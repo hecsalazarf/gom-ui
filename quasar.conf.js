@@ -54,7 +54,16 @@ module.exports = function (ctx) {
         'QPullToRefresh',
         'QToggle',
         'QCheckbox',
-        'QCircularProgress'
+        'QCircularProgress',
+        'QExpansionItem',
+        'QCard',
+        'QCardSection',
+        'QCardActions',
+        'QBadge',
+        'QTabPanels',
+        'QTabPanel',
+        'QTab',
+        'QSpace'
       ],
 
       directives: [
@@ -67,7 +76,8 @@ module.exports = function (ctx) {
       plugins: [
         'Notify',
         'LocalStorage',
-        'AddressbarColor'
+        'AddressbarColor',
+        'Cookies'
       ],
 
       config: {
@@ -105,12 +115,24 @@ module.exports = function (ctx) {
     devServer: {
       // https: true,
       // port: 8080,
-      open: false // opens browser window automatically
+      open: false, // opens browser window automatically
+      proxy: {
+        // proxy all requests starting with /api to jsonplaceholder
+        '/api': {
+          target: 'http://192.168.0.2:7001',
+          changeOrigin: true,
+          pathRewrite: {
+            '^/api': ''
+          }
+        }
+      }
     },
 
     // animations: 'all', // --- includes all animations
     animations: [
-      'fadeOut'
+      'fadeOut',
+      'slideOutUp',
+      'slideInUp'
     ],
 
     ssr: {

@@ -2,6 +2,7 @@
 const routes = [
   {
     path: '/',
+    name: 'home',
     redirect: { name: 'orders' },
     component: () => import('layouts/Gom.vue'),
     children: [
@@ -16,7 +17,7 @@ const routes = [
           {
             path: 'order/:id',
             name: 'orderDetails',
-            component: () => import('pages/order/Details.vue'),
+            component: () => import('pages/order/Details.1.vue'),
             props: true
           },
           {

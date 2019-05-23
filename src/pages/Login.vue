@@ -40,6 +40,7 @@ export default {
       debugger
       this.$axios.post('login', credentials).then(response => {
         debugger
+        // vm.$q.cookies.set('atk', response.data.access_token, { path: '/' })
         vm.$q.localStorage.set('atk', response.data.access_token)
         vm.$q.localStorage.set('itk', response.data.id_token)
         vm.$router.push({ name: 'home', query: { tk: response.data.access_token } })

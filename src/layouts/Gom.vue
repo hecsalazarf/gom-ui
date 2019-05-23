@@ -24,12 +24,14 @@
 <script>
 import { openURL } from 'quasar'
 const MAIN_TOOLBAR = 'h-main-toolbar'
+const ORDER_TOOLBAR = 'h-order-toolbar'
 
 export default {
   name: 'GomLayout',
   components: {
     'h-main-toolbar': () => import('components/MainToolbar.vue'),
-    'h-selection-toolbar': () => import('components/order/SelectionToolbar.vue')
+    'h-selection-toolbar': () => import('components/order/SelectionToolbar.vue'),
+    'h-order-toolbar': () => import('components/order/DetailsToolbar.vue')
   },
   data () {
     return {
@@ -59,7 +61,14 @@ export default {
   },
   watch: {
     $route (route) {
-      this.toolbar = MAIN_TOOLBAR // TODO: change toolbar depending on current route
+      switch (route.name) {
+        case 'orderDetails':
+          this.toolbar = ORDER_TOOLBAR
+          break
+        default:
+          this.toolbar = MAIN_TOOLBAR
+          break
+      }
     }
   }
 }

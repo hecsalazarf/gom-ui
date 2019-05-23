@@ -18,9 +18,6 @@
         />
       </q-list>
     </q-pull-to-refresh>
-    <q-page-sticky position="bottom-right" :offset="[18, 18]">
-      <q-btn round color="accent" icon="add_shopping_cart"/>
-    </q-page-sticky>
   </q-page>
 </template>
 
@@ -51,7 +48,7 @@ export default {
       selectionMode: false
     }
   },
-  mounted () {},
+  mounted () { debugger },
   methods: {
     refresh (done) {
       setTimeout(() => {
