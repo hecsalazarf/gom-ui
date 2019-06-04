@@ -1,113 +1,46 @@
 <template>
-  <div>
-    <q-item clickable @click="handleClick($event)" v-touch-hold.mouse="handleHold" :active="isActive" active-class="bg-teal-1 text-grey-8">
-      <q-item-section side top v-show="selectionMode">
-        <q-checkbox ref="selectionEl" v-model="isSelected" :val="value.id" />
-      </q-item-section>
-
+  <q-card bordered flat>
+    <q-item>
       <q-item-section>
-        <q-item-label class="text-body1 text-weight-medium">{{value.customer}}</q-item-label>
-        <q-item-label class="text-body2 text-weight-light" lines="1">{{value.item}}</q-item-label>
-      </q-item-section>
-
-      <q-item-section side top>
-        <q-item-label>{{this.createdAt}}</q-item-label>
-        <q-icon :name="this.icon.name" :color="this.icon.color"/>
+        <q-item-label class="text-subtitle1 text-weight-medium">{{description}}</q-item-label>
+        <q-item-label caption>{{code}}</q-item-label>
       </q-item-section>
     </q-item>
-    <q-separator v-if="separator" inset spaced/>
-  </div>
+    <q-separator inset/>
+    <q-item>
+      <q-item-section>
+        <q-input label="Precio" v-model="price" readonly borderless>
+          <template v-slot:prepend>
+            <q-icon name="monetization_on" color="primary"/>
+          </template>
+        </q-input>
+        <q-input label="Cantidad" v-model="quantity" readonly borderless>
+          <template v-slot:prepend>
+            <q-icon name="format_list_numbered" color="primary"/>
+          </template>
+        </q-input>
+        <q-input label="Marca" v-model="provider" readonly borderless>
+          <template v-slot:prepend>
+            <q-icon name="stars" color="primary"/>
+          </template>
+        </q-input>
+      </q-item-section>
+    </q-item>
+  </q-card>
 </template>
 
 <script>
-import { date } from 'quasar'
-
 export default {
   name: 'HOrderItem',
-  props: {
-    value: {
-      type: Object,
-      default: () => {},
-      required: true
-    },
-    separator: {
-      type: Boolean,
-      default: true,
-      required: false
-    },
-    selected: {
-      type: Array,
-      default: () => []
-    },
-    selection: {
-      type: Boolean,
-      default: false
-    }
-  },
   data () {
     return {
+      code: '02255',
+      description: 'Lámpara de luces led',
+      price: '$50',
+      quantity: 2,
+      provider: 'Avon'
     }
-  },
-  methods: {
-    handleHold ({ evt, ...info }) {
-      if (!this.selectionMode) {
-        this.$emit('selection')
-      }
-      this.$refs.selectionEl.toggle()
-    },
-    handleClick (evt) {
-      if (this.selectionMode) {
-        this.$refs.selectionEl.toggle()
-      } else {
-        this.$router.push({ name: 'orderDetails', params: { id: this.value.id } })
-      }
-    }
-  },
-  computed: {
-    createdAt () {
-      const orderDate = new Date(this.value.createdAt)
-      if (new Date().toDateString() === orderDate.toDateString()) {
-        // if today's order, display time
-        return date.formatDate(orderDate, 'hh:mm a')
-      } else {
-        // otherwise, display date
-        return date.formatDate(orderDate, 'DD/MM/YYYY')
-      }
-    },
-    icon () {
-      let icon
-      switch (this.value.stage) {
-        case 'WON':
-          icon = { name: 'check_circle', color: 'positive' }
-          break
-        case 'OPEN':
-          icon = { name: 'input', color: 'cyan-5' }
-          break
-        case 'CLOSED':
-          icon = { name: 'cancel_presentation', color: 'negative' }
-          break
-      }
-      return icon
-    },
-    isSelected: {
-      get () {
-        return this.selected
-      },
-      set (value) {
-        this.$emit('selected', value)
-      }
-    },
-    isActive () {
-      if (this.isSelected.includes(this.value.id)) {
-        return true
-      }
-      return false
-    },
-    selectionMode () {
-      return this.selection
-    }
-  },
-  mounted () { }
+  }
 }
 </script>
 

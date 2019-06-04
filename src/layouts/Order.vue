@@ -13,8 +13,8 @@
         @selected="setToolbarProps('h-selection-toolbar', $event)"
       />
     </transition>
-    <q-page-sticky v-if="$route.name === 'orders'" position="bottom-right" :offset="[18, 18]">
-      <q-btn round color="accent" icon="add_shopping_cart"/>
+    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+      <q-btn round color="accent" :icon="floatingButton" class="shadow-7"/>
     </q-page-sticky>
   </q-page-container>
 </template>
@@ -50,6 +50,9 @@ export default {
     leaveActiveClass () {
       // animate transition only on mobile devices
       return this.$q.platform.is.mobile ? 'animated slideOutUp' : ''
+    },
+    floatingButton () {
+      return this.$route.name === 'orders' ? 'add_shopping_cart' : 'edit'
     }
   }
 }

@@ -14,34 +14,27 @@
           align="justify"
           narrow-indicator
         >
-          <q-tab name="mails" label="Articulo" />
-          <q-tab name="alarms" label="Cliente" />
-          <q-tab name="movies" label="Fechas" />
+          <q-tab name="items" label="Articulos" />
+          <q-tab name="details" label="Detalles" />
         </q-tabs>
 
         <q-separator />
 
-        <q-tab-panels v-model="tab" animated swipeable>
-          <q-tab-panel name="mails">
-            <div class="text-h6">Articulo</div>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        <q-tab-panels v-model="tab" animated swipeable keep-alive>
+          <q-tab-panel name="items" class=" q-gutter-y-md">
+            <h-order-item/>
+            <h-order-item/>
           </q-tab-panel>
 
-          <q-tab-panel name="alarms">
-            <div class="text-h6">Cliente</div>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          </q-tab-panel>
-
-          <q-tab-panel name="movies">
-            <div class="text-h6">Fechas</div>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          <q-tab-panel name="details">
+            <h-order-details-tab/>
           </q-tab-panel>
         </q-tab-panels>
       </div>
     </div>
-    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+    <!-- <q-page-sticky position="bottom-right" :offset="[18, 18]">
       <q-btn round color="accent" icon="edit"/>
-    </q-page-sticky>
+    </q-page-sticky> -->
   </q-page>
 </template>
 
@@ -63,10 +56,14 @@ export default {
   },
   data () {
     return {
-      tab: 'mails'
+      tab: 'items'
     }
   },
   name: 'PageOrders',
+  components: {
+    'h-order-item': () => import('components/order/Item.vue'),
+    'h-order-details-tab': () => import('components/order/DetailsTab.vue')
+  },
   mounted () {}
 }
 </script>
