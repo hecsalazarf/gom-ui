@@ -10,7 +10,8 @@ function createApolloClient (ssr = false) {
     uri: '/api/graphql',
     // credentials: 'include',
     headers: {
-      'Accept': 'application/json'
+      'Accept': 'application/json'/* ,
+      'X-Csrf-Token': Cookies.get('csrf-token') */
     }
   })
 
@@ -46,6 +47,9 @@ export default async ({ app, Vue }) => {
   const apolloClient = createApolloClient()
   const apolloProvider = new VueApollo({
     defaultClient: apolloClient
+    /* errorHandler (error) {
+      console.log('Vue-Apollo global error handler', error)
+    } */
   })
   app.apolloProvider = apolloProvider
 }

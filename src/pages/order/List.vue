@@ -5,7 +5,7 @@
         <h-filter-input @filter="filter($event)" :disable="selectionMode"/>
       </q-bar>
       <q-list>
-        <h-order-item
+        <h-list-item
           ref="item"
           v-for="(order, index) in orders"
           :key="order.id"
@@ -25,8 +25,9 @@
 </style>
 
 <script>
-// only for testing purpouses
-import ApiData from 'assets/orders'
+import QueryUserOrders from 'src/graphql/queries/UserOrders.gql'
+import { Auth } from 'src/helpers'
+import { QSpinnerBars } from 'quasar'
 
 export default {
   props: {
@@ -36,34 +37,47 @@ export default {
     }
   },
   components: {
-    'h-order-item': () => import('components/order/Item.vue'),
+    'h-list-item': () => import('components/order/ListItem.vue'),
     'h-filter-input': () => import('components/order/FilterInput.vue')
   },
-  name: 'PageOrders',
+  name: 'OrdersListPage',
   data () {
     return {
-      allOrders: ApiData,
-      orders: ApiData,
+      allOrders: [],
       selected: [],
-      selectionMode: false
+      selectionMode: false,
+      orders: {}
     }
   },
-  mounted () { debugger },
+  created () {
+  },
   methods: {
     refresh (done) {
-      setTimeout(() => {
-        // Not for production. REMOVE !!!
-        this.orders.unshift({
-          data: {
-            id: '4',
-            customer: 'Juanita',
-            item: 'Soda',
-            createdAt: '2019-05-17T23:51:39.887Z',
-            stage: 'OPEN'
+      debugger
+      this.$apollo.queries.orders.refetch({
+        variables: {
+          id: Auth.userId
+        }
+      }).then(() => done())
+        .catch(() => done())
+
+      // FOLLOWING CODE USED FOR PAGINATION
+      /* this.$apollo.queries.orders.fetchMore({
+        variables: {
+          id: Auth.userId
+        },
+        updateQuery (previousResult, { fetchMoreResult }) {
+          debugger
+          previousResult.user.orders.edges.unshift(...fetchMoreResult.user.orders.edges)
+          return {
+            user: {
+              __typename: previousResult.user.__typename,
+              orders: previousResult.user.orders,
+              uid: fetchMoreResult.user.uid
+            }
           }
-        })
-        done()
-      }, 1000)
+        }
+      }) */
     },
     filter (params) {
       this.orders = this.allOrders.filter(order => {
@@ -110,6 +124,47 @@ export default {
           max: this.ordersMaxIndex + 1,
           count: value.length
         })
+      }
+    }
+  },
+  apollo: {
+    orders () {
+      return {
+        query: QueryUserOrders,
+        error: err => {
+          debugger
+          console.log(err)
+        },
+        context: {
+          headers: {
+            'X-Csrf-Token': this.$q.cookies.get('csrf-token')
+          }
+        },
+        update (data) {
+          debugger
+          this.allOrders = data.user.orders.edges.map(edge => {
+            return {
+              data: {
+                id: edge.node.uid,
+                customer: edge.node.issuedTo.edges[0].node.name1,
+                item: 'Pan',
+                createdAt: edge.node.createdAt,
+                stage: edge.node.stage
+              }
+            }
+          })
+          return this.allOrders
+        },
+        watchLoading (isLoading, countModifier) {
+          debugger
+          if (isLoading) this.$q.loading.show({ spinner: QSpinnerBars })
+          else this.$q.loading.hide()
+        },
+        variables () {
+          return {
+            id: Auth.userId
+          }
+        }
       }
     }
   }

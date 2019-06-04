@@ -1,0 +1,23 @@
+###### Query user orders #########
+query UserOrders($id: String!) {
+	user(id: $id) {
+    uid,
+    orders {
+      edges {
+        node {
+          uid
+          stage
+          createdAt
+          issuedTo {
+            edges{
+              node{
+                uid
+                name1
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
