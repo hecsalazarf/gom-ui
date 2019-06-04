@@ -1,12 +1,12 @@
 import { QSpinnerBars } from 'quasar'
 
 class SessionHelper {
-  logout () {
+  async logout () {
     this.$q.loading.show({ spinner: QSpinnerBars })
-    this.$axios.get('auth/logout').then(res => {
-      this.$q.loading.hide()
-      this.$router.replace({ name: 'login' })
-    })
+    await this.$apollo.getClient().clearStore()
+    await this.$axios.get('auth/logout')
+    this.$q.loading.hide()
+    this.$router.replace({ name: 'login' })
   }
 }
 

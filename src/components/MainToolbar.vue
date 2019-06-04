@@ -42,14 +42,7 @@ export default {
         stackButtons: false,
         color: 'primary'
       }).onOk(() => {
-        debugger
         Session.logout.call(this)
-        // this.$q.loading.show({ spinner: QSpinnerBars })
-        // this.$axios.get('auth/logout').then(res => {
-        //   debugger
-        //   this.$q.loading.hide()
-        //   this.$router.replace({ name: 'login' })
-        // })
       })
     }
   }
