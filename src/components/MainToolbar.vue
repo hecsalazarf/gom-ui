@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { QSpinnerBars } from 'quasar'
+import { Session } from 'src/helpers'
 export default {
   name: 'HMainToolbar',
   data () {
@@ -43,12 +43,13 @@ export default {
         color: 'primary'
       }).onOk(() => {
         debugger
-        this.$q.loading.show({ spinner: QSpinnerBars })
-        this.$axios.get('auth/logout').then(res => {
-          debugger
-          this.$q.loading.hide()
-          this.$router.replace({ name: 'login' })
-        })
+        Session.logout.call(this)
+        // this.$q.loading.show({ spinner: QSpinnerBars })
+        // this.$axios.get('auth/logout').then(res => {
+        //   debugger
+        //   this.$q.loading.hide()
+        //   this.$router.replace({ name: 'login' })
+        // })
       })
     }
   }
