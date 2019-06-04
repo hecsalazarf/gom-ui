@@ -1,13 +1,13 @@
-import { LocalStorage } from 'quasar'
+import { Cookies } from 'quasar'
 
 const GlobalGuards = {
   beforeEach (to, from, next) {
-    let atk = LocalStorage.getItem('atk')
-    if (!atk && to.name === 'login') {
+    const accessToken = Cookies.get('access_token')
+    if (!accessToken && to.name === 'login') {
       next()
-    } else if (!atk) {
+    } else if (!accessToken) {
       next({ name: 'login' })
-    } else if (atk && to.name === 'login') {
+    } else if (accessToken && to.name === 'login') {
       next({ path: from.path })
     } else {
       next() // always call next()!

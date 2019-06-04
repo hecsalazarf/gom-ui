@@ -35,27 +35,24 @@ export default {
   },
   methods: {
     async onSubmit (credentials) {
-      const vm = this
       this.$refs['login-form'].startLoading()
-      debugger
-      this.$axios.post('login', credentials).then(response => {
-        debugger
-        // vm.$q.cookies.set('atk', response.data.access_token, { path: '/' })
-        vm.$q.localStorage.set('atk', response.data.access_token)
-        vm.$q.localStorage.set('itk', response.data.id_token)
-        vm.$router.push({ name: 'home', query: { tk: response.data.access_token } })
-
+      try {
+        if (!this.$q.cookies.has('csrf-token')) {
+          await this.$axios.get('auth/ping')
+        }
+        await this.$axios.post('auth/login', credentials, { headers: { 'X-Csrf-Token': this.$q.cookies.get('csrf-token') } })
         this.$refs['login-form'].stopLoading()
-      }).catch(e => {
+        this.$router.replace({ name: 'home' })
+      } catch (e) {
         this.$refs['login-form'].stopLoading()
         if (e.response.data.code === 'invalid_grant') {
-          vm.$refs['login-form'].setOnError()
-          vm.$q.notify({ color: 'negative', message: 'Usuario o contraseña incorrectos', icon: 'report_problem' })
+          // this.$refs['login-form'].setOnError()
+          this.$q.notify({ color: 'negative', message: 'Usuario o contraseña incorrectos', icon: 'report_problem' })
         } else {
-          vm.$q.notify({ color: 'negative', message: 'No pudimos iniciar sesión. Inténtalo más tarde', icon: 'report_problem' })
+          this.$q.notify({ color: 'negative', message: 'No pudimos iniciar sesión. Inténtalo más tarde', icon: 'report_problem' })
           console.error(e.response.data)
         }
-      })
+      }
     }
   },
   beforeRouteEnter (to, from, next) {

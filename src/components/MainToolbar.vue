@@ -5,7 +5,7 @@
     <q-btn flat round>
       <q-menu>
         <q-list dense>
-          <q-item clickable v-close-popup>
+          <q-item clickable v-close-popup @click="logout()">
             <q-item-section>Salir</q-item-section>
           </q-item>
         </q-list>
@@ -16,10 +16,41 @@
 </template>
 
 <script>
+import { QSpinnerBars } from 'quasar'
 export default {
-  // name: 'ComponentName',
+  name: 'HMainToolbar',
   data () {
     return {}
+  },
+  methods: {
+    logout () {
+      this.$q.dialog({
+        title: 'Cerrar sesión',
+        message: '¿Continuar?',
+        position: 'bottom',
+        persistent: true,
+        cancel: {
+          label: 'No',
+          color: 'primary',
+          flat: true
+        },
+        ok: {
+          label: 'Sí',
+          color: 'primary',
+          flat: true
+        },
+        stackButtons: false,
+        color: 'primary'
+      }).onOk(() => {
+        debugger
+        this.$q.loading.show({ spinner: QSpinnerBars })
+        this.$axios.get('auth/logout').then(res => {
+          debugger
+          this.$q.loading.hide()
+          this.$router.replace({ name: 'login' })
+        })
+      })
+    }
   }
 }
 </script>

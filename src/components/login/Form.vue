@@ -1,5 +1,5 @@
 <template>
-    <q-form class="q-gutter-y-md" @submit="$emit('submit', {user, password})">
+    <q-form class="q-gutter-y-md" @submit="$emit('submit', {username, password})">
       <q-input
         color="primary"
         bg-color="white"
@@ -8,7 +8,7 @@
         clearable
         items-aligned
         type="email"
-        v-model="user"
+        v-model="username"
         label="Usuario"
         error-message=""
         :error="errorOnAuth"
@@ -66,7 +66,7 @@ export default {
   data () {
     return {
       password: '',
-      user: '',
+      username: '',
       isPwd: true,
       errorOnAuth: false,
       loading: false
@@ -76,7 +76,7 @@ export default {
     password (oldVal, newVal) {
       this.errorOnAuth = false
     },
-    user (oldVal, newVal) {
+    username (oldVal, newVal) {
       this.errorOnAuth = false
     }
   },

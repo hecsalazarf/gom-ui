@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import routes from './routes'
-// import GlobalGuards from './guards'
+import GlobalGuards from './guards'
 
 Vue.use(VueRouter)
 
@@ -22,6 +22,6 @@ export default function (/* { store, ssrContext } */) {
     mode: process.env.VUE_ROUTER_MODE,
     base: process.env.VUE_ROUTER_BASE
   })
-  // Router.beforeEach(GlobalGuards.beforeEach)
+  Router.beforeEach(GlobalGuards.beforeEach)
   return Router
 }
