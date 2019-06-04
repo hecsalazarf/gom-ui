@@ -7,7 +7,8 @@ module.exports = function (ctx) {
     boot: [
       'i18n',
       'axios',
-      'addressbar-color'
+      'addressbar-color',
+      'apollo-vue'
     ],
 
     css: [
@@ -63,7 +64,8 @@ module.exports = function (ctx) {
         'QTabPanels',
         'QTabPanel',
         'QTab',
-        'QSpace'
+        'QSpace',
+        'QSelect'
       ],
 
       directives: [
@@ -75,9 +77,10 @@ module.exports = function (ctx) {
       // Quasar plugins
       plugins: [
         'Notify',
-        'LocalStorage',
+        'Dialog',
         'AddressbarColor',
-        'Cookies'
+        'Cookies',
+        'Loading'
       ],
 
       config: {
@@ -86,6 +89,11 @@ module.exports = function (ctx) {
           timeout: 2500,
           textColor: 'white',
           actions: [{ icon: 'close', color: 'white' }]
+        },
+        loading: {
+          delay: 400,
+          sanitize: true,
+          backgroundColor: 'primary'
         }
       }
       // iconSet: 'ionicons-v4'
@@ -108,6 +116,11 @@ module.exports = function (ctx) {
           test: /\.(js|vue)$/,
           loader: 'eslint-loader',
           exclude: /node_modules/
+        })
+        cfg.module.rules.push({ // this allows to load Graphql files
+          test: /\.(graphql|gql)$/,
+          exclude: /node_modules/,
+          loader: 'graphql-tag/loader'
         })
       }
     },
