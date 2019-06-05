@@ -37,7 +37,9 @@
 <script>
 import OrderDetails from 'src/graphql/queries/OrderDetails.gql'
 import { QSpinnerBars } from 'quasar'
-
+import { createNamespacedHelpers } from 'vuex'
+const { mapActions } = createNamespacedHelpers('GomState')
+// this.$store.dispatch('GomState/changeActiveOrder', '23')
 export default {
   props: {
     id: {
@@ -57,7 +59,13 @@ export default {
     'h-order-item': () => import('components/order/Item.vue'),
     'h-order-details-tab': () => import('components/order/DetailsTab.vue')
   },
-  mounted () {},
+  methods: {
+    ...mapActions([
+      'changeActiveOrder'
+    ])
+  },
+  created () {
+  },
   apollo: {
     order () {
       return {
@@ -71,6 +79,7 @@ export default {
           }
         },
         update (data) {
+          this.changeActiveOrder(data.order.uid)
           this.items = data.order.items.edges.map(edge => {
             return {
               data: {
@@ -85,6 +94,7 @@ export default {
           })
 
           return {
+            id: data.order.uid,
             items: this.items,
             stage: data.order.stage,
             name: data.order.name,

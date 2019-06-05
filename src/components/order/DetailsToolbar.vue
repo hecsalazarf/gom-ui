@@ -4,27 +4,74 @@
      <q-avatar
       rounded
       size="2.5em"
-      icon="input"
+      :icon="stage.icon"
       color="accent"
       text-color="white"
     >
-      <q-badge floating color="teal">Nuevo</q-badge>
+      <q-badge floating color="teal">{{stage.label}}</q-badge>
     </q-avatar>
     <div class="column self-stretch q-ml-md items-start justify-start content-start">
-      <div class="col-5 text-subtitle1">Soda bien fria</div>
-      <div class="col text-subtitle2 text-weight-regular">Juanito Perez</div>
+      <div class="col-5 text-subtitle1">{{order.name}}</div>
+      <div class="col text-subtitle2 text-weight-regular">{{customer}}</div>
     </div>
-    <!-- <q-toolbar-title class="text-subtitle1">Soda fria</q-toolbar-title> -->
     <q-space />
     <q-btn flat dense icon="more_horiz"/>
   </q-toolbar>
 </template>
 
 <script>
+import OrderDetails from 'src/graphql/queries/OrderDetails.gql'
+import { createNamespacedHelpers } from 'vuex'
+const { mapGetters } = createNamespacedHelpers('GomState')
+
 export default {
   name: 'OrderToolbar',
   data () {
     return {}
+  },
+  computed: {
+    order () {
+      try {
+        const { order } = this.$apollo.getClient().readQuery({
+          query: OrderDetails,
+          variables: {
+            id: this.activeOrder
+          }
+        })
+        return {
+          name: order.name,
+          stage: order.stage,
+          customer: order.issuedTo.edges[0].node
+        }
+      } catch (err) {
+        return {}
+      }
+    },
+    stage () {
+      let stage
+      switch (this.order.stage) {
+        case 'WON':
+          stage = { label: 'Entregado', value: 'WON', icon: 'check' }
+          break
+        case 'OPEN':
+          stage = { label: 'Nuevo', icon: 'check' }
+          break
+        case 'CLOSED':
+          stage = { label: 'Cancelado', icon: 'cancel_presentation' }
+          break
+      }
+      return stage
+    },
+    customer () {
+      const name1 = this.order.customer.name1 ? this.order.customer.name1 : ''
+      const name2 = this.order.customer.name2 ? this.order.customer.name2 : ''
+      const lastName1 = this.order.customer.lastName1 ? this.order.customer.lastName1 : ''
+      const lastName2 = this.order.customer.lastName2 ? this.order.customer.lastName2 : ''
+      return `${name1} ${name2} ${lastName1} ${lastName2}`.replace(/\s+/g, ' ')
+    },
+    ...mapGetters([
+      'activeOrder'
+    ])
   }
 }
 </script>
