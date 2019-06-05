@@ -6,8 +6,8 @@
       </q-item-section>
 
       <q-item-section>
-        <q-item-label class="text-body1 text-weight-medium">{{value.customer}}</q-item-label>
-        <q-item-label class="text-body2 text-weight-light" lines="1">{{value.item}}</q-item-label>
+        <q-item-label class="text-body1 text-weight-medium">{{value.name}}</q-item-label>
+        <q-item-label class="text-body2 text-weight-light" lines="1">{{value.customer}}</q-item-label>
       </q-item-section>
 
       <q-item-section side top>

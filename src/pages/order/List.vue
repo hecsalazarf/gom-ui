@@ -53,7 +53,6 @@ export default {
   },
   methods: {
     refresh (done) {
-      debugger
       this.$apollo.queries.orders.refetch({
         variables: {
           id: Auth.userId
@@ -67,7 +66,6 @@ export default {
           id: Auth.userId
         },
         updateQuery (previousResult, { fetchMoreResult }) {
-          debugger
           previousResult.user.orders.edges.unshift(...fetchMoreResult.user.orders.edges)
           return {
             user: {
@@ -132,7 +130,6 @@ export default {
       return {
         query: QueryUserOrders,
         error: err => {
-          debugger
           console.log(err)
         },
         context: {
@@ -141,13 +138,12 @@ export default {
           }
         },
         update (data) {
-          debugger
           this.allOrders = data.user.orders.edges.map(edge => {
             return {
               data: {
                 id: edge.node.uid,
+                name: edge.node.name,
                 customer: edge.node.issuedTo.edges[0].node.name1,
-                item: 'Pan',
                 createdAt: edge.node.createdAt,
                 stage: edge.node.stage
               }
@@ -156,7 +152,6 @@ export default {
           return this.allOrders
         },
         watchLoading (isLoading, countModifier) {
-          debugger
           if (isLoading) this.$q.loading.show({ spinner: QSpinnerBars })
           else this.$q.loading.hide()
         },

@@ -1,11 +1,12 @@
 ###### Query user orders #########
 query UserOrders($id: String!) {
 	user(id: $id) {
-    uid,
+    uid
     orders {
       edges {
         node {
           uid
+          name
           stage
           createdAt
           issuedTo {
