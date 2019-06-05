@@ -32,13 +32,32 @@
 <script>
 export default {
   name: 'HOrderItem',
+  props: {
+    value: {
+      type: Object,
+      default: () => {},
+      required: true
+    }
+  },
   data () {
     return {
-      code: '02255',
-      description: 'Lámpara de luces led',
-      price: '$50',
-      quantity: 2,
-      provider: 'Avon'
+    }
+  },
+  computed: {
+    code () {
+      return this.value.code
+    },
+    quantity () {
+      return this.value.quantity
+    },
+    description () {
+      return this.value.description
+    },
+    provider () {
+      return this.value.provider
+    },
+    price () {
+      return this.value.price
     }
   }
 }

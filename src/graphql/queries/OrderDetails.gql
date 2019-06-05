@@ -1,0 +1,42 @@
+query ReadOrder($id: String!) {
+  order (id: $id) {
+    items {
+      edges {
+        node {
+          uid
+          code
+          quantity
+          description
+          provider,
+          pricing {
+            edges {
+              node {
+                amount
+                currency
+              }
+              props {
+                type
+              }
+            }
+          }
+        }
+      }
+    }
+    issuedTo {
+      edges{
+        node{
+          uid
+          name1
+          name2
+          lastName1
+          lastName2
+        }
+      }
+    }
+    uid
+    name
+    stage
+    createdAt
+    updatedAt
+  }
+}

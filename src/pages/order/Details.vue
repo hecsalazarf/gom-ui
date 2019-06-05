@@ -1,85 +1,31 @@
 <template>
   <q-page class="flex">
-    <!-- <div class="column">
-      <h1>Detalles</h1>
-    </div>-->
-    <div class="row full-width content-start">
-      <div class="col-xs-12 col-sm-12 col-md-6 q-pa-xs">
-        <q-card class="no-shadow">
-          <!-- <q-img src="https://media-cdn.tripadvisor.com/media/photo-s/0a/47/a8/91/chicken-salad-sandwich.jpg" /> -->
-
-          <q-card-section>
-            <q-btn
-              fab
-              color="primary"
-              icon="place"
-              class="absolute"
-              style="top: 20px; right: 50px;"
-            />
-
-            <div class="row no-wrap items-center">
-              <div class="col text-h6 ellipsis">Cafe Basilico</div>
-              <div class="col-auto text-grey q-pt-md">
-                <q-icon name="place"/>250 ft
-              </div>
-            </div>
-          </q-card-section>
-
-          <q-card-section>
-            <div class="text-subtitle1">$・Italian, Cafe</div>
-            <div
-              class="text-subtitle2 text-grey"
-            >Small plates, salads & sandwiches in an intimate setting.</div>
-          </q-card-section>
-
-          <q-separator/>
-
-          <q-card-actions>
-            <q-btn flat round icon="event" v-close-popup/>
-            <q-btn flat v-close-popup>5:30PM</q-btn>
-            <q-btn flat v-close-popup>7:30PM</q-btn>
-            <q-btn flat v-close-popup>9:00PM</q-btn>
-            <q-btn flat color="primary" v-close-popup>Reserve</q-btn>
-          </q-card-actions>
-        </q-card>
-      </div>
-      <div class="col-xs-12 col-sm-12 col-md-6 q-pa-xs">
-        <q-expansion-item
-          expand-separator
-          icon="perm_identity"
-          label="Account settings"
-          caption="John Doe"
+    <div class="row full-width justify-center content-start">
+      <div class="col-xs-12 col-sm-12 col-md-8 q-pa-xs">
+        <q-tabs
+          v-model="tab"
+          dense
+          class="text-grey"
+          active-color="primary"
+          indicator-color="primary"
+          align="justify"
+          narrow-indicator
         >
-          <q-card>
-            <q-card-section>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem, eius reprehenderit eos corrupti
-              commodi magni quaerat ex numquam, dolorum officiis modi facere maiores architecto suscipit iste
-              eveniet doloribus ullam aliquid.
-            </q-card-section>
-          </q-card>
-        </q-expansion-item>
-      </div>
-      <div class="col-xs-12 col-sm-12 col-md-6 q-pa-xs">
-        <q-expansion-item expand-separator icon="signal_wifi_off" label="Wifi settings">
-          <q-card>
-            <q-card-section>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem, eius reprehenderit eos corrupti
-              commodi magni quaerat ex numquam, dolorum officiis modi facere maiores architecto suscipit iste
-              eveniet doloribus ullam aliquid.
-            </q-card-section>
-          </q-card>
-        </q-expansion-item>
-      </div>
-      <div class="col-xs-12 col-sm-12 col-md-6 q-pa-xs">
-        <q-expansion-item expand-separator icon="drafts" label="Drafts" header-class="text-purple">
-          <q-card>
-            <q-card-section>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem, eius reprehenderit eos corrupti
-              commodi magni quaerat ex numquam, dolorum officiis modi facere maiores architecto suscipit iste
-              eveniet doloribus ullam aliquid.
-            </q-card-section>
-          </q-card>
-        </q-expansion-item>
+          <q-tab name="items" label="Articulos"/>
+          <q-tab name="details" label="Detalles"/>
+        </q-tabs>
+
+        <q-separator/>
+
+        <q-tab-panels v-model="tab" animated swipeable keep-alive>
+          <q-tab-panel name="items" class="q-gutter-y-md">
+            <h-order-item v-for="(item) in items" :key="item.id" v-model="item.data"/>
+          </q-tab-panel>
+
+          <q-tab-panel name="details">
+            <h-order-details-tab v-model="order"/>
+          </q-tab-panel>
+        </q-tab-panels>
       </div>
     </div>
   </q-page>
@@ -89,19 +35,75 @@
 </style>
 
 <script>
+import OrderDetails from 'src/graphql/queries/OrderDetails.gql'
+import { QSpinnerBars } from 'quasar'
+
 export default {
   props: {
-    tk: {
-      type: String,
-      default: ''
-    },
     id: {
       type: String,
       default: '',
       required: true
     }
   },
+  data () {
+    return {
+      tab: 'items',
+      items: []
+    }
+  },
   name: 'PageOrders',
-  mounted () {}
+  components: {
+    'h-order-item': () => import('components/order/Item.vue'),
+    'h-order-details-tab': () => import('components/order/DetailsTab.vue')
+  },
+  mounted () {},
+  apollo: {
+    order () {
+      return {
+        query: OrderDetails,
+        error: err => {
+          console.log(err)
+        },
+        context: {
+          headers: {
+            'X-Csrf-Token': this.$q.cookies.get('csrf-token')
+          }
+        },
+        update (data) {
+          this.items = data.order.items.edges.map(edge => {
+            return {
+              data: {
+                id: edge.node.uid,
+                code: edge.node.code,
+                description: edge.node.description,
+                provider: edge.node.provider,
+                quantity: edge.node.quantity,
+                price: edge.node.pricing.edges[0].node.amount
+              }
+            }
+          })
+
+          return {
+            items: this.items,
+            stage: data.order.stage,
+            name: data.order.name,
+            createdAt: data.order.createdAt,
+            updatedAt: data.order.updatedAt,
+            customer: data.order.issuedTo.edges[0].node
+          }
+        },
+        watchLoading (isLoading, countModifier) {
+          if (isLoading) this.$q.loading.show({ spinner: QSpinnerBars })
+          else this.$q.loading.hide()
+        },
+        variables () {
+          return {
+            id: this.id
+          }
+        }
+      }
+    }
+  }
 }
 </script>
