@@ -54,20 +54,29 @@ export default {
           stage = { label: 'Entregado', value: 'WON', icon: 'check' }
           break
         case 'OPEN':
-          stage = { label: 'Nuevo', icon: 'check' }
+          stage = { label: 'Nuevo', icon: 'input' }
           break
         case 'CLOSED':
           stage = { label: 'Cancelado', icon: 'cancel_presentation' }
           break
+        default:
+          stage = { label: '', icon: '' }
       }
       return stage
     },
     customer () {
-      const name1 = this.order.customer.name1 ? this.order.customer.name1 : ''
-      const name2 = this.order.customer.name2 ? this.order.customer.name2 : ''
-      const lastName1 = this.order.customer.lastName1 ? this.order.customer.lastName1 : ''
-      const lastName2 = this.order.customer.lastName2 ? this.order.customer.lastName2 : ''
-      return `${name1} ${name2} ${lastName1} ${lastName2}`.replace(/\s+/g, ' ')
+      let name
+      if (this.order.customer) {
+        const name1 = this.order.customer.name1 ? this.order.customer.name1 : ''
+        const name2 = this.order.customer.name2 ? this.order.customer.name2 : ''
+        const lastName1 = this.order.customer.lastName1 ? this.order.customer.lastName1 : ''
+        const lastName2 = this.order.customer.lastName2 ? this.order.customer.lastName2 : ''
+        name = `${name1} ${name2} ${lastName1} ${lastName2}`.replace(/\s+/g, ' ')
+      } else {
+        name = ''
+      }
+
+      return name
     },
     ...mapGetters([
       'activeOrder'

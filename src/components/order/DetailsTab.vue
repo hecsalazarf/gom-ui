@@ -11,7 +11,7 @@
         <q-card>
           <q-card-section>
             <q-input dense label="Nombre del pedido" v-model="name" readonly borderless></q-input>
-            <q-select dense borderless label="Estado" v-model="status" :options="statusOptions">
+            <q-select dense borderless label="Estado" v-model="status" :options="statusOptions" readonly>
             </q-select>
             <q-input dense label="Total" v-model="totalAmount" readonly borderless></q-input>
           </q-card-section>
