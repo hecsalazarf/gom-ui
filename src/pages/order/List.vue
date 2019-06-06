@@ -87,7 +87,7 @@ export default {
         }
         if (
           params.has('term') &&
-          !order.data.item.toLowerCase().includes(params.get('term'))
+          !order.data.name.toLowerCase().includes(params.get('term'))
         ) {
           return false
         }
