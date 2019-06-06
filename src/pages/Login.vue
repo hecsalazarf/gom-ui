@@ -41,6 +41,7 @@ export default {
           await this.$axios.get('auth/ping')
         }
         await this.$axios.post('auth/login', credentials, { headers: { 'X-Csrf-Token': this.$q.cookies.get('csrf-token') } })
+        await this.$apollo.getClient().clearStore() // ensure a clear cache
         this.$refs['login-form'].stopLoading()
         this.$router.replace({ name: 'home' })
       } catch (e) {
