@@ -61,10 +61,12 @@ export default {
   },
   methods: {
     ...mapActions([
-      'changeActiveOrder'
+      'changeActiveOrder',
+      'changeActiveToolbar'
     ])
   },
   created () {
+    this.changeActiveToolbar('h-order-toolbar')
   },
   apollo: {
     order () {
@@ -114,6 +116,10 @@ export default {
         }
       }
     }
+  },
+  beforeRouteLeave (to, from, next) {
+    this.changeActiveToolbar(null)
+    next()
   }
 }
 </script>

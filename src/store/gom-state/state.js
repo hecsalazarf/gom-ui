@@ -1,3 +1,4 @@
 export default {
-  activeOrder: null
+  activeOrder: null,
+  activeToolbar: null
 }

@@ -3,7 +3,7 @@
     <q-header reveal :reveal-offset="100">
       <transition mode="out-in" leave-active-class="animated fadeOut">
         <component
-          :is="toolbar"
+          :is="activeToolbar"
           v-bind="toolbarProps"
           @action="dispatchToolbarEvent($event)"
         />
@@ -23,8 +23,10 @@
 
 <script>
 import { openURL } from 'quasar'
+import { createNamespacedHelpers } from 'vuex'
+const { mapGetters, mapActions } = createNamespacedHelpers('GomState')
+
 const MAIN_TOOLBAR = 'h-main-toolbar'
-const ORDER_TOOLBAR = 'h-order-toolbar'
 
 export default {
   name: 'GomLayout',
@@ -36,7 +38,7 @@ export default {
   data () {
     return {
       tab: 'orders',
-      toolbar: MAIN_TOOLBAR,
+      // toolbar: MAIN_TOOLBAR,
       toolbarProps: {}
     }
   },
@@ -55,21 +57,18 @@ export default {
     },
     dispatchViewEvent ({ method, params }) {
       this[method](params)
-    }
+    },
+    ...mapActions([
+      'changeActiveToolbar'
+    ])
   },
   computed: {
+    ...mapGetters([
+      'activeToolbar'
+    ])
   },
-  watch: {
-    $route (route) {
-      switch (route.name) {
-        case 'orderDetails':
-          this.toolbar = ORDER_TOOLBAR
-          break
-        default:
-          this.toolbar = MAIN_TOOLBAR
-          break
-      }
-    }
+  created () {
+    this.changeActiveToolbar('h-main-toolbar')
   }
 }
 </script>
