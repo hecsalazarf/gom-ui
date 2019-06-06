@@ -81,6 +81,9 @@ export default {
           }
         },
         update (data) {
+          if (Object.entries(data).length === 0) {
+            return {}
+          }
           this.changeActiveOrder(data.order.uid)
           this.items = data.order.items.edges.map(edge => {
             return {

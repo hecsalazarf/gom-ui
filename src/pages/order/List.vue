@@ -138,6 +138,9 @@ export default {
           }
         },
         update (data) {
+          if (Object.entries(data).length === 0) {
+            return []
+          }
           this.allOrders = data.user.orders.edges.map(edge => {
             return {
               data: {
