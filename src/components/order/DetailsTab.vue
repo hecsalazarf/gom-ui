@@ -1,33 +1,94 @@
 <template>
   <q-card bordered flat>
     <q-list bordered class="rounded-borders">
-       <q-expansion-item
+      <q-expansion-item
         expand-separator
-        icon="assistant_photo"
-        label="Resumen"
         default-opened
+        switch-toggle-side
         header-class="text-subtitle1 text-weight-medium text-primary"
       >
+        <template v-slot:header>
+          <q-item-section>Resumen</q-item-section>
+          <q-item-section side>
+            <div class="row row q-gutter-x-md">
+              <q-btn
+                icon="edit"
+                color="primary"
+                size="0.75em"
+                flat
+                dense
+                round
+                v-show="!editMode"
+                @click.stop="editMode = true"
+              >
+                <q-tooltip>Editar</q-tooltip>
+              </q-btn>
+              <q-btn
+                icon="clear"
+                color="red"
+                size="0.75em"
+                flat
+                dense
+                round
+                v-if="editMode"
+                @click.stop="clear()"
+              >
+                <q-tooltip>Cancelar</q-tooltip>
+              </q-btn>
+              <q-btn
+                icon="done"
+                color="teal"
+                size="0.75em"
+                flat
+                dense
+                round
+                v-if="editMode"
+                @click.stop="save()"
+              >
+                <q-tooltip>Guardar</q-tooltip>
+              </q-btn>
+            </div>
+          </q-item-section>
+        </template>
         <q-card>
-          <q-card-section>
-            <q-input dense label="Nombre del pedido" v-model="name" readonly borderless></q-input>
-            <q-select dense borderless label="Estado" v-model="status" :options="statusOptions" readonly>
-            </q-select>
-            <q-input dense label="Total" v-model="totalAmount" readonly borderless></q-input>
-          </q-card-section>
+          <q-form>
+            <q-card-section class=" q-gutter-y-xs">
+              <q-input
+                dense
+                standout="bg-blue-1"
+                input-class="text-black"
+                label="Nombre del pedido"
+                v-model="name"
+                :readonly="!editMode"
+                :borderless="!editMode"
+              />
+              <q-select
+                dense
+                color="red"
+                standout="bg-blue-1"
+                label="Estado"
+                v-model="status"
+                :options="statusOptions"
+                :readonly="!editMode"
+                :borderless="!editMode"
+              />
+              <q-input dense label="Total" v-model="totalAmount" readonly borderless/>
+            </q-card-section>
+          </q-form>
         </q-card>
       </q-expansion-item>
 
       <q-expansion-item
         expand-separator
         icon="perm_identity"
+        switch-toggle-side
         label="Cliente"
         default-opened
         header-class="text-subtitle1 text-weight-medium text-primary"
       >
         <q-card>
           <q-card-section>
-            <q-input dense label="Nombre" v-model="customer" readonly borderless></q-input>
+            <q-input dense label="Nombre" v-model="customer" readonly borderless/>
           </q-card-section>
         </q-card>
       </q-expansion-item>
@@ -35,16 +96,17 @@
       <q-expansion-item
         expand-separator
         icon="date_range"
+        switch-toggle-side
         label="Fechas"
         default-opened
         header-class="text-subtitle1 text-weight-medium text-primary"
       >
         <q-card>
           <q-card-section>
-            <q-input dense label="Pedido el" readonly borderless v-model="createdAt"></q-input>
+            <q-input dense label="Pedido el" readonly borderless v-model="createdAt"/>
           </q-card-section>
           <q-card-section>
-            <q-input dense label="Actualizado el" readonly borderless v-model="updatedAt"></q-input>
+            <q-input dense label="Actualizado el" readonly borderless v-model="updatedAt"/>
           </q-card-section>
         </q-card>
       </q-expansion-item>
@@ -71,15 +133,32 @@ export default {
         { label: 'Entregado', value: 'WON', icon: 'check' },
         { label: 'Cancelado', value: 'CLOSED', icon: 'cancel_presentation' },
         { label: 'En Proceso', value: 'IN_PROCESS', icon: 'input' }
-      ]
+      ],
+      editMode: false
+    }
+  },
+  methods: {
+    clear () {
+      // TODO Clear changes
+      console.log('clear')
+      this.editMode = false
+    },
+    save () {
+      // TODO Clear changes
+      console.log('save')
+      this.editMode = false
     }
   },
   computed: {
     customer () {
       const name1 = this.value.customer.name1 ? this.value.customer.name1 : ''
       const name2 = this.value.customer.name2 ? this.value.customer.name2 : ''
-      const lastName1 = this.value.customer.lastName1 ? this.value.customer.lastName1 : ''
-      const lastName2 = this.value.customer.lastName2 ? this.value.customer.lastName2 : ''
+      const lastName1 = this.value.customer.lastName1
+        ? this.value.customer.lastName1
+        : ''
+      const lastName2 = this.value.customer.lastName2
+        ? this.value.customer.lastName2
+        : ''
       return `${name1} ${name2} ${lastName1} ${lastName2}`.replace(/\s+/g, ' ')
     },
     createdAt () {
@@ -92,7 +171,9 @@ export default {
       return this.value.items.reduce((acc, item) => acc + item.data.price, 0)
     },
     status () {
-      return this.statusOptions.find(status => status.value === this.value.stage)
+      return this.statusOptions.find(
+        status => status.value === this.value.stage
+      )
     },
     name () {
       return this.value.name

@@ -4,9 +4,9 @@
     <q-toolbar-title>GOM</q-toolbar-title>
     <q-btn flat round>
       <q-menu>
-        <q-list dense>
+        <q-list>
           <q-item clickable v-close-popup @click="logout()">
-            <q-item-section>Salir</q-item-section>
+            <q-item-section class="text-body2">Salir</q-item-section>
           </q-item>
         </q-list>
       </q-menu>

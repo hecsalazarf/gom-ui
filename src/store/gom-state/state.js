@@ -1,4 +1,10 @@
 export default {
   activeOrder: null,
-  activeToolbar: null
+  activeOrderTab: null,
+  activeToolbar: null,
+  event: {
+    target: null,
+    method: null,
+    args: null
+  }
 }

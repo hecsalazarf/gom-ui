@@ -18,6 +18,9 @@
         />
       </q-list>
     </q-pull-to-refresh>
+    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+      <q-btn fab round color="accent" icon="add_shopping_cart" class="shadow-7"/>
+    </q-page-sticky>
   </q-page>
 </template>
 

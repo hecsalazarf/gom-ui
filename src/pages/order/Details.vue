@@ -19,7 +19,7 @@
 
         <q-tab-panels v-model="tab" animated swipeable keep-alive>
           <q-tab-panel name="items" class="q-gutter-y-md">
-            <h-order-item v-for="(item) in items" :key="item.id" v-model="item.data"/>
+            <h-order-item v-for="(item) in order.items" :key="item.id" v-model="item.data"/>
           </q-tab-panel>
 
           <q-tab-panel name="details">
@@ -28,6 +28,7 @@
         </q-tab-panels>
       </div>
     </div>
+    <h-new-item ref="newItem" v-if="newItem"/>
   </q-page>
 </template>
 
@@ -38,9 +39,10 @@
 import OrderDetails from 'src/graphql/queries/OrderDetails.gql'
 import { QSpinnerBars } from 'quasar'
 import { createNamespacedHelpers } from 'vuex'
-const { mapActions } = createNamespacedHelpers('GomState')
-// this.$store.dispatch('GomState/changeActiveOrder', '23')
+const { mapActions, mapGetters } = createNamespacedHelpers('GomState')
+
 export default {
+  name: 'HOrderDetails',
   props: {
     id: {
       type: String,
@@ -51,22 +53,58 @@ export default {
   data () {
     return {
       tab: 'items',
-      items: []
+      order: {
+        items: [] // initialize items to avoid undefined errors
+      },
+      newItem: false
     }
   },
-  name: 'PageOrders',
   components: {
     'h-order-item': () => import('components/order/Item.vue'),
-    'h-order-details-tab': () => import('components/order/DetailsTab.vue')
+    'h-order-details-tab': () => import('components/order/DetailsTab.vue'),
+    'h-new-item': () => import('components/order/NewItem.vue')
   },
   methods: {
+    save () {
+    },
+    cancel () {
+      console.log()
+    },
+    addItem () {
+      this.$refs.newItem.show()
+      console.log('addItem')
+    },
     ...mapActions([
       'changeActiveOrder',
-      'changeActiveToolbar'
+      'changeActiveToolbar',
+      'changeActiveOrderTab'
     ])
   },
   created () {
+    /* this.$store.subscribeAction((action, state) => {
+      if (action.type === 'GomState/emitEvent' &&
+      action.payload.target === this.$options.name &&
+      this[action.payload.method]
+      ) {
+        this[action.payload.method](action.payload.args)
+      }
+    }) */
+    setTimeout(() => { this.newItem = !this.newItem }, 500)
     this.changeActiveToolbar('h-order-toolbar')
+    this.changeActiveOrderTab(this.tab)
+  },
+  watch: {
+    tab (newVal, oldVal) {
+      this.changeActiveOrderTab(newVal)
+    },
+    event (evt) {
+      if (evt.target === this.$options.name && this[evt.method]) this[evt.method](evt.args)
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'event'
+    ])
   },
   apollo: {
     order () {
@@ -85,7 +123,7 @@ export default {
             return {}
           }
           this.changeActiveOrder(data.order.uid)
-          this.items = data.order.items.edges.map(edge => {
+          const items = data.order.items.edges.map(edge => {
             return {
               data: {
                 id: edge.node.uid,
@@ -100,7 +138,7 @@ export default {
 
           return {
             id: data.order.uid,
-            items: this.items,
+            items,
             stage: data.order.stage,
             name: data.order.name,
             createdAt: data.order.createdAt,

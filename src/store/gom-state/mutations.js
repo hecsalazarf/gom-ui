@@ -9,3 +9,11 @@ export function setActiveToolbar (state, toolbar) {
     state.activeToolbar = 'h-main-toolbar' // if null, set default one
   }
 }
+
+export function setActiveOrderTab (state, orderTab) {
+  state.activeOrderTab = orderTab
+}
+
+export function setEvent (state, event) {
+  state.event = event
+}

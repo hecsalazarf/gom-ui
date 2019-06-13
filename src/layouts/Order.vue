@@ -13,15 +13,18 @@
         @selected="setToolbarProps('h-selection-toolbar', $event)"
       />
     </transition>
-    <q-page-sticky position="bottom-right" :offset="[18, 18]">
-      <q-btn round color="accent" :icon="floatingButton" class="shadow-7"/>
-    </q-page-sticky>
+    <!-- <q-page-sticky position="bottom-right" :offset="[18, 18]">
+      <q-btn round color="accent" :icon="floatingButton" class="shadow-7" @click="dispatchFloatinAction()" />
+    </q-page-sticky> -->
   </q-page-container>
 </template>
 
 <script>
+/* import { createNamespacedHelpers } from 'vuex'
+const { mapActions, mapGetters } = createNamespacedHelpers('GomState') */
+
 export default {
-  // name: 'LayoutName',
+  name: 'OrderLayout',
   methods: {
     dispatch ({ method, params }) {
       this.$refs.orders[method](method)
@@ -40,7 +43,17 @@ export default {
         method: 'setToolbarProps',
         params: { name: toolbar, props: props }
       })
-    }
+    }/* ,
+    dispatchFloatinAction () {
+      switch (this.$route.name) {
+        case 'orderDetails':
+          this.enableEditMode(!this.editMode)
+          break
+      }
+    },
+    ...mapActions([
+      'enableEditMode'
+    ]) */
   },
   computed: {
     enterActiveClass () {
@@ -53,7 +66,10 @@ export default {
     },
     floatingButton () {
       return this.$route.name === 'orders' ? 'add_shopping_cart' : 'edit'
-    }
+    }/* ,
+    ...mapGetters([
+      'editMode'
+    ]) */
   }
 }
 </script>

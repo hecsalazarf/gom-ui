@@ -5,3 +5,11 @@ export function activeOrder (state) {
 export function activeToolbar (state) {
   return state.activeToolbar
 }
+
+export function activeOrderTab (state) {
+  return state.activeOrderTab
+}
+
+export function event (state) {
+  return state.event
+}

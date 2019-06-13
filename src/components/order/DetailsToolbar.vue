@@ -15,19 +15,32 @@
       <div class="col text-subtitle2 text-weight-regular">{{customer}}</div>
     </div>
     <q-space />
-    <q-btn flat dense icon="more_horiz"/>
+    <q-btn flat dense icon="more_horiz">
+      <q-menu>
+        <q-list>
+          <q-item clickable v-close-popup v-if="activeOrderTab === 'items'" @click="emitEvent({target: 'HOrderDetails', method: 'addItem'})">
+            <q-item-section class="text-body2">Agregar artículo</q-item-section>
+          </q-item>
+        </q-list>
+      </q-menu>
+    </q-btn>
   </q-toolbar>
 </template>
 
 <script>
 import OrderDetails from 'src/graphql/queries/OrderDetails.gql'
 import { createNamespacedHelpers } from 'vuex'
-const { mapGetters } = createNamespacedHelpers('GomState')
+const { mapGetters, mapActions } = createNamespacedHelpers('GomState')
 
 export default {
   name: 'OrderToolbar',
   data () {
     return {}
+  },
+  methods: {
+    ...mapActions([
+      'emitEvent'
+    ])
   },
   computed: {
     order () {
@@ -79,7 +92,8 @@ export default {
       return name
     },
     ...mapGetters([
-      'activeOrder'
+      'activeOrder',
+      'activeOrderTab'
     ])
   }
 }
