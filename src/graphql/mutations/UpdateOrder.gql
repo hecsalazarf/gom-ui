@@ -1,0 +1,10 @@
+###### Update order #########
+mutation UpdateOrder($id: String!, $data: OrderUpdateInp!) {
+	updateOrder(id: $id, data: $data) {
+    uid
+    name
+    stage
+    createdAt
+    updatedAt
+  }
+}

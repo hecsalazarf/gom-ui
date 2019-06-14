@@ -23,7 +23,7 @@
           </q-tab-panel>
 
           <q-tab-panel name="details">
-            <h-order-details-tab v-model="order"/>
+            <h-order-details-tab :value="order"/>
           </q-tab-panel>
         </q-tab-panels>
       </div>

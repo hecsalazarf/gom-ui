@@ -116,6 +116,11 @@
 
 <script>
 import { date } from 'quasar'
+import UpdateOrder from 'src/graphql/mutations/UpdateOrder.gql'
+import OrderDetails from 'src/graphql/queries/OrderDetails.gql'
+import { createNamespacedHelpers } from 'vuex'
+const { mapActions } = createNamespacedHelpers('GomState')
+
 export default {
   name: 'HOrderDetailsTab',
   props: {
@@ -134,49 +139,105 @@ export default {
         { label: 'Cancelado', value: 'CLOSED', icon: 'cancel_presentation' },
         { label: 'En Proceso', value: 'IN_PROCESS', icon: 'input' }
       ],
-      editMode: false
+      editMode: false,
+      order: { ...this.value },
+      data: {} // mutation variable
+    }
+  },
+  watch: {
+    value (newVal) {
+      this.order = { ...this.value }
     }
   },
   methods: {
+    updateCache (cache, { data: { updateOrder } }) {
+      try {
+        let cachedOrder = cache.readQuery({
+          query: OrderDetails,
+          variables: {
+            id: this.order.id
+          }
+        })
+        cachedOrder.order = { ...cachedOrder.order, ...updateOrder }
+        cache.writeQuery({
+          query: OrderDetails,
+          variables: {
+            id: this.order.id
+          },
+          data: cachedOrder
+        })
+      } catch (err) {
+        console.err(err)
+      }
+    },
     clear () {
-      // TODO Clear changes
-      console.log('clear')
-      this.editMode = false
+      this.order = { ...this.value } // revert changes
+      this.data = {} // reset temporary changes
+      this.editMode = false // disable edit mode
     },
     save () {
-      // TODO Clear changes
-      console.log('save')
-      this.editMode = false
-    }
+      this.$apollo.mutate({
+        mutation: UpdateOrder,
+        variables: { id: this.order.id, data: this.data },
+        context: {
+          headers: {
+            'X-Csrf-Token': this.$q.cookies.get('csrf-token')
+          }
+        },
+        update: this.updateCache
+      }).then(res => {
+        this.editMode = false
+        this.$q.notify({ color: 'positive', message: 'Cambios guardados', icon: 'check_circle' })
+      }).catch(err => {
+        this.$q.notify({ color: 'negative', message: 'No pudimos guardar los cambios :(', icon: 'report_problem' })
+        if (err.graphQLErrors.length > 0) console.error(err.graphQLErrors)
+        else console.log(err)
+      })
+    },
+    ...mapActions([
+      'emitEvent'
+    ])
   },
   computed: {
     customer () {
-      const name1 = this.value.customer.name1 ? this.value.customer.name1 : ''
-      const name2 = this.value.customer.name2 ? this.value.customer.name2 : ''
-      const lastName1 = this.value.customer.lastName1
-        ? this.value.customer.lastName1
+      const name1 = this.order.customer.name1 ? this.order.customer.name1 : ''
+      const name2 = this.order.customer.name2 ? this.order.customer.name2 : ''
+      const lastName1 = this.order.customer.lastName1
+        ? this.order.customer.lastName1
         : ''
-      const lastName2 = this.value.customer.lastName2
-        ? this.value.customer.lastName2
+      const lastName2 = this.order.customer.lastName2
+        ? this.order.customer.lastName2
         : ''
       return `${name1} ${name2} ${lastName1} ${lastName2}`.replace(/\s+/g, ' ')
     },
     createdAt () {
-      return date.formatDate(this.value.createdAt, 'DD/MM/YYYY HH:mm:ss')
+      return date.formatDate(this.order.createdAt, 'DD/MM/YYYY HH:mm:ss')
     },
     updatedAt () {
-      return date.formatDate(this.value.updatedAt, 'DD/MM/YYYY HH:mm:ss')
+      return date.formatDate(this.order.updatedAt, 'DD/MM/YYYY HH:mm:ss')
     },
     totalAmount () {
-      return this.value.items.reduce((acc, item) => acc + item.data.price, 0)
+      return this.order.items.reduce((acc, item) => acc + item.data.price, 0)
     },
-    status () {
-      return this.statusOptions.find(
-        status => status.value === this.value.stage
-      )
+    status: {
+      get () {
+        return this.statusOptions.find(
+          status => status.value === this.order.stage
+        )
+      },
+      set (status) {
+        this.data.stage = status.value
+        this.order.stage = status.value
+      }
     },
-    name () {
-      return this.value.name
+    name: {
+      get () {
+        return this.order.name
+      },
+      set (name) {
+        this.data.name = name
+        this.order.name = name
+      }
     }
   }
 }
