@@ -28,7 +28,7 @@
 </style>
 
 <script>
-import QueryUserOrders from 'src/graphql/queries/UserOrders.gql'
+import UserOrders from 'src/graphql/queries/UserOrders.gql'
 import { Auth } from 'src/helpers'
 import { QSpinnerBars } from 'quasar'
 
@@ -131,7 +131,7 @@ export default {
   apollo: {
     orders () {
       return {
-        query: QueryUserOrders,
+        query: UserOrders,
         error: err => {
           console.log(err)
         },

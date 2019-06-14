@@ -65,14 +65,8 @@ export default {
     'h-new-item': () => import('components/order/NewItem.vue')
   },
   methods: {
-    save () {
-    },
-    cancel () {
-      console.log()
-    },
     addItem () {
       this.$refs.newItem.show()
-      console.log('addItem')
     },
     ...mapActions([
       'changeActiveOrder',
