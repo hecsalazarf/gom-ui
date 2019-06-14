@@ -89,9 +89,10 @@ export default {
         this[action.payload.method](action.payload.args)
       }
     }) */
-    setTimeout(() => { this.newItem = !this.newItem }, 500)
+    this.changeActiveOrder(this.id)
     this.changeActiveToolbar('h-order-toolbar')
     this.changeActiveOrderTab(this.tab)
+    setTimeout(() => { this.newItem = !this.newItem }, 500)
   },
   watch: {
     tab (newVal, oldVal) {
@@ -122,7 +123,6 @@ export default {
           if (Object.entries(data).length === 0) {
             return {}
           }
-          this.changeActiveOrder(data.order.uid)
           const items = data.order.items.edges.map(edge => {
             return {
               data: {
