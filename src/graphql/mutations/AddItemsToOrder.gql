@@ -1,0 +1,29 @@
+###### Add items to order #########
+mutation AddItemToOrder($id: String!, $data: OrderUpdateInp!) {
+	updateOrder(id: $id, data: $data) {
+    items {
+      edges {
+        node {
+          uid
+          code
+          quantity
+          description
+          provider
+          pricing {
+            edges {
+              node {
+                uid
+                amount
+                currency
+              }
+              props {
+                type
+              }
+            }
+          }
+        }
+      }
+    }
+    updatedAt
+  }
+}

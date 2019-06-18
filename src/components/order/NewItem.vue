@@ -8,7 +8,7 @@
     ref="dialog"
   >
     <q-card bordered flat class="q-gutter-y-sm">
-      <q-form @submit="save()" @reset="cancel()" class="q-gutter-y-xs">
+      <q-form @submit="save()" @reset="clear()" class="q-gutter-y-xs">
         <q-item dense>
           <q-item-section class="q-gutter-y-xs">
             <q-input
@@ -16,29 +16,54 @@
               standout="bg-blue-1"
               dense
               label="Descripción"
+              v-model="model.description"
             />
             <q-input
               input-class="text-caption text-black"
               standout="bg-blue-1"
               dense
               label="Código"
+              v-model="model.code"
             />
           </q-item-section>
         </q-item>
         <q-separator inset/>
         <q-item>
           <q-item-section class="q-gutter-y-xs">
-            <q-input standout="bg-blue-1" input-class="text-black" dense label="Precio">
+            <q-input
+              standout="bg-blue-1"
+              input-class="text-black"
+              dense
+              label="Precio"
+              type="number"
+              step="0.01"
+              min="0"
+              v-model="model.price"
+            >
               <template v-slot:prepend>
                 <q-icon name="monetization_on" color="primary"/>
               </template>
             </q-input>
-            <q-input dense standout="bg-blue-1" input-class="text-black" label="Cantidad">
+            <q-input
+              dense
+              standout="bg-blue-1"
+              input-class="text-black"
+              label="Cantidad"
+              type="number"
+              min="1"
+              v-model="model.quantity"
+            >
               <template v-slot:prepend>
                 <q-icon name="format_list_numbered" color="primary"/>
               </template>
             </q-input>
-            <q-input dense standout="bg-blue-1" input-class="text-black" label="Marca">
+            <q-input
+              dense
+              standout="bg-blue-1"
+              input-class="text-black"
+              label="Marca"
+              v-model="model.provider"
+            >
               <template v-slot:prepend>
                 <q-icon name="stars" color="primary"/>
               </template>
@@ -60,25 +85,126 @@
 </template>
 
 <script>
+import AddItemsToOrder from 'src/graphql/mutations/AddItemsToOrder.gql'
+import OrderDetails from 'src/graphql/queries/OrderDetails.gql'
+import { createNamespacedHelpers } from 'vuex'
+const { mapGetters } = createNamespacedHelpers('GomState')
+
 export default {
   name: 'HNewItem',
   data () {
     return {
-      isShown: false
+      isShown: false,
+      model: {
+        description: '',
+        code: '',
+        price: 0,
+        quantity: 1,
+        provider: ''
+      }
     }
   },
   methods: {
     show () {
       this.isShown = true
     },
-    cancel () {
+    clear () {
       this.isShown = false
-      console.log('cancelItem')
+      this.model = {
+        description: '',
+        code: '',
+        price: 0,
+        quantity: 1,
+        provider: ''
+      }
     },
     save () {
+      this.$apollo
+        .mutate({
+          mutation: AddItemsToOrder,
+          variables: { id: this.activeOrder, data: this.itemData },
+          context: {
+            headers: {
+              'X-Csrf-Token': this.$q.cookies.get('csrf-token')
+            }
+          },
+          update: this.updateCache
+        }).then(res => this.onSuccess(res)).catch(err => this.onError(err))
+    },
+    updateCache (cache, { data }) {
+      try {
+        // Read order details cache
+        let cached = cache.readQuery({
+          query: OrderDetails,
+          variables: {
+            id: this.activeOrder
+          }
+        })
+
+        cached.order.items.edges = data.updateOrder.items.edges
+        cached.order.updatedAt = data.updateOrder.updatedAt
+        // Update order details cache
+        cache.writeQuery({
+          query: OrderDetails,
+          variables: {
+            id: this.activeOrder
+          },
+          data: cached
+        })
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    onSuccess (response) {
       this.isShown = false
-      console.log('saveItem')
+      this.$q.notify({
+        color: 'positive',
+        message: 'Cambios guardados',
+        icon: 'check_circle'
+      })
+    },
+    onError (error) {
+      console.log(error)
+      this.$q.notify({
+        color: 'negative',
+        message: 'No pudimos guardar los cambios :(',
+        icon: 'report_problem'
+      })
+      if (error.graphQLErrors.length > 0) console.error(error.graphQLErrors)
+      else console.log(error)
     }
+  },
+  computed: {
+    itemData () {
+      return {
+        edges: {
+          items: [
+            {
+              node: {
+                code: this.model.code,
+                quantity: this.model.quantity,
+                description: this.model.description,
+                provider: this.model.provider,
+                edges: {
+                  pricing: [
+                    {
+                      node: {
+                        amount: parseFloat(this.model.price),
+                        currency: 'MXN' // default
+                      },
+                      props: {
+                        type: 'GENERAL'
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    ...mapGetters(['activeOrder'])
   }
 }
 </script>
