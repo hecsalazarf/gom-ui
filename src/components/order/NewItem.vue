@@ -17,6 +17,10 @@
               dense
               label="Descripción"
               v-model="model.description"
+              type="text"
+              maxlength="40"
+              :rules="[ val => !!val || '* Campo obligatorio', val => val.length <= 40 || 'Máximo 40 caracteres' ]"
+              hide-bottom-space
             />
             <q-input
               input-class="text-caption text-black"
@@ -24,6 +28,10 @@
               dense
               label="Código"
               v-model="model.code"
+              type="text"
+              maxlength="15"
+              :rules="[ val => val.length <= 15 || 'Máximo 15 caracteres' ]"
+              hide-bottom-space
             />
           </q-item-section>
         </q-item>
@@ -39,6 +47,8 @@
               step="0.01"
               min="0"
               v-model="model.price"
+              :rules="[ val => !!val || '* Campo obligatorio', val => val < 100000 || 'Ups, muy caro', /* val => !isNaN(parseFloat(val)) && isFinite(val) || 'Sólo números' */]"
+              hide-bottom-space
             >
               <template v-slot:prepend>
                 <q-icon name="monetization_on" color="primary"/>
@@ -52,6 +62,8 @@
               type="number"
               min="1"
               v-model="model.quantity"
+              :rules="[ val => val > 0 || 'Debe haber al menos 1', val => val < 10000 || 'Es demasiado' ]"
+              hide-bottom-space
             >
               <template v-slot:prepend>
                 <q-icon name="format_list_numbered" color="primary"/>
@@ -63,6 +75,10 @@
               input-class="text-black"
               label="Marca"
               v-model="model.provider"
+              type="text"
+              maxlength="20"
+              :rules="[ val => val.length <= 20 || 'Máximo 20 caracteres' ]"
+              hide-bottom-space
             >
               <template v-slot:prepend>
                 <q-icon name="stars" color="primary"/>

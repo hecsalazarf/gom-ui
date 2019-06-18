@@ -43,7 +43,7 @@
                 dense
                 round
                 v-if="editMode"
-                @click.stop="save()"
+                @click.stop="$refs.form.validate(true).then(out => { if(out) save() })"
               >
                 <q-tooltip>Guardar</q-tooltip>
               </q-btn>
@@ -51,7 +51,7 @@
           </q-item-section>
         </template>
         <q-card>
-          <q-form>
+          <q-form ref="form">
             <q-card-section class=" q-gutter-y-xs">
               <q-input
                 dense
@@ -61,6 +61,10 @@
                 v-model="name"
                 :readonly="!editMode"
                 :borderless="!editMode"
+                type="text"
+                maxlength="40"
+                :rules="[ val => !!val || '* Campo obligatorio', val => val.length <= 40 || 'Máximo 40 caracteres' ]"
+                hide-bottom-space
               />
               <q-select
                 dense

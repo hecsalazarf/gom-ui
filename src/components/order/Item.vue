@@ -10,6 +10,10 @@
             v-model="description"
             :readonly="!editMode"
             :borderless="!editMode"
+            type="text"
+            maxlength="40"
+            :rules="[ val => !!val || '* Campo obligatorio', val => val.length <= 40 || 'Máximo 40 caracteres' ]"
+            hide-bottom-space
           />
           <q-input
             input-class="text-caption text-black"
@@ -18,6 +22,10 @@
             v-model="code"
             :readonly="!editMode"
             :borderless="!editMode"
+            type="text"
+            maxlength="15"
+            :rules="[ val => val.length <= 15 || 'Máximo 15 caracteres' ]"
+            hide-bottom-space
           />
         </q-item-section>
         <q-item-section side>
@@ -86,6 +94,8 @@
             v-model="price"
             :readonly="!editMode"
             :borderless="!editMode"
+            :rules="[ val => !!val || '* Campo obligatorio', val => val < 100000 || 'Ups, muy caro', /* val => !isNaN(parseFloat(val)) && isFinite(val) || 'Sólo números' */]"
+            hide-bottom-space
           >
             <template v-slot:prepend>
               <q-icon name="monetization_on" color="primary"/>
@@ -99,6 +109,9 @@
             v-model="quantity"
             :readonly="!editMode"
             :borderless="!editMode"
+            type="number"
+            :rules="[ val => val > 0 || 'Debe haber al menos 1', val => val < 10000 || 'Es demasiado' ]"
+            hide-bottom-space
           >
             <template v-slot:prepend>
               <q-icon name="format_list_numbered" color="primary"/>
@@ -112,6 +125,10 @@
             v-model="provider"
             :readonly="!editMode"
             :borderless="!editMode"
+            type="text"
+            maxlength="20"
+            :rules="[ val => val.length <= 20 || 'Máximo 20 caracteres' ]"
+            hide-bottom-space
           >
             <template v-slot:prepend>
               <q-icon name="stars" color="primary"/>
@@ -167,17 +184,25 @@ export default {
         const items = cached.order.items.edges
         const index = items.findIndex(({ node }) => node.uid === this.item.id)
 
-        if (data.updateItem) { // item data
+        if (data.updateItem) {
+          // item data
           items[index].node = { ...items[index].node, ...data.updateItem }
         }
 
-        if (data.updatePrice) { // pricing data
+        if (data.updatePrice) {
+          // pricing data
           const pricing = items[index].node.pricing.edges
-          const iprice = pricing.findIndex(({ node }) => node.uid === this.edges.pricing.id)
-          pricing[iprice].node = { ...pricing[iprice].node, ...data.updatePrice }
+          const iprice = pricing.findIndex(
+            ({ node }) => node.uid === this.edges.pricing.id
+          )
+          pricing[iprice].node = {
+            ...pricing[iprice].node,
+            ...data.updatePrice
+          }
         }
 
-        if (data.removeItems) { // item removal
+        if (data.removeItems) {
+          // item removal
           items.splice(index, 1)
         }
 
@@ -204,7 +229,9 @@ export default {
             }
           },
           update: this.updateCache
-        }).then(res => this.onSuccess(res)).catch(err => this.onError(err))
+        })
+        .then(res => this.onSuccess(res))
+        .catch(err => this.onError(err))
     },
     clear () {
       this.item = JSON.parse(JSON.stringify(this.value)) // revert changes
@@ -220,33 +247,33 @@ export default {
       if (Object.entries(this.edges).length > 0 && this.edges.pricing) {
         promises.push(this.savePrice())
       }
-      Promise.all(promises).then(res => this.onSuccess(res)).catch(err => this.onError(err))
+      Promise.all(promises)
+        .then(res => this.onSuccess(res))
+        .catch(err => this.onError(err))
     },
     saveItem () {
-      return this.$apollo
-        .mutate({
-          mutation: UpdateItem,
-          variables: { id: this.item.id, data: this.data },
-          context: {
-            headers: {
-              'X-Csrf-Token': this.$q.cookies.get('csrf-token')
-            }
-          },
-          update: this.updateCache
-        })
+      return this.$apollo.mutate({
+        mutation: UpdateItem,
+        variables: { id: this.item.id, data: this.data },
+        context: {
+          headers: {
+            'X-Csrf-Token': this.$q.cookies.get('csrf-token')
+          }
+        },
+        update: this.updateCache
+      })
     },
     savePrice () {
-      return this.$apollo
-        .mutate({
-          mutation: UpdatePrice,
-          variables: { id: this.edges.pricing.id, data: this.edges.pricing.data },
-          context: {
-            headers: {
-              'X-Csrf-Token': this.$q.cookies.get('csrf-token')
-            }
-          },
-          update: this.updateCache
-        })
+      return this.$apollo.mutate({
+        mutation: UpdatePrice,
+        variables: { id: this.edges.pricing.id, data: this.edges.pricing.data },
+        context: {
+          headers: {
+            'X-Csrf-Token': this.$q.cookies.get('csrf-token')
+          }
+        },
+        update: this.updateCache
+      })
     },
     onSuccess (response) {
       this.editMode = false
@@ -349,4 +376,5 @@ export default {
 </script>
 
 <style>
+
 </style>
