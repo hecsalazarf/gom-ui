@@ -7,10 +7,11 @@ query ReadOrder($id: String!) {
           code
           quantity
           description
-          provider,
+          provider
           pricing {
             edges {
               node {
+                uid
                 amount
                 currency
               }

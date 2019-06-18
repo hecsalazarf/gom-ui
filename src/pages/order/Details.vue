@@ -125,7 +125,7 @@ export default {
                 description: edge.node.description,
                 provider: edge.node.provider,
                 quantity: edge.node.quantity,
-                price: edge.node.pricing.edges[0].node.amount
+                price: edge.node.pricing.edges[0].node
               }
             }
           })

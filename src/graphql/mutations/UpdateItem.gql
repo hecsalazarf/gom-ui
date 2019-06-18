@@ -1,0 +1,10 @@
+###### Update item #########
+mutation UpdateItem($id: String!, $data: ItemMutationInp!) {
+	updateItem(id: $id, data: $data) {
+    uid
+  	code
+    quantity
+    description
+    provider
+  }
+}

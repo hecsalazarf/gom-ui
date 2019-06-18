@@ -80,6 +80,8 @@
             standout="bg-blue-1"
             input-class="text-black"
             dense
+            type="number"
+            step="0.01"
             label="Precio"
             v-model="price"
             :readonly="!editMode"
@@ -122,6 +124,12 @@
 </template>
 
 <script>
+import UpdateItem from 'src/graphql/mutations/UpdateItem.gql'
+import UpdatePrice from 'src/graphql/mutations/UpdatePrice.gql'
+import OrderDetails from 'src/graphql/queries/OrderDetails.gql'
+import { createNamespacedHelpers } from 'vuex'
+const { mapGetters } = createNamespacedHelpers('GomState')
+
 export default {
   name: 'HOrderItem',
   props: {
@@ -133,20 +141,114 @@ export default {
   },
   data () {
     return {
-      editMode: false
+      editMode: false,
+      data: {},
+      edges: {},
+      // naive deep copy, for more complex one, use a differente approach
+      item: JSON.parse(JSON.stringify(this.value))
+    }
+  },
+  watch: {
+    value (val) {
+      this.item = JSON.parse(JSON.stringify(val))
     }
   },
   methods: {
+    updateCache (cache, { data }) {
+      try {
+        // Read order details cache
+        let cached = cache.readQuery({
+          query: OrderDetails,
+          variables: {
+            id: this.activeOrder
+          }
+        })
+        const items = cached.order.items.edges
+        const index = items.findIndex(({ node }) => node.uid === this.item.id)
+
+        if (data.updateItem) { // item data
+          items[index].node = { ...items[index].node, ...data.updateItem }
+        }
+
+        if (data.updatePrice) { // pricing data
+          const pricing = items[index].node.pricing.edges
+          const iprice = pricing.findIndex(({ node }) => node.uid === this.edges.pricing.id)
+          pricing[iprice].node = { ...pricing[iprice].node, ...data.updatePrice }
+        }
+        // Update order details cache
+        cache.writeQuery({
+          query: OrderDetails,
+          variables: {
+            id: this.activeOrder
+          },
+          data: cached
+        })
+      } catch (err) {
+        console.log(err)
+      }
+    },
     deleteIt () {
       console.log('delete')
     },
     clear () {
-      console.log('clear')
-      this.editMode = false
+      this.item = JSON.parse(JSON.stringify(this.value)) // revert changes
+      this.data = {} // reset temporary changes
+      this.edges = {}
+      this.editMode = false // disable edit mode
     },
     save () {
-      console.log('save')
+      let promises = []
+      if (Object.entries(this.data).length > 0) {
+        promises.push(this.saveItem())
+      }
+      if (Object.entries(this.edges).length > 0 && this.edges.pricing) {
+        promises.push(this.savePrice())
+      }
+      Promise.all(promises).then(res => this.onSuccess(res)).catch(err => this.onError(err))
+    },
+    saveItem () {
+      return this.$apollo
+        .mutate({
+          mutation: UpdateItem,
+          variables: { id: this.item.id, data: this.data },
+          context: {
+            headers: {
+              'X-Csrf-Token': this.$q.cookies.get('csrf-token')
+            }
+          },
+          update: this.updateCache
+        })
+    },
+    savePrice () {
+      return this.$apollo
+        .mutate({
+          mutation: UpdatePrice,
+          variables: { id: this.edges.pricing.id, data: this.edges.pricing.data },
+          context: {
+            headers: {
+              'X-Csrf-Token': this.$q.cookies.get('csrf-token')
+            }
+          },
+          update: this.updateCache
+        })
+    },
+    onSuccess (response) {
       this.editMode = false
+      this.$q.notify({
+        color: 'positive',
+        message: 'Cambios guardados',
+        icon: 'check_circle'
+      })
+    },
+    onError (error) {
+      console.log(error)
+      this.$q.notify({
+        color: 'negative',
+        message: 'No pudimos guardar los cambios :(',
+        icon: 'report_problem'
+      })
+      if (error.graphQLErrors.length > 0) console.error(error.graphQLErrors)
+      else console.log(error)
     },
     confirmDelete () {
       this.$q
@@ -174,21 +276,58 @@ export default {
     }
   },
   computed: {
-    code () {
-      return this.value.code
+    code: {
+      get () {
+        return this.item.code
+      },
+      set (code) {
+        this.data.code = code
+        this.item.code = code
+      }
     },
-    quantity () {
-      return this.value.quantity
+    quantity: {
+      get () {
+        return this.item.quantity
+      },
+      set (quantity) {
+        this.data.quantity = quantity
+        this.item.quantity = quantity
+      }
     },
-    description () {
-      return this.value.description
+    description: {
+      get () {
+        return this.item.description
+      },
+      set (description) {
+        this.data.description = description
+        this.item.description = description
+      }
     },
-    provider () {
-      return this.value.provider
+    provider: {
+      get () {
+        return this.item.provider
+      },
+      set (provider) {
+        this.data.provider = provider
+        this.item.provider = provider
+      }
     },
-    price () {
-      return this.value.price
-    }
+    price: {
+      get () {
+        return this.item.price.amount
+      },
+      set (amount) {
+        this.edges.pricing = {
+          data: {
+            amount: parseFloat(amount),
+            currency: 'MXN' // default
+          },
+          id: this.item.price.uid
+        }
+        this.item.price.amount = amount
+      }
+    },
+    ...mapGetters(['activeOrder'])
   }
 }
 </script>
