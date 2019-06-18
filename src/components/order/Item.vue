@@ -127,6 +127,7 @@
 import UpdateItem from 'src/graphql/mutations/UpdateItem.gql'
 import UpdatePrice from 'src/graphql/mutations/UpdatePrice.gql'
 import OrderDetails from 'src/graphql/queries/OrderDetails.gql'
+import RemoveItems from 'src/graphql/mutations/RemoveItems.gql'
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters } = createNamespacedHelpers('GomState')
 
@@ -175,6 +176,11 @@ export default {
           const iprice = pricing.findIndex(({ node }) => node.uid === this.edges.pricing.id)
           pricing[iprice].node = { ...pricing[iprice].node, ...data.updatePrice }
         }
+
+        if (data.removeItems) { // item removal
+          items.splice(index, 1)
+        }
+
         // Update order details cache
         cache.writeQuery({
           query: OrderDetails,
@@ -188,7 +194,17 @@ export default {
       }
     },
     deleteIt () {
-      console.log('delete')
+      this.$apollo
+        .mutate({
+          mutation: RemoveItems,
+          variables: { orderId: this.activeOrder, items: [this.item.id] },
+          context: {
+            headers: {
+              'X-Csrf-Token': this.$q.cookies.get('csrf-token')
+            }
+          },
+          update: this.updateCache
+        }).then(res => this.onSuccess(res)).catch(err => this.onError(err))
     },
     clear () {
       this.item = JSON.parse(JSON.stringify(this.value)) // revert changes
