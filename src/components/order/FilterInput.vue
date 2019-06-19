@@ -122,7 +122,7 @@ export default {
 }
 </script>
 
-<style lang="stylus">
-.h-filter-input
+<style scoped lang="stylus">
+/deep/ .h-filter-input
   color: $primary
 </style>
