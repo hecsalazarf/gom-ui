@@ -6,7 +6,7 @@
       </q-item-section>
     </q-item>
     <div class="h-rounded-borders-20 bg-blue-1">
-      <h-contact-item :separator="false"/>
+      <h-contact-item :separator="index < value.length - 1" v-for="(contact, index) in value" :key="contact.data.id" v-model="contact.data"/>
     </div>
   </div>
 </template>
@@ -18,6 +18,11 @@ export default {
     name: {
       type: String,
       default: 'GroupName'
+    },
+    value: {
+      type: Array,
+      default: () => [],
+      required: true
     }
   },
   components: {

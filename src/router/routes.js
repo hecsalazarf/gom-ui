@@ -15,18 +15,27 @@ const routes = [
             component: () => import('pages/order/List.vue')
           },
           {
-            path: 'order/:id',
+            path: 'id/:id',
             name: 'orderDetails',
             component: () => import('pages/order/Details.vue'),
             props: true
           },
           {
-            path: 'order',
+            path: 'id',
             redirect: { name: 'orders' }
           }
         ]
       },
-      { path: 'customers', name: 'customers', component: () => import('pages/customers/Customers.vue') }
+      { path: 'customers',
+        component: () => import('layouts/Customer.vue'),
+        children: [
+          {
+            path: '',
+            name: 'customers',
+            component: () => import('pages/customer/List.vue')
+          }
+        ]
+      }
     ]
   },
   {

@@ -3,10 +3,10 @@
     <q-slide-item>
       <q-item clickable v-ripple>
         <q-item-section avatar>
-          <q-avatar color="primary" text-color="white">{{avatarChar}}</q-avatar>
+          <q-avatar color="primary" text-color="white">{{value.charName}}</q-avatar>
         </q-item-section>
         <q-item-section>
-          <q-item-label class="text-subtitle1">Ale Perex</q-item-label>
+          <q-item-label class="text-subtitle1">{{value.name}}</q-item-label>
         </q-item-section>
       </q-item>
     </q-slide-item>
@@ -25,6 +25,10 @@ export default {
     'avatar-char': {
       type: String,
       default: 'AC'
+    },
+    value: {
+      type: Object,
+      default: () => {}
     }
   },
   data () {
