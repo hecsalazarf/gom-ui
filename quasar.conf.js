@@ -48,6 +48,7 @@ module.exports = function (ctx) {
         'QPageSticky',
         'QMenu',
         'QList',
+        'QSlideItem',
         'QItem',
         'QItemSection',
         'QItemLabel',
