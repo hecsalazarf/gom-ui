@@ -11,14 +11,6 @@
   .q-menu > .q-list
     min-width: 20vw
 
-/*****************************
-***** LOGIN PAGE STYLES ******
-*****************************/
-@media (min-width: $sizes.xs) and (max-width: $breakpoint-xs)
-  .h-login
-    min-height: 70vh
-
-@media (min-width: $sizes.sm)
-  .h-login
-    min-height: 90vh
-
+/* Input textfield */
+.q-field--standout.q-field--focused .q-field__control
+  background: $blue-1 // Override default error color on standout fields
