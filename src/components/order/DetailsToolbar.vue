@@ -4,7 +4,7 @@
     <q-avatar rounded size="2.5em" :icon="stage.icon" color="accent" text-color="white">
       <q-badge floating color="teal">{{stage.label}}</q-badge>
     </q-avatar>
-    <div class="column self-stretch q-ml-md items-start justify-start content-start">
+    <div class="column self-stretch q-ml-md items-start justify-start content-start ellipsis">
       <div class="col-5 text-subtitle1">{{header.name}}</div>
       <div class="col text-subtitle2 text-weight-regular">{{customer}}</div>
     </div>
