@@ -247,9 +247,11 @@ export default {
       if (Object.entries(this.edges).length > 0 && this.edges.pricing) {
         promises.push(this.savePrice())
       }
-      Promise.all(promises)
-        .then(res => this.onSuccess(res))
-        .catch(err => this.onError(err))
+      if (promises.length > 0) {
+        Promise.all(promises)
+          .then(res => this.onSuccess(res))
+          .catch(err => this.onError(err))
+      } else this.editMode = false
     },
     saveItem () {
       return this.$apollo.mutate({
@@ -324,7 +326,8 @@ export default {
         return this.item.code
       },
       set (code) {
-        this.data.code = code
+        if (code !== this.value.code) this.data.code = code // check changes
+        else delete this.data.code // if no changes, remove it to avoid unnecessary save
         this.item.code = code
       }
     },
@@ -333,7 +336,8 @@ export default {
         return this.item.quantity
       },
       set (quantity) {
-        this.data.quantity = quantity
+        if (quantity !== this.value.quantity) this.data.quantity = quantity
+        else delete this.data.quantity
         this.item.quantity = quantity
       }
     },
@@ -342,7 +346,8 @@ export default {
         return this.item.description
       },
       set (description) {
-        this.data.description = description
+        if (description !== this.value.description) this.data.description = description
+        else delete this.data.description
         this.item.description = description
       }
     },
@@ -351,7 +356,8 @@ export default {
         return this.item.provider
       },
       set (provider) {
-        this.data.provider = provider
+        if (provider !== this.value.provider) this.data.provider = provider
+        else delete this.data.provider
         this.item.provider = provider
       }
     },
@@ -360,13 +366,15 @@ export default {
         return this.item.price.amount
       },
       set (amount) {
-        this.edges.pricing = {
-          data: {
-            amount: parseFloat(amount),
-            currency: 'MXN' // default
-          },
-          id: this.item.price.uid
-        }
+        if (parseFloat(amount) !== this.value.price.amount) {
+          this.edges.pricing = {
+            data: {
+              amount: parseFloat(amount),
+              currency: 'MXN' // default
+            },
+            id: this.item.price.uid
+          }
+        } else delete this.edges.pricing
         this.item.price.amount = amount
       }
     },

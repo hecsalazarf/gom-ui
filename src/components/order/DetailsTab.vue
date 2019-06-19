@@ -201,6 +201,10 @@ export default {
       this.editMode = false // disable edit mode
     },
     save () {
+      if (Object.keys(this.data).length === 0) {
+        this.editMode = false
+        return // Do not save if no changes
+      }
       this.$apollo.mutate({
         mutation: UpdateOrder,
         variables: { id: this.order.id, data: this.data },
@@ -251,7 +255,8 @@ export default {
         )
       },
       set (status) {
-        this.data.stage = status.value
+        if (status !== this.value.stage) this.data.stage = status.value // if it changed, save it
+        else delete this.data.stage // otherwise remove key from data object
         this.order.stage = status.value
       }
     },
@@ -260,7 +265,8 @@ export default {
         return this.order.name
       },
       set (name) {
-        this.data.name = name
+        if (name !== this.value.name) this.data.name = name
+        else delete this.data.name
         this.order.name = name
       }
     }
