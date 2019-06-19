@@ -122,5 +122,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="stylus">
+.h-filter-input
+  color: $primary
 </style>

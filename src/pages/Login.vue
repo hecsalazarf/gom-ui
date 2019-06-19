@@ -62,5 +62,36 @@ export default {
 }
 </script>
 
-<style>
+<style lang="stylus">
+/*
+* Gradient-animated background
+* Taken from a pen by Manuel Pinto https://codepen.io/P1N2O/pen/pyBNzX
+*/
+.h-login-background
+  width: 100%;
+  height: 100%;
+  color: #fff;
+  background: linear-gradient(-45deg, #EE7752, #E73C7E, #23A6D5, #23D5AB);
+  background-size: 400% 400%;
+  -webkit-animation: Gradient 7s ease infinite;
+  -moz-animation: Gradient 7s ease infinite;
+  animation: Gradient 7s ease infinite;
+
+@keyframes Gradient
+  0%
+    background-position: 0% 50%
+  50%
+    background-position: 100% 50%
+  100%
+    background-position: 0% 50%
+
+  /* Center form  */
+@media (min-width: $sizes.xs) and (max-width: $breakpoint-xs)
+  .h-login
+    min-height: 70vh
+
+@media (min-width: $sizes.sm)
+  .h-login
+    min-height: 90vh
+
 </style>
