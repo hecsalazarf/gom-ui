@@ -29,7 +29,8 @@ export default {
   components: {
     'h-main-toolbar': () => import('components/MainToolbar.vue'),
     'h-selection-toolbar': () => import('components/order/SelectionToolbar.vue'),
-    'h-order-toolbar': () => import('components/order/DetailsToolbar.vue')
+    'h-order-toolbar': () => import('components/order/DetailsToolbar.vue'),
+    'h-customer-toolbar': () => import('components/customer/DetailsToolbar.vue')
   },
   data () {
     return {
