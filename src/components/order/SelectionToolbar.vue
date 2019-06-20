@@ -4,14 +4,14 @@
       icon="arrow_back_ios"
       flat
       dense
-      @click="$emit('action', { method: 'unselectAll', params: {} })"
+      @click="changeSelectedOrders([])"
     />
     <q-avatar>
       <q-circular-progress
         show-value
-        :max="maxCount"
+        :max="availableOrders.length"
         font-size="0.5em"
-        :value="countValue"
+        :value="selectedOrders.length"
         size="2em"
         :thickness="0.2"
         color="accent"
@@ -27,10 +27,10 @@
         <q-menu>
           <q-list dense>
             <q-item
-              v-show="countValue < maxCount"
+              v-show="selectedOrders.length < availableOrders.length"
               clickable
               v-close-popup
-              @click="$emit('action', { method: 'selectAll', params: {} })"
+              @click="changeSelectedOrders(availableOrders)"
             >
               <q-item-section>Seleccionar todo</q-item-section>
             </q-item>
@@ -42,32 +42,43 @@
 </template>
 
 <script>
-// import { colors } from 'quasar'
+import UserOrders from 'src/graphql/queries/UserOrders.gql'
+import { createNamespacedHelpers } from 'vuex'
+import { Auth } from 'src/helpers'
+const { mapActions, mapGetters } = createNamespacedHelpers('GomState')
+
 export default {
   name: 'OrderSelectionToolbar',
   props: {
-    count: {
-      type: Number,
-      default: 0
-    },
-    max: {
-      type: Number,
-      default: 100
-    }
   },
   data () {
-    return {}
+    return {
+      availableOrders: []
+    }
+  },
+  methods: {
+    updateAvailableOrders ({ data: { user } }) {
+      this.availableOrders = user.orders.edges.map(el => el.node.uid)
+    },
+    ...mapActions([
+      'changeSelectedOrders'
+    ])
   },
   computed: {
-    maxCount () {
-      return this.max
-    },
-    countValue () {
-      return this.count
-    }
+    ...mapGetters([
+      'selectedOrders'
+    ])
   },
   created () {
     this.$q.addressbarColor.set('#2196f3') // change address bar color accordingly
+    this.$apollo
+      .watchQuery({
+        query: UserOrders,
+        variables: {
+          id: Auth.userId
+        }
+      })
+      .subscribe(this.updateAvailableOrders)
   },
   beforeDestroy () {
     this.$q.addressbarColor.set() // back to default color

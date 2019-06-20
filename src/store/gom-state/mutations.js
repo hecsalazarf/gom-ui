@@ -17,3 +17,7 @@ export function setActiveOrderTab (state, orderTab) {
 export function setEvent (state, event) {
   state.event = event
 }
+
+export function setSelectedOrders (state, orders) {
+  state.selectedOrders = orders
+}

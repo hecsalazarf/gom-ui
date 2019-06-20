@@ -1,8 +1,8 @@
 <template>
   <div>
     <q-item clickable @click="handleClick($event)" v-touch-hold.mouse="handleHold" :active="isActive" active-class="bg-teal-1 text-grey-8">
-      <q-item-section side top v-show="selectionMode">
-        <q-checkbox ref="selectionEl" v-model="isSelected" :val="value.id" />
+      <q-item-section side top v-show="selectedOrders.length > 0">
+        <q-checkbox ref="selectionEl" v-model="selected" :val="value.id" />
       </q-item-section>
 
       <q-item-section>
@@ -21,6 +21,8 @@
 
 <script>
 import { date } from 'quasar'
+import { createNamespacedHelpers } from 'vuex'
+const { mapActions, mapGetters } = createNamespacedHelpers('GomState')
 
 export default {
   name: 'HListItem',
@@ -34,34 +36,33 @@ export default {
       type: Boolean,
       default: true,
       required: false
-    },
-    selected: {
-      type: Array,
-      default: () => []
-    },
-    selection: {
-      type: Boolean,
-      default: false
     }
   },
   data () {
     return {
     }
   },
+  watch: {
+    selected (newVal) {
+      if (newVal.length > 0) this.changeActiveToolbar('h-selection-toolbar')
+      else this.changeActiveToolbar(null)
+    }
+  },
   methods: {
     handleHold ({ evt, ...info }) {
-      if (!this.selectionMode) {
-        this.$emit('selection')
-      }
       this.$refs.selectionEl.toggle()
     },
     handleClick (evt) {
-      if (this.selectionMode) {
+      if (this.selectedOrders.length > 0) {
         this.$refs.selectionEl.toggle()
       } else {
         this.$router.push({ name: 'orderDetails', params: { id: this.value.id } })
       }
-    }
+    },
+    ...mapActions([
+      'changeSelectedOrders',
+      'changeActiveToolbar'
+    ])
   },
   computed: {
     createdAt () {
@@ -89,23 +90,20 @@ export default {
       }
       return icon
     },
-    isSelected: {
+    selected: {
       get () {
-        return this.selected
+        return this.selectedOrders
       },
-      set (value) {
-        this.$emit('selected', value)
+      set (values) {
+        this.changeSelectedOrders(values)
       }
     },
     isActive () {
-      if (this.isSelected.includes(this.value.id)) {
-        return true
-      }
-      return false
+      return this.selectedOrders.includes(this.value.id)
     },
-    selectionMode () {
-      return this.selection
-    }
+    ...mapGetters([
+      'selectedOrders'
+    ])
   },
   mounted () { }
 }

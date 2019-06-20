@@ -13,3 +13,7 @@ export function activeOrderTab (state) {
 export function event (state) {
   return state.event
 }
+
+export function selectedOrders (state) {
+  return state.selectedOrders
+}

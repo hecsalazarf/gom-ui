@@ -4,8 +4,6 @@
       <transition mode="out-in" leave-active-class="animated fadeOut">
         <component
           :is="activeToolbar"
-          v-bind="toolbarProps"
-          @action="dispatchToolbarEvent($event)"
         />
       </transition>
     </q-header>
@@ -16,7 +14,7 @@
       </q-tabs>
     </q-footer>
     <q-page-container>
-      <router-view ref="view" @dispatch="dispatchViewEvent($event)"/>
+      <router-view/>
     </q-page-container>
   </q-layout>
 </template>
@@ -25,8 +23,6 @@
 import { openURL } from 'quasar'
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapActions } = createNamespacedHelpers('GomState')
-
-const MAIN_TOOLBAR = 'h-main-toolbar'
 
 export default {
   name: 'GomLayout',
@@ -37,27 +33,11 @@ export default {
   },
   data () {
     return {
-      tab: 'orders',
-      // toolbar: MAIN_TOOLBAR,
-      toolbarProps: {}
+      tab: 'orders'
     }
   },
   methods: {
     openURL,
-    changeToolbar (toolbar) {
-      this.toolbar = toolbar.show ? toolbar.name : MAIN_TOOLBAR
-    },
-    setToolbarProps (toolbar) {
-      if (toolbar.name === this.toolbar) { // ensure the active toolbar
-        this.toolbarProps = toolbar.props
-      }
-    },
-    dispatchToolbarEvent (evt) {
-      this.$refs.view.dispatch(evt)
-    },
-    dispatchViewEvent ({ method, params }) {
-      this[method](params)
-    },
     ...mapActions([
       'changeActiveToolbar'
     ])

@@ -2,7 +2,7 @@
   <q-page class="flex">
     <q-pull-to-refresh @refresh="refresh" class="full-width">
       <q-bar class="q-pa-lg bg-white">
-        <h-filter-input @filter="filter($event)" :disable="selectionMode"/>
+        <h-filter-input @filter="filter($event)" :disable="selectedOrders.length > 0"/>
       </q-bar>
       <q-list>
         <h-list-item
@@ -11,10 +11,6 @@
           :key="order.id"
           v-model="order.data"
           :separator="index < ordersMaxIndex"
-          :selected="selected"
-          @selected="selected = $event"
-          :selection="selectionMode"
-          @selection="activateSel()"
         />
       </q-list>
     </q-pull-to-refresh>
@@ -31,13 +27,11 @@
 import UserOrders from 'src/graphql/queries/UserOrders.gql'
 import { Auth } from 'src/helpers'
 import { QSpinnerBars } from 'quasar'
+import { createNamespacedHelpers } from 'vuex'
+const { mapGetters } = createNamespacedHelpers('GomState')
 
 export default {
   props: {
-    tk: {
-      type: String,
-      default: ''
-    }
   },
   components: {
     'h-list-item': () => import('components/order/ListItem.vue'),
@@ -47,8 +41,6 @@ export default {
   data () {
     return {
       allOrders: [],
-      selected: [],
-      selectionMode: false,
       orders: {}
     }
   },
@@ -96,37 +88,15 @@ export default {
         }
         return true
       })
-    },
-    activateSel () {
-      this.selectionMode = true
-      this.$emit('toolbar', true)
-    },
-    selectAll () {
-      this.selected = this.orders.map(order => {
-        return order.data.id
-      })
-    },
-    unselectAll () {
-      this.selected = []
     }
   },
   computed: {
     ordersMaxIndex () {
       return this.orders.length - 1
-    }
-  },
-  watch: {
-    selected (value) {
-      if (value.length === 0) {
-        this.selectionMode = false
-        this.$emit('toolbar', false)
-      } else {
-        this.$emit('selected', {
-          max: this.ordersMaxIndex + 1,
-          count: value.length
-        })
-      }
-    }
+    },
+    ...mapGetters([
+      'selectedOrders'
+    ])
   },
   apollo: {
     orders () {
