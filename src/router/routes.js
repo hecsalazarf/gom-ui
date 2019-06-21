@@ -33,6 +33,16 @@ const routes = [
             path: '',
             name: 'customers',
             component: () => import('pages/customer/List.vue')
+          },
+          {
+            path: 'id/:id',
+            name: 'customerDetails',
+            component: () => import('pages/customer/Details.vue'),
+            props: true
+          },
+          {
+            path: 'id/',
+            redirect: { name: 'customers' }
           }
         ]
       }

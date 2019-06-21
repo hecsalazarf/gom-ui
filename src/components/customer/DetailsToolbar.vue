@@ -2,7 +2,7 @@
   <q-toolbar>
     <q-btn class="q-mr-sm" icon="arrow_back_ios" flat dense @click="$router.back()"/>
     <div class="column items-start justify-center content-start ellipsis">
-      <div class="col-5 text-subtitle1">Nombre del cliente</div>
+      <div class="col-5 text-subtitle1 text-weight-medium">Adriana Sanchez</div>
     </div>
     <q-space/>
     <q-btn flat dense icon="more_horiz">

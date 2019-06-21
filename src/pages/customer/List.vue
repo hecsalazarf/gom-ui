@@ -1,8 +1,16 @@
 <template>
-  <q-page class="flex">
-    <q-list bordered class="full-width">
-      <h-contact-group v-for="group in groups" :key="group.group.id" v-model="group.group.contacts" :name="group.group.name"/>
+  <q-page padding class="flex">
+    <q-list class="full-width">
+      <h-contact-group
+        v-for="group in groups"
+        :key="group.id"
+        v-model="group.contacts"
+        :name="group.name"
+      />
     </q-list>
+    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+      <q-btn fab round color="accent" icon="person_add" class="shadow-7"/>
+    </q-page-sticky>
   </q-page>
 </template>
 
@@ -18,70 +26,64 @@ export default {
       groups: [
         // dummy data, for component showcase. NOT FOR PRODUCTION
         {
-          group: {
-            name: 'A',
-            id: 'A',
-            contacts: [
-              {
-                data: {
-                  id: '1',
-                  name: 'Adriana Sanchez',
-                  charName: 'AS'
-                }
-              },
-              {
-                data: {
-                  id: '2',
-                  name: 'Ariel Zapata',
-                  charName: 'AZ'
-                }
+          name: 'A',
+          id: 'A',
+          contacts: [
+            {
+              data: {
+                id: '1',
+                name: 'Adriana Sanchez',
+                charName: 'AS'
               }
-            ]
-          }
+            },
+            {
+              data: {
+                id: '2',
+                name: 'Ariel Zapata',
+                charName: 'AZ'
+              }
+            }
+          ]
         },
         {
-          group: {
-            name: 'B',
-            id: 'B',
-            contacts: [
-              {
-                data: {
-                  id: '3',
-                  name: 'Bartolo Lara',
-                  charName: 'BL'
-                }
-              },
-              {
-                data: {
-                  id: '4',
-                  name: 'Beatriz Manzano',
-                  charName: 'BM'
-                }
-              },
-              {
-                data: {
-                  id: '5',
-                  name: 'Bernardo Aros',
-                  charName: 'BA'
-                }
+          name: 'B',
+          id: 'B',
+          contacts: [
+            {
+              data: {
+                id: '3',
+                name: 'Bartolo Lara',
+                charName: 'BL'
               }
-            ]
-          }
+            },
+            {
+              data: {
+                id: '4',
+                name: 'Beatriz Manzano',
+                charName: 'BM'
+              }
+            },
+            {
+              data: {
+                id: '5',
+                name: 'Bernardo Aros',
+                charName: 'BA'
+              }
+            }
+          ]
         },
         {
-          group: {
-            name: 'C',
-            id: 'C',
-            contacts: [
-              {
-                data: {
-                  id: '6',
-                  name: 'Carlos Buenavista',
-                  charName: 'CB'
-                }
+          name: 'C',
+          id: 'C',
+          contacts: [
+            {
+              data: {
+                id: '6',
+                name: 'Carlos Buenavista',
+                charName: 'CB'
               }
-            ]
-          }
+            }
+          ]
         }
       ]
     }

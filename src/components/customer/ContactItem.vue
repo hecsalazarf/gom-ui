@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-slide-item>
-      <q-item clickable v-ripple>
+      <q-item clickable v-ripple @click="$router.push({name: 'customerDetails', params: { id: value.id }})">
         <q-item-section avatar>
           <q-avatar color="primary" text-color="white">{{value.charName}}</q-avatar>
         </q-item-section>
