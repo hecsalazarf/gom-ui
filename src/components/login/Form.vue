@@ -10,9 +10,8 @@
         type="email"
         v-model="username"
         label="Usuario"
-        error-message=""
-        :error="errorOnAuth"
-        lazy-rules=""
+        :disable="loading"
+        lazy-rules
         :rules="[val => !!val || 'Campo requerido']"
       >
         <template v-slot:prepend>
@@ -29,8 +28,7 @@
         :type="isPwd ? 'password' : 'text'"
         v-model="password"
         label="Contraseña"
-        error-message=""
-        :error="errorOnAuth"
+        :disable="loading"
         lazy-rules
         :rules="[val => !!val || 'Campo requerido']"
       >
@@ -52,6 +50,7 @@
         type="submit"
         color="primary"
         :loading="loading"
+        :disable="loading"
       >
       <template v-slot:loading>
         <q-spinner-bars />
@@ -62,33 +61,18 @@
 
 <script>
 export default {
-  // name: 'ComponentName',
+  name: 'HLoginForm',
+  props: {
+    loading: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
       password: '',
       username: '',
-      isPwd: true,
-      errorOnAuth: false,
-      loading: false
-    }
-  },
-  watch: {
-    password (oldVal, newVal) {
-      this.errorOnAuth = false
-    },
-    username (oldVal, newVal) {
-      this.errorOnAuth = false
-    }
-  },
-  methods: {
-    setOnError () {
-      this.errorOnAuth = true
-    },
-    startLoading () {
-      this.loading = true
-    },
-    stopLoading () {
-      this.loading = false
+      isPwd: true
     }
   }
 }
