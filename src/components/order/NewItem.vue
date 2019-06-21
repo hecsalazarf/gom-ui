@@ -46,8 +46,8 @@
               type="number"
               step="0.01"
               min="0"
-              v-model="model.price"
-              :rules="[ val => !!val || '* Campo obligatorio', val => val < 100000 || 'Ups, muy caro', /* val => !isNaN(parseFloat(val)) && isFinite(val) || 'Sólo números' */]"
+              v-model.number="model.price"
+              :rules="[ val => !!val || '* Campo obligatorio', val => val < 100000 || 'Ups, muy caro' ]"
               hide-bottom-space
             >
               <template v-slot:prepend>
@@ -61,7 +61,7 @@
               label="Cantidad"
               type="number"
               min="1"
-              v-model="model.quantity"
+              v-model.number="model.quantity"
               :rules="[ val => val > 0 || 'Debe haber al menos 1', val => val < 10000 || 'Es demasiado' ]"
               hide-bottom-space
             >
@@ -205,7 +205,7 @@ export default {
                   pricing: [
                     {
                       node: {
-                        amount: parseFloat(this.model.price),
+                        amount: this.model.price,
                         currency: 'MXN' // default
                       },
                       props: {

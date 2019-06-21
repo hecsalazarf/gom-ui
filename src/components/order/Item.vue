@@ -91,10 +91,10 @@
             type="number"
             step="0.01"
             label="Precio"
-            v-model="price"
+            v-model.number="price"
             :readonly="!editMode"
             :borderless="!editMode"
-            :rules="[ val => !!val || '* Campo obligatorio', val => val < 100000 || 'Ups, muy caro', /* val => !isNaN(parseFloat(val)) && isFinite(val) || 'Sólo números' */]"
+            :rules="[ val => !!val || '* Campo obligatorio', val => val < 100000 || 'Ups, muy caro' ]"
             hide-bottom-space
           >
             <template v-slot:prepend>
@@ -106,7 +106,7 @@
             input-class="text-black"
             dense
             label="Cantidad"
-            v-model="quantity"
+            v-model.number="quantity"
             :readonly="!editMode"
             :borderless="!editMode"
             type="number"
@@ -366,10 +366,10 @@ export default {
         return this.item.price.amount
       },
       set (amount) {
-        if (parseFloat(amount) !== this.value.price.amount) {
+        if (amount !== this.value.price.amount) {
           this.edges.pricing = {
             data: {
-              amount: parseFloat(amount),
+              amount: amount,
               currency: 'MXN' // default
             },
             id: this.item.price.uid
