@@ -19,7 +19,7 @@
               hide-bottom-space
               :readonly="!editMode"
               :borderless="!editMode"
-              v-model="name"
+              v-model="fullName"
               type="text"
               maxlength="40"
               :rules="[ val=> !!val || 'Campo requerido', val=> val.length <= 40 || 'Máximo 40 caracteres' ]"
@@ -136,14 +136,9 @@ export default {
   data () {
     return {
       editMode: false,
-      moreNames: false,
-      defaultLabels: {
-        name: 'Nombre',
-        phone: 'Teléfono',
-        email: 'Correo electrónico'
-      },
       model: {
-        name: 'Adriana Sanchez',
+        name: 'Adriana',
+        lastName: 'Sanchez',
         phone: '55 1234 5678',
         email: 'adriana@sanchez.net'
       }
@@ -156,12 +151,15 @@ export default {
     ...mapActions(['changeActiveToolbar'])
   },
   computed: {
-    name: {
+    fullName: {
       get () {
-        return this.model.name // ? this.model.name : this.defaultLabels.name
+        return `${this.model.name} ${this.model.lastName}`
       },
       set (value) {
-        this.model.name = value
+        // get splitted name and assign it to the corresponding varibale
+        const fullName = value.trim().split(' ')
+        this.model.name = fullName.slice(0, fullName.length - 1).join(' ')
+        this.model.lastName = fullName[fullName.length - 1]
       }
     },
     phone: {
