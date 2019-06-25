@@ -1,12 +1,4 @@
 <template>
-  <q-dialog
-    persistent
-    :position="$q.platform.is.mobile ? 'bottom' : 'standard'"
-    v-model="isShown"
-    transition-show="slide-up"
-    transition-hide="slide-down"
-    ref="dialog"
-  >
     <q-card flat>
       <q-form @submit="save()" @reset="clear()">
         <q-card-section>
@@ -14,6 +6,7 @@
         </q-card-section>
         <q-card-section class="q-gutter-y-xs">
           <q-input
+            autofocus
             input-class="text-subtitle1 text-weight-medium text-black"
             standout="bg-blue-1"
             dense
@@ -21,7 +14,7 @@
             v-model="model.description"
             type="text"
             maxlength="40"
-            :rules="[ val => !!val || '* Campo obligatorio', val => val.length <= 40 || 'Máximo 40 caracteres' ]"
+            :rules="[ val => !!val || 'Campo obligatorio', val => val.length <= 40 || 'Máximo 40 caracteres' ]"
             hide-bottom-space
           />
           <q-input
@@ -47,7 +40,7 @@
             step="0.01"
             min="0"
             v-model.number="model.price"
-            :rules="[ val => !!val || '* Campo obligatorio', val => val < 100000 || 'Ups, muy caro' ]"
+            :rules="[ val => !!val || 'Campo obligatorio', val => val < 100000 || 'Ups, muy caro' ]"
             hide-bottom-space
           >
             <template v-slot:prepend>
@@ -96,7 +89,6 @@
         </q-card-actions>
       </q-form>
     </q-card>
-  </q-dialog>
 </template>
 
 <script>
@@ -109,7 +101,6 @@ export default {
   name: 'HNewItem',
   data () {
     return {
-      isShown: false,
       model: {
         description: '',
         code: '',
@@ -120,11 +111,7 @@ export default {
     }
   },
   methods: {
-    show () {
-      this.isShown = true
-    },
     clear () {
-      this.isShown = false
       this.model = {
         description: '',
         code: '',
@@ -132,6 +119,7 @@ export default {
         quantity: 1,
         provider: ''
       }
+      this.$emit('reset')
     },
     save () {
       this.$apollo
@@ -173,12 +161,12 @@ export default {
       }
     },
     onSuccess (response) {
-      this.isShown = false
       this.$q.notify({
         color: 'positive',
         message: 'Cambios guardados',
         icon: 'check_circle'
       })
+      this.$emit('done')
     },
     onError (error) {
       console.log(error)

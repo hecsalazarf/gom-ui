@@ -275,7 +275,7 @@ export default {
 </script>
 
 <style scoped lang="stylus">
-/deep/ .q-expansion-item__content > .q-card
+.q-expansion-item__content > .q-card
   border-bottom-left-radius: 20px
   border-bottom-right-radius: 20px
 </style>

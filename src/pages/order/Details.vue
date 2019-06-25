@@ -1,7 +1,7 @@
 <template>
-  <q-page class="flex">
+  <q-page padding class="flex">
     <div class="row full-width justify-center content-start">
-      <div class="col-xs-12 col-sm-12 col-md-8 q-pa-xs">
+      <div class="col-xs-12 col-sm-12 col-md-8">
         <q-tabs
           v-model="tab"
           dense
@@ -14,9 +14,7 @@
           <q-tab name="items" label="Articulos"/>
           <q-tab name="details" label="Detalles"/>
         </q-tabs>
-
         <q-separator/>
-
         <q-tab-panels v-model="tab" animated swipeable keep-alive>
           <q-tab-panel name="items" class="q-gutter-y-md">
             <h-order-item v-for="(item) in order.items" :key="item.id" v-model="item.data"/>
@@ -28,12 +26,17 @@
         </q-tab-panels>
       </div>
     </div>
-    <h-new-item ref="newItem" v-if="newItem"/>
+    <q-dialog
+      persistent
+      :position="$q.platform.is.mobile ? 'bottom' : 'standard'"
+      transition-show="slide-up"
+      transition-hide="slide-down"
+      ref="newItem"
+    >
+      <h-new-item @reset="$refs.newItem.hide()" @done="$refs.newItem.hide()"/>
+    </q-dialog>
   </q-page>
 </template>
-
-<style>
-</style>
 
 <script>
 import OrderDetails from 'src/graphql/queries/OrderDetails.gql'
@@ -55,8 +58,7 @@ export default {
       tab: 'items',
       order: {
         items: [] // initialize items to avoid undefined errors
-      },
-      newItem: false
+      }
     }
   },
   components: {
@@ -86,20 +88,19 @@ export default {
     this.changeActiveOrder(this.id)
     this.changeActiveToolbar('h-order-toolbar')
     this.changeActiveOrderTab(this.tab)
-    setTimeout(() => { this.newItem = !this.newItem }, 500)
   },
   watch: {
     tab (newVal, oldVal) {
       this.changeActiveOrderTab(newVal)
     },
     event (evt) {
-      if (evt.target === this.$options.name && this[evt.method]) this[evt.method](evt.args)
+      if (evt.target === this.$options.name && this[evt.method]) {
+        this[evt.method](evt.args)
+      }
     }
   },
   computed: {
-    ...mapGetters([
-      'event'
-    ])
+    ...mapGetters(['event'])
   },
   apollo: {
     order () {
@@ -158,3 +159,12 @@ export default {
   }
 }
 </script>
+
+<style scoped lang="stylus">
+.q-tab-panel {
+  padding-top: 16px;
+  padding-right: 0px;
+  padding-bottom: 16px;
+  padding-left: 0px;
+}
+</style>

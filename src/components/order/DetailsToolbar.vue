@@ -10,7 +10,8 @@
     </div>
     <q-space/>
     <q-btn flat dense icon="more_horiz">
-      <q-menu>
+      <!-- no-refocus to prevent input to lose focus in NewItemComponent -->
+      <q-menu no-refocus>
         <q-list>
           <q-item
             clickable
