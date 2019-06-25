@@ -153,13 +153,19 @@ export default {
   computed: {
     fullName: {
       get () {
-        return `${this.model.name} ${this.model.lastName}`
+        if (this.model.lastName === '') return this.model.name
+        else return `${this.model.name} ${this.model.lastName}`
       },
       set (value) {
         // get splitted name and assign it to the corresponding varibale
         const fullName = value.replace(/\s+/g, ' ').trim().split(' ')
-        this.model.name = fullName.slice(0, fullName.length - 1).join(' ')
-        this.model.lastName = fullName[fullName.length - 1]
+        if (fullName.length === 1) {
+          this.model.name = fullName[0] // if only one name
+          this.model.lastName = ''
+        } else {
+          this.model.name = fullName.slice(0, fullName.length - 1).join(' ')
+          this.model.lastName = fullName[fullName.length - 1]
+        }
       }
     },
     phone: {
