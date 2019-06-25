@@ -7,85 +7,84 @@
     transition-hide="slide-down"
     ref="dialog"
   >
-    <q-card bordered flat class="q-gutter-y-sm">
-      <q-form @submit="save()" @reset="clear()" class="q-gutter-y-xs">
-        <q-item dense>
-          <q-item-section class="q-gutter-y-xs">
-            <q-input
-              input-class="text-subtitle1 text-weight-medium text-black"
-              standout="bg-blue-1"
-              dense
-              label="Descripción"
-              v-model="model.description"
-              type="text"
-              maxlength="40"
-              :rules="[ val => !!val || '* Campo obligatorio', val => val.length <= 40 || 'Máximo 40 caracteres' ]"
-              hide-bottom-space
-            />
-            <q-input
-              input-class="text-caption text-black"
-              standout="bg-blue-1"
-              dense
-              label="Código"
-              v-model="model.code"
-              type="text"
-              maxlength="15"
-              :rules="[ val => val.length <= 15 || 'Máximo 15 caracteres' ]"
-              hide-bottom-space
-            />
-          </q-item-section>
-        </q-item>
+    <q-card flat>
+      <q-form @submit="save()" @reset="clear()">
+        <q-card-section>
+          <div class="text-subtitle1 text-weight-medium">Nuevo artículo</div>
+        </q-card-section>
+        <q-card-section class="q-gutter-y-xs">
+          <q-input
+            input-class="text-subtitle1 text-weight-medium text-black"
+            standout="bg-blue-1"
+            dense
+            label="Descripción"
+            v-model="model.description"
+            type="text"
+            maxlength="40"
+            :rules="[ val => !!val || '* Campo obligatorio', val => val.length <= 40 || 'Máximo 40 caracteres' ]"
+            hide-bottom-space
+          />
+          <q-input
+            input-class="text-caption text-black"
+            standout="bg-blue-1"
+            dense
+            label="Código"
+            v-model="model.code"
+            type="text"
+            maxlength="15"
+            :rules="[ val => val.length <= 15 || 'Máximo 15 caracteres' ]"
+            hide-bottom-space
+          />
+        </q-card-section>
         <q-separator inset/>
-        <q-item>
-          <q-item-section class="q-gutter-y-xs">
-            <q-input
-              standout="bg-blue-1"
-              input-class="text-black"
-              dense
-              label="Precio"
-              type="number"
-              step="0.01"
-              min="0"
-              v-model.number="model.price"
-              :rules="[ val => !!val || '* Campo obligatorio', val => val < 100000 || 'Ups, muy caro' ]"
-              hide-bottom-space
-            >
-              <template v-slot:prepend>
-                <q-icon name="monetization_on" color="primary"/>
-              </template>
-            </q-input>
-            <q-input
-              dense
-              standout="bg-blue-1"
-              input-class="text-black"
-              label="Cantidad"
-              type="number"
-              min="1"
-              v-model.number="model.quantity"
-              :rules="[ val => val > 0 || 'Debe haber al menos 1', val => val < 10000 || 'Es demasiado' ]"
-              hide-bottom-space
-            >
-              <template v-slot:prepend>
-                <q-icon name="format_list_numbered" color="primary"/>
-              </template>
-            </q-input>
-            <q-input
-              dense
-              standout="bg-blue-1"
-              input-class="text-black"
-              label="Marca"
-              v-model="model.provider"
-              type="text"
-              maxlength="20"
-              :rules="[ val => val.length <= 20 || 'Máximo 20 caracteres' ]"
-              hide-bottom-space
-            >
-              <template v-slot:prepend>
-                <q-icon name="stars" color="primary"/>
-              </template>
-            </q-input>
-          </q-item-section>
-        </q-item>
+        <q-card-section class="q-gutter-y-xs">
+          <q-input
+            standout="bg-blue-1"
+            input-class="text-black"
+            dense
+            label="Precio"
+            type="number"
+            step="0.01"
+            min="0"
+            v-model.number="model.price"
+            :rules="[ val => !!val || '* Campo obligatorio', val => val < 100000 || 'Ups, muy caro' ]"
+            hide-bottom-space
+          >
+            <template v-slot:prepend>
+              <q-icon name="monetization_on" color="primary"/>
+            </template>
+          </q-input>
+          <q-input
+            dense
+            standout="bg-blue-1"
+            input-class="text-black"
+            label="Cantidad"
+            type="number"
+            min="1"
+            v-model.number="model.quantity"
+            :rules="[ val => val > 0 || 'Debe haber al menos 1', val => val < 10000 || 'Es demasiado' ]"
+            hide-bottom-space
+          >
+            <template v-slot:prepend>
+              <q-icon name="format_list_numbered" color="primary"/>
+            </template>
+          </q-input>
+          <q-input
+            dense
+            standout="bg-blue-1"
+            input-class="text-black"
+            label="Marca"
+            v-model="model.provider"
+            type="text"
+            maxlength="20"
+            :rules="[ val => val.length <= 20 || 'Máximo 20 caracteres' ]"
+            hide-bottom-space
+          >
+            <template v-slot:prepend>
+              <q-icon name="stars" color="primary"/>
+            </template>
+          </q-input>
+        </q-card-section>
         <q-separator inset/>
         <q-card-actions align="around">
           <q-btn flat round color="red" icon="clear" type="reset">
@@ -145,7 +144,9 @@ export default {
             }
           },
           update: this.updateCache
-        }).then(res => this.onSuccess(res)).catch(err => this.onError(err))
+        })
+        .then(res => this.onSuccess(res))
+        .catch(err => this.onError(err))
     },
     updateCache (cache, { data }) {
       try {

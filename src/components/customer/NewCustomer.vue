@@ -1,5 +1,5 @@
 <template>
-  <q-card class="h-rounded-borders-20 no-shadow">
+  <q-card class="h-rounded-borders-20" flat>
     <q-form @submit="submit()" @reset="$emit('reset')">
       <q-card-section>
         <div class="text-subtitle1 text-weight-medium">Nuevo cliente</div>
