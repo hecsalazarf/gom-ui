@@ -1,8 +1,8 @@
 <template>
-  <q-card bordered flat>
-    <q-list bordered class="rounded-borders">
+  <q-card flat>
+    <q-list class="q-gutter-y-sm">
       <q-expansion-item
-        expand-separator
+        class="bg-blue-1 h-rounded-borders-20"
         default-opened
         switch-toggle-side
         header-class="text-subtitle1 text-weight-medium text-primary"
@@ -50,7 +50,7 @@
             </div>
           </q-item-section>
         </template>
-        <q-card>
+        <q-card class="bg-blue-1">
           <q-form ref="form">
             <q-card-section class=" q-gutter-y-xs">
               <q-input
@@ -83,14 +83,14 @@
       </q-expansion-item>
 
       <q-expansion-item
-        expand-separator
+        class="bg-blue-1 h-rounded-borders-20"
         icon="perm_identity"
         switch-toggle-side
         label="Cliente"
         default-opened
         header-class="text-subtitle1 text-weight-medium text-primary"
       >
-        <q-card>
+        <q-card class="bg-blue-1">
           <q-card-section>
             <q-input dense label="Nombre" v-model="customer" readonly borderless/>
           </q-card-section>
@@ -98,14 +98,14 @@
       </q-expansion-item>
 
       <q-expansion-item
-        expand-separator
+        class="bg-blue-1 h-rounded-borders-20"
         icon="date_range"
         switch-toggle-side
         label="Fechas"
         default-opened
         header-class="text-subtitle1 text-weight-medium text-primary"
       >
-        <q-card>
+        <q-card class="bg-blue-1">
           <q-card-section>
             <q-input dense label="Pedido el" readonly borderless v-model="createdAt"/>
           </q-card-section>
@@ -274,5 +274,8 @@ export default {
 }
 </script>
 
-<style>
+<style scoped lang="stylus">
+/deep/ .q-expansion-item__content > .q-card
+  border-bottom-left-radius: 20px
+  border-bottom-right-radius: 20px
 </style>

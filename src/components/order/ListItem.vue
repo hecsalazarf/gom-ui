@@ -1,8 +1,14 @@
 <template>
   <div>
-    <q-item clickable @click="handleClick($event)" v-touch-hold.mouse="handleHold" :active="isActive" active-class="bg-teal-1 text-grey-8">
+    <q-item
+      clickable
+      @click="handleClick($event)"
+      v-touch-hold.mouse="handleHold"
+      :active="isActive"
+      active-class="bg-teal-1 text-grey-8"
+    >
       <q-item-section side top v-show="selectedOrders.length > 0">
-        <q-checkbox ref="selectionEl" v-model="selected" :val="value.id" />
+        <q-checkbox ref="selectionEl" v-model="selected" :val="value.id"/>
       </q-item-section>
 
       <q-item-section>
@@ -39,8 +45,7 @@ export default {
     }
   },
   data () {
-    return {
-    }
+    return {}
   },
   watch: {
     selected (newVal) {
@@ -56,13 +61,13 @@ export default {
       if (this.selectedOrders.length > 0) {
         this.$refs.selectionEl.toggle()
       } else {
-        this.$router.push({ name: 'orderDetails', params: { id: this.value.id } })
+        this.$router.push({
+          name: 'orderDetails',
+          params: { id: this.value.id }
+        })
       }
     },
-    ...mapActions([
-      'changeSelectedOrders',
-      'changeActiveToolbar'
-    ])
+    ...mapActions(['changeSelectedOrders', 'changeActiveToolbar'])
   },
   computed: {
     createdAt () {
@@ -101,11 +106,9 @@ export default {
     isActive () {
       return this.selectedOrders.includes(this.value.id)
     },
-    ...mapGetters([
-      'selectedOrders'
-    ])
+    ...mapGetters(['selectedOrders'])
   },
-  mounted () { }
+  mounted () {}
 }
 </script>
 

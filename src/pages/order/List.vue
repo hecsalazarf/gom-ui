@@ -1,10 +1,10 @@
 <template>
-  <q-page class="flex">
+  <q-page class="flex" padding>
     <q-pull-to-refresh @refresh="refresh" class="full-width">
-      <q-bar class="q-pa-lg bg-white">
+      <q-bar class="bg-white q-mb-lg">
         <h-filter-input @filter="filter($event)" :disable="selectedOrders.length > 0"/>
       </q-bar>
-      <q-list>
+      <q-list class="bg-blue-1 h-rounded-borders-20">
         <h-list-item
           ref="item"
           v-for="(order, index) in orders"

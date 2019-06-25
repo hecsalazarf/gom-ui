@@ -1,7 +1,7 @@
 <template>
-  <q-card bordered flat>
+  <q-card bordered flat class="bg-blue-1 h-rounded-borders-20 no-border">
     <q-form @submit="save()" @reset="clear()">
-      <q-item dense class="q-gutter-y-xs">
+      <q-item dense>
         <q-item-section class="q-gutter-y-xs">
           <q-input
             input-class="text-subtitle1 text-weight-medium text-black"
