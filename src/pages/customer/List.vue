@@ -8,8 +8,24 @@
         :name="group.name"
       />
     </q-list>
+    <q-dialog
+      ref="newCustomer"
+      persistent
+      :position="$q.platform.is.mobile ? 'bottom' : 'standard'"
+      transition-show="slide-up"
+      transition-hide="slide-down"
+    >
+      <h-new-customer @reset="$refs.newCustomer.hide()" class="new-customer-dialog"/>
+    </q-dialog>
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
-      <q-btn fab round color="accent" icon="person_add" class="shadow-7"/>
+      <q-btn
+        fab
+        round
+        color="accent"
+        icon="person_add"
+        class="shadow-7"
+        @click="$refs.newCustomer.show()"
+      />
     </q-page-sticky>
   </q-page>
 </template>
@@ -18,9 +34,15 @@
 export default {
   props: {},
   components: {
-    'h-contact-group': () => import('components/customer/ContactGroup.vue')
+    'h-contact-group': () => import('components/customer/ContactGroup.vue'),
+    'h-new-customer': () => import('components/customer/NewCustomer.vue')
   },
   name: 'CustomerListPage',
+  methods: {
+    cancelD () {
+      console.log('cancel')
+    }
+  },
   data () {
     return {
       groups: [
@@ -92,4 +114,7 @@ export default {
 }
 </script>
 
-<style scoped lang="stylus"></style>
+<style scoped lang="stylus">
+.new-customer-dialog
+  width: 50vw
+</style>
