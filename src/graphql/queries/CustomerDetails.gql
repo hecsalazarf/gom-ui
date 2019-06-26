@@ -1,0 +1,10 @@
+###### BP query by id #########
+query BP($id: String!) {
+  bp (id: $id) {
+    uid
+    name1
+    lastName1
+    phone
+    email
+  }
+}

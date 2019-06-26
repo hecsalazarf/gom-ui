@@ -17,3 +17,7 @@ export function emitEvent (context, event) {
 export function changeSelectedOrders (context, orders) {
   context.commit('setSelectedOrders', orders)
 }
+
+export function changeActiveCustomer (context, customer) {
+  context.commit('setActiveCustomer', customer)
+}

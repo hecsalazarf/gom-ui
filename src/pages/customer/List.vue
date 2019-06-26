@@ -3,7 +3,7 @@
     <q-list class="full-width">
       <h-contact-group
         v-for="group in groups"
-        :key="group.id"
+        :key="group.name"
         v-model="group.contacts"
         :name="group.name"
       />
@@ -31,6 +31,10 @@
 </template>
 
 <script>
+import UserCustomers from 'src/graphql/queries/UserCustomers.gql'
+import { Auth } from 'src/helpers'
+import { QSpinnerBars } from 'quasar'
+
 export default {
   props: {},
   components: {
@@ -45,72 +49,69 @@ export default {
   },
   data () {
     return {
-      groups: [
-        // dummy data, for component showcase. NOT FOR PRODUCTION
-        {
-          name: 'A',
-          id: 'A',
-          contacts: [
-            {
-              data: {
-                id: '1',
-                name: 'Adriana Sanchez',
-                charName: 'AS'
-              }
-            },
-            {
-              data: {
-                id: '2',
-                name: 'Ariel Zapata',
-                charName: 'AZ'
-              }
-            }
-          ]
-        },
-        {
-          name: 'B',
-          id: 'B',
-          contacts: [
-            {
-              data: {
-                id: '3',
-                name: 'Bartolo Lara',
-                charName: 'BL'
-              }
-            },
-            {
-              data: {
-                id: '4',
-                name: 'Beatriz Manzano',
-                charName: 'BM'
-              }
-            },
-            {
-              data: {
-                id: '5',
-                name: 'Bernardo Aros',
-                charName: 'BA'
-              }
-            }
-          ]
-        },
-        {
-          name: 'C',
-          id: 'C',
-          contacts: [
-            {
-              data: {
-                id: '6',
-                name: 'Carlos Buenavista',
-                charName: 'CB'
-              }
-            }
-          ]
-        }
-      ]
     }
   },
-  mounted () {}
+  apollo: {
+    groups () {
+      return {
+        query: UserCustomers,
+        error: err => {
+          console.log(err)
+        },
+        context: {
+          headers: {
+            'X-Csrf-Token': this.$q.cookies.get('csrf-token')
+          }
+        },
+        update (data) {
+          if (Object.entries(data).length === 0) {
+            return []
+          }
+          let customers = data.user.customers.edges
+          customers.sort((first, second) => {
+            if (first.node.name1 < second.node.name1) return -1
+            if (first.node.name1 > second.node.name1) return 1
+            return 0
+          })
+          return customers.reduce((acc, { node }) => {
+            const groupName = node.name1.charAt(0)
+            const charName = `${groupName}${node.lastName1 ? node.lastName1.charAt(0) : ''}`
+            const index = acc.findIndex(el => el.name === groupName)
+            const contact = {
+              id: node.uid,
+              charName: charName.toUpperCase(),
+              name1: node.name1,
+              lastName1: node.lastName1,
+              phone: node.phone,
+              email: node.email
+            }
+            if (index > -1) {
+              acc[index].contacts.push({
+                data: contact
+              })
+            } else {
+              acc.push({
+                name: groupName,
+                contacts: [{
+                  data: contact
+                }]
+              })
+            }
+            return acc
+          }, [])
+        },
+        watchLoading (isLoading, countModifier) {
+          if (isLoading) this.$q.loading.show({ spinner: QSpinnerBars })
+          else this.$q.loading.hide()
+        },
+        variables () {
+          return {
+            id: Auth.userId
+          }
+        }
+      }
+    }
+  }
 }
 </script>
 

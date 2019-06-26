@@ -17,3 +17,7 @@ export function event (state) {
 export function selectedOrders (state) {
   return state.selectedOrders
 }
+
+export function activeCustomer (state) {
+  return state.activeCustomer
+}

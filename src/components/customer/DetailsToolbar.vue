@@ -2,7 +2,7 @@
   <q-toolbar>
     <q-btn class="q-mr-sm" icon="arrow_back_ios" flat dense @click="$router.back()"/>
     <div class="column items-start justify-center content-start ellipsis">
-      <div class="col-5 text-subtitle1 text-weight-medium">Adriana Sanchez</div>
+      <div class="col-5 text-subtitle1 text-weight-medium">{{fullName}}</div>
     </div>
     <q-space/>
     <q-btn flat dense icon="more_horiz">
@@ -23,15 +23,44 @@
 </template>
 
 <script>
-// import { createNamespacedHelpers } from 'vuex'
-// const { mapGetters, mapActions } = createNamespacedHelpers('GomState')
+import CustomerDetails from 'src/graphql/queries/CustomerDetails.gql'
+import { createNamespacedHelpers } from 'vuex'
+const { mapGetters } = createNamespacedHelpers('GomState')
 
 export default {
   name: 'OrderToolbar',
   data () {
     return {
-      header: {}
+      header: {
+        name1: '',
+        lastName1: ''
+      }
     }
+  },
+  created () {
+    this.$apollo
+      .watchQuery({
+        query: CustomerDetails,
+        variables: {
+          id: this.activeCustomer
+        }
+      })
+      .subscribe(this.updateHeader)
+  },
+  methods: {
+    updateHeader ({ data: { bp } }) {
+      this.header = {
+        name1: bp.name1,
+        lastName1: bp.lastName1
+      }
+    }
+  },
+  computed: {
+    fullName () {
+      if (this.header.lastName1 === '') return this.header.name1
+      else return `${this.header.name1} ${this.header.lastName1}`
+    },
+    ...mapGetters(['activeCustomer'])
   }
 }
 </script>

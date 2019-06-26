@@ -21,3 +21,7 @@ export function setEvent (state, event) {
 export function setSelectedOrders (state, orders) {
   state.selectedOrders = orders
 }
+
+export function setActiveCustomer (state, customer) {
+  state.activeCustomer = customer
+}

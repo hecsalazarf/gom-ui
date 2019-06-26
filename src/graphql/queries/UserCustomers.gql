@@ -1,0 +1,17 @@
+###### Query user's customers #########
+query UserCustomers($id: String!) {
+	user(id: $id) {
+    uid
+    customers {
+      edges {
+        node {
+          uid
+          name1
+          lastName1
+          email
+          phone
+        }
+      }
+    }
+  }
+}

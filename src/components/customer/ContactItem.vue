@@ -6,7 +6,7 @@
           <q-avatar color="primary" text-color="white">{{value.charName}}</q-avatar>
         </q-item-section>
         <q-item-section>
-          <q-item-label class="text-subtitle1">{{value.name}}</q-item-label>
+          <q-item-label class="text-subtitle1">{{fullName}}</q-item-label>
         </q-item-section>
       </q-item>
     </q-slide-item>
@@ -35,6 +35,10 @@ export default {
     return {}
   },
   computed: {
+    fullName () {
+      if (this.value.lastName1 === '') return this.value.name1
+      else return `${this.value.name1} ${this.value.lastName1}`
+    }
   }
 }
 </script>

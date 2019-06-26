@@ -1,129 +1,14 @@
 <template>
   <q-page padding>
-    <div class="row justify-center">
-      <div class="col-12 text-center">
-        <q-avatar style="z-index: 100" size="5em" text-color="white" color="primary">AS</q-avatar>
-      </div>
-      <q-card
-        class="col-xs-12 col-sm-8 col-md-6 col-6 no-shadow bg-blue-1 q-pt-lg h-rounded-borders-20 relative-position"
-        style="transform: translate(0, -35px);"
-      >
-        <q-card-section class="row justify-center">
-          <q-form ref="form" class="q-gutter-y-xs">
-            <q-input
-              class="col-8"
-              input-class="text-h6 text-black text-center ellipsis"
-              placeholder="Nombre"
-              standout="bg-blue-1"
-              dense
-              hide-bottom-space
-              :readonly="!editMode"
-              :borderless="!editMode"
-              v-model="fullName"
-              type="text"
-              maxlength="40"
-              :rules="[ val=> !!val || 'Campo requerido', val=> val.length <= 40 || 'Máximo 40 caracteres' ]"
-            />
-            <q-input
-              class="col-8"
-              input-class="text-subtitle1 text-black text-center ellipsis"
-              placeholder="Teléfono"
-              standout="bg-blue-1"
-              dense
-              hide-bottom-space
-              :borderless="!editMode"
-              :readonly="!editMode"
-              v-model="phone"
-              type="tel"
-              mask="(##) #### ####"
-              unmasked-value
-              :rules="[ val=> !!val || 'Campo requerido', val => val.replace(/\s/g, '').length === 10 || 'Teléfono debe tener 10 dígitos']"
-            />
-            <q-input
-              class="col-8"
-              input-class="text-subtitle1 text-black text-center ellipsis"
-              placeholder="Correo electrónico"
-              standout="bg-blue-1"
-              dense
-              hide-bottom-space
-              :borderless="!editMode"
-              :readonly="!editMode"
-              v-model="email"
-              type="email"
-              :rules="[ val=> val.length <= 256 || 'Máximo 256 caracteres' ]"
-            />
-          </q-form>
-        </q-card-section>
-        <q-separator inset class="relative-position"/>
-        <q-card-actions align="center">
-          <q-btn
-            icon="phone"
-            color="primary"
-            size="1.3em"
-            dense
-            flat
-            :type="editMode ? '' : 'a'"
-            :href="`tel:${phone}`"
-            :disable="editMode"
-          >
-            <q-tooltip>Llamar por teléfono</q-tooltip>
-          </q-btn>
-          <q-btn
-            icon="email"
-            color="primary"
-            size="1.3em"
-            dense
-            flat
-            :type="editMode ? '' : 'a'"
-            :href="`mailto:${email}`"
-            :disable="editMode"
-          >
-            <q-tooltip>Enviar correo</q-tooltip>
-          </q-btn>
-        </q-card-actions>
-        <q-card-actions class="absolute-top-right">
-          <q-btn
-            dense
-            round
-            flat
-            icon="edit"
-            color="primary"
-            v-show="!editMode"
-            @click="editMode = !editMode"
-          >
-            <q-tooltip>Editar</q-tooltip>
-          </q-btn>
-          <q-btn
-            dense
-            round
-            flat
-            icon="clear"
-            color="red"
-            v-if="editMode"
-            @click="editMode = false"
-          >
-            <q-tooltip>Cancelar</q-tooltip>
-          </q-btn>
-          <q-btn
-            dense
-            round
-            flat
-            icon="done"
-            color="teal"
-            v-if="editMode"
-            @click="$refs.form.validate(true).then(out => { if(out) editMode = false })"
-          >
-            <q-tooltip>Guardar</q-tooltip>
-          </q-btn>
-        </q-card-actions>
-      </q-card>
-    </div>
+    <h-customer-card :value="customer"/>
   </q-page>
 </template>
 
 <script>
 import { createNamespacedHelpers } from 'vuex'
 const { mapActions } = createNamespacedHelpers('GomState')
+import CustomerDetails from 'src/graphql/queries/CustomerDetails.gql'
+import { QSpinnerBars } from 'quasar'
 
 export default {
   name: 'CustomerDetailsPage',
@@ -133,55 +18,60 @@ export default {
       required: true
     }
   },
+  components: {
+    'h-customer-card': () => import('components/customer/Card.vue')
+  },
   data () {
     return {
-      editMode: false,
-      model: {
-        name: 'Adriana',
-        lastName: 'Sanchez',
-        phone: '55 1234 5678',
-        email: 'adriana@sanchez.net'
+      customer: {
+        uid: '',
+        name1: '',
+        lastName1: '',
+        phone: '',
+        email: ''
       }
     }
   },
   created () {
+    this.changeActiveCustomer(this.id)
     this.changeActiveToolbar('h-customer-toolbar')
   },
   methods: {
-    ...mapActions(['changeActiveToolbar'])
+    ...mapActions(['changeActiveToolbar', 'changeActiveCustomer'])
   },
-  computed: {
-    fullName: {
-      get () {
-        if (this.model.lastName === '') return this.model.name
-        else return `${this.model.name} ${this.model.lastName}`
-      },
-      set (value) {
-        // get splitted name and assign it to the corresponding varibale
-        const fullName = value.replace(/\s+/g, ' ').trim().split(' ')
-        if (fullName.length === 1) {
-          this.model.name = fullName[0] // if only one name
-          this.model.lastName = ''
-        } else {
-          this.model.name = fullName.slice(0, fullName.length - 1).join(' ')
-          this.model.lastName = fullName[fullName.length - 1]
+  apollo: {
+    customer () {
+      return {
+        query: CustomerDetails,
+        error: err => {
+          console.log(err)
+        },
+        context: {
+          headers: {
+            'X-Csrf-Token': this.$q.cookies.get('csrf-token')
+          }
+        },
+        update (data) {
+          if (Object.entries(data).length === 0) {
+            return []
+          }
+          return {
+            uid: data.bp.uid,
+            name1: data.bp.name1,
+            lastName1: data.bp.lastName1,
+            phone: data.bp.phone,
+            email: data.bp.email
+          }
+        },
+        watchLoading (isLoading, countModifier) {
+          if (isLoading) this.$q.loading.show({ spinner: QSpinnerBars })
+          else this.$q.loading.hide()
+        },
+        variables () {
+          return {
+            id: this.id
+          }
         }
-      }
-    },
-    phone: {
-      get () {
-        return this.model.phone
-      },
-      set (value) {
-        this.model.phone = value
-      }
-    },
-    email: {
-      get () {
-        return this.model.email
-      },
-      set (value) {
-        this.model.email = value
       }
     }
   },
