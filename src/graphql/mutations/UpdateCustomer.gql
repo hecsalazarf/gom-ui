@@ -1,0 +1,9 @@
+### Update BP ###
+mutation UpdateBP($id: String!, $data: BpUpdateInp!) {
+ updateBP(id: $id, data: $data) {
+ 	name1
+  lastName1
+  email
+  phone
+ }
+}

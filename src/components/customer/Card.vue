@@ -102,7 +102,7 @@
           icon="done"
           color="teal"
           v-if="editMode"
-          @click="$refs.form.validate(true).then(out => { if(out) editMode = false })"
+          @click="$refs.form.validate(true).then(out => { if(out) save() })"
         >
           <q-tooltip>Guardar</q-tooltip>
         </q-btn>
@@ -112,6 +112,11 @@
 </template>
 
 <script>
+import UpdateCustomer from 'src/graphql/mutations/UpdateCustomer.gql'
+import CustomerDetails from 'src/graphql/queries/CustomerDetails.gql'
+import UserCustomers from 'src/graphql/queries/UserCustomers.gql'
+import { Auth } from 'src/helpers'
+
 export default {
   name: 'CustomerCard',
   props: {
@@ -123,12 +128,91 @@ export default {
   data () {
     return {
       editMode: false,
-      model: { ...this.value }
+      model: { ...this.value },
+      data: {}
     }
   },
   watch: {
     value (val) {
       this.model = { ...val }
+    }
+  },
+  methods: {
+    updateCache (cache, { data }) {
+      try {
+        let cached = cache.readQuery({
+          query: CustomerDetails,
+          variables: {
+            id: this.value.id
+          }
+        })
+        cached.bp = { ...cached.bp, ...data.updateBP }
+
+        // Update customer details cache
+        cache.writeQuery({
+          query: CustomerDetails,
+          variables: {
+            id: this.value.id
+          },
+          data: cached
+        })
+
+        cached = cache.readQuery({
+          query: UserCustomers,
+          variables: {
+            id: Auth.userId
+          }
+        })
+        const customer = cached.user.customers.edges
+        const index = customer.findIndex(el => el.node.uid === this.value.id)
+        customer[index].node = { ...customer[index].node, ...data.updateBP }
+
+        // Update customer list cache
+        cache.writeQuery({
+          query: UserCustomers,
+          variables: {
+            id: Auth.userId
+          },
+          data: cached
+        })
+      } catch (err) {
+        if (err.name !== 'Invariant Violation') console.error(err)
+      }
+    },
+    save () {
+      if (Object.entries(this.data).length < 1) {
+        this.editMode = false
+        return
+      }
+
+      this.$apollo.mutate({
+        mutation: UpdateCustomer,
+        variables: { id: this.value.id, data: this.data },
+        context: {
+          headers: {
+            'X-Csrf-Token': this.$q.cookies.get('csrf-token')
+          }
+        },
+        update: this.updateCache
+      }).then(res => this.onSuccess(res)).catch(err => this.onError(err))
+    },
+    onSuccess (response) {
+      this.editMode = false
+      this.$q.notify({
+        color: 'positive',
+        message: 'Cambios guardados',
+        icon: 'check_circle'
+      })
+    },
+    onError (error) {
+      console.log(error)
+      this.$q.notify({
+        color: 'negative',
+        message: 'No pudimos guardar los cambios :(',
+        icon: 'report_problem'
+      })
+      if (error.graphQLErrors.length > 0) console.error(error.graphQLErrors)
+      else console.log(error)
     }
   },
   computed: {
@@ -138,18 +222,27 @@ export default {
         else return `${this.model.name1} ${this.model.lastName1}`
       },
       set (value) {
-        // get splitted name and assign it to the corresponding varibale
+        // get splitted name and assign it to the corresponding variable
         const fullName = value
           .replace(/\s+/g, ' ')
           .trim()
           .split(' ')
         if (fullName.length === 1) {
-          this.model.name1 = fullName[0] // if only one name
+          this.model.name1 = fullName[0]
           this.model.lastName1 = ''
         } else {
           this.model.name1 = fullName.slice(0, fullName.length - 1).join(' ')
           this.model.lastName1 = fullName[fullName.length - 1]
         }
+
+        // this avoid unnecessary saving by comparing current value to original one
+        if (this.model.name1 !== this.value.name1) {
+          this.data.name1 = this.model.name1
+        } else delete this.data.name1
+
+        if (this.model.lastName1 !== this.value.lastName1) {
+          this.data.lastName1 = this.model.lastName1
+        } else delete this.data.lastName1
       }
     },
     phone: {
@@ -158,6 +251,9 @@ export default {
       },
       set (value) {
         this.model.phone = value
+        if (value !== this.value.phone) {
+          this.data.phone = value
+        } else delete this.data.phone
       }
     },
     email: {
@@ -166,6 +262,9 @@ export default {
       },
       set (value) {
         this.model.email = value
+        if (value !== this.value.email) {
+          this.data.email = value
+        } else delete this.data.email
       }
     },
     avatarText () {

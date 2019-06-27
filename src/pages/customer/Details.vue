@@ -56,7 +56,7 @@ export default {
             return []
           }
           return {
-            uid: data.bp.uid,
+            id: data.bp.uid,
             name1: data.bp.name1,
             lastName1: data.bp.lastName1,
             phone: data.bp.phone,
