@@ -92,7 +92,7 @@
         >
           <q-tooltip>Editar</q-tooltip>
         </q-btn>
-        <q-btn dense round flat icon="clear" color="red" v-if="editMode" @click="editMode = false">
+        <q-btn dense round flat icon="clear" color="red" v-if="editMode" @click="clear()">
           <q-tooltip>Cancelar</q-tooltip>
         </q-btn>
         <q-btn
@@ -178,6 +178,11 @@ export default {
       } catch (err) {
         if (err.name !== 'Invariant Violation') console.error(err)
       }
+    },
+    clear () {
+      this.model = { ...this.value }
+      this.data = {}
+      this.editMode = false
     },
     save () {
       if (Object.entries(this.data).length < 1) {
