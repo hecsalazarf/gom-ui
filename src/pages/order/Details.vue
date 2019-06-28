@@ -16,8 +16,8 @@
         </q-tabs>
         <q-separator/>
         <q-tab-panels v-model="tab" animated swipeable keep-alive>
-          <q-tab-panel name="items" class="q-gutter-y-md">
-            <h-order-item v-for="(item) in order.items" :key="item.id" v-model="item.data"/>
+          <q-tab-panel name="items" class="q-gutter-y-sm">
+            <h-order-item v-for="(item) in order.items" :key="item.data.id" v-model="item.data"/>
           </q-tab-panel>
 
           <q-tab-panel name="details">
@@ -155,6 +155,7 @@ export default {
   },
   beforeRouteLeave (to, from, next) {
     this.changeActiveToolbar(null)
+    this.changeActiveOrder(null)
     next()
   }
 }
