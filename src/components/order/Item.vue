@@ -1,24 +1,26 @@
 <template>
-  <q-card bordered flat class="bg-blue-1 h-rounded-borders-20 no-border">
+  <q-card bordered flat class="bg-blue-1 h-rounded-borders-20 no-border q-pa-xs">
     <q-form @submit="save()" @reset="clear()">
-      <q-item dense>
-        <q-item-section class="q-gutter-y-xs">
+      <div class="row">
+        <q-card-section class="q-gutter-y-xs col-8 q-pa-xs">
           <q-input
             input-class="text-subtitle1 text-weight-medium text-black"
             standout="bg-blue-1"
             dense
+            label="Descripción"
             v-model="description"
             :readonly="!editMode"
             :borderless="!editMode"
             type="text"
             maxlength="40"
-            :rules="[ val => !!val || '* Campo obligatorio', val => val.length <= 40 || 'Máximo 40 caracteres' ]"
+            :rules="[ val => !!val || 'Campo obligatorio', val => val.length <= 40 || 'Máximo 40 caracteres' ]"
             hide-bottom-space
           />
           <q-input
             input-class="text-caption text-black"
             standout="bg-blue-1"
             dense
+            label="Código"
             v-model="code"
             :readonly="!editMode"
             :borderless="!editMode"
@@ -27,9 +29,9 @@
             :rules="[ val => val.length <= 15 || 'Máximo 15 caracteres' ]"
             hide-bottom-space
           />
-        </q-item-section>
-        <q-item-section side>
-          <div class="row q-gutter-x-md">
+        </q-card-section>
+        <q-card-section class="col-4 q-pr-xs q-pl-xs">
+          <div class="row justify-end q-pr-sm">
             <q-btn
               icon="edit"
               color="primary"
@@ -43,6 +45,7 @@
               <q-tooltip>Editar</q-tooltip>
             </q-btn>
             <q-btn
+              class="q-ml-md"
               icon="delete"
               color="primary"
               size="0.75em"
@@ -67,6 +70,7 @@
               <q-tooltip>Cancelar</q-tooltip>
             </q-btn>
             <q-btn
+              class="q-ml-md"
               icon="done"
               color="teal"
               size="0.75em"
@@ -79,12 +83,12 @@
               <q-tooltip>Guardar</q-tooltip>
             </q-btn>
           </div>
-        </q-item-section>
-      </q-item>
-      <q-separator inset class="q-mt-xs"/>
-      <q-item>
-        <q-item-section class="q-gutter-y-xs">
+        </q-card-section>
+      </div>
+      <q-separator inset/>
+        <q-card-section class="q-gutter-xs q-pa-xs row">
           <q-input
+            class="col-4"
             standout="bg-blue-1"
             input-class="text-black"
             dense
@@ -94,14 +98,12 @@
             v-model.number="price"
             :readonly="!editMode"
             :borderless="!editMode"
-            :rules="[ val => !!val || '* Campo obligatorio', val => val < 100000 || 'Ups, muy caro' ]"
+            :rules="[ val => !!val || 'Campo obligatorio', val => val < 100000 || 'Ups, muy caro' ]"
             hide-bottom-space
           >
-            <template v-slot:prepend>
-              <q-icon name="monetization_on" color="primary"/>
-            </template>
           </q-input>
           <q-input
+            class="col-3"
             standout="bg-blue-1"
             input-class="text-black"
             dense
@@ -113,11 +115,9 @@
             :rules="[ val => val > 0 || 'Debe haber al menos 1', val => val < 10000 || 'Es demasiado' ]"
             hide-bottom-space
           >
-            <template v-slot:prepend>
-              <q-icon name="format_list_numbered" color="primary"/>
-            </template>
           </q-input>
           <q-input
+            class="col"
             standout="bg-blue-1"
             input-class="text-black"
             dense
@@ -130,12 +130,8 @@
             :rules="[ val => val.length <= 20 || 'Máximo 20 caracteres' ]"
             hide-bottom-space
           >
-            <template v-slot:prepend>
-              <q-icon name="stars" color="primary"/>
-            </template>
           </q-input>
-        </q-item-section>
-      </q-item>
+        </q-card-section>
     </q-form>
   </q-card>
 </template>
@@ -383,6 +379,7 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped lang="stylus">
+.q-card__section + .q-card__section
+  padding-top: 16px
 </style>
