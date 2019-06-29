@@ -21,6 +21,11 @@ const routes = [
             props: true
           },
           {
+            path: 'new',
+            name: 'newOrder',
+            component: () => import('pages/order/New.vue')
+          },
+          {
             path: 'id',
             redirect: { name: 'orders' }
           }

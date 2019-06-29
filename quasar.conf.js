@@ -40,7 +40,6 @@ module.exports = function (ctx) {
         'QRouteTab',
         'QAvatar',
         'QForm',
-        'QField',
         'QInput',
         'QSpinnerBars',
         'QFooter',
@@ -68,7 +67,10 @@ module.exports = function (ctx) {
         'QSpace',
         'QSelect',
         'QTooltip',
-        'QDialog'
+        'QDialog',
+        'QStepper',
+        'QStep',
+        'QStepperNavigation'
       ],
 
       directives: [
