@@ -76,7 +76,7 @@
                 :readonly="!editMode"
                 :borderless="!editMode"
               />
-              <q-input dense label="Total" v-model="totalAmount" readonly borderless/>
+              <q-input dense prefix="$" label="Total" v-model="totalAmount" readonly borderless/>
             </q-card-section>
           </q-form>
         </q-card>

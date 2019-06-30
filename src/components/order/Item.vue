@@ -1,5 +1,5 @@
 <template>
-  <q-card bordered flat class="bg-blue-1 h-rounded-borders-20 no-border q-pa-xs">
+  <q-card bordered flat class="bg-blue-1 h-rounded-borders-20 no-border q-pa-sm">
     <q-form @submit="save()" @reset="clear()">
       <div class="row">
         <q-card-section class="q-gutter-y-xs col-8 q-pa-xs">
@@ -95,6 +95,7 @@
             type="number"
             step="0.01"
             label="Precio"
+            prefix="$"
             v-model.number="price"
             :readonly="!editMode"
             :borderless="!editMode"

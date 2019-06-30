@@ -35,6 +35,7 @@
             standout="bg-blue-1"
             input-class="text-black"
             dense
+            prefix="$"
             label="Precio"
             type="number"
             step="0.01"
