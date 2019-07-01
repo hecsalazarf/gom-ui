@@ -1,114 +1,117 @@
 <template>
   <q-page padding>
-    <q-stepper
-      v-model="step"
-      ref="stepper"
-      color="primary"
-      animated
-      keep-alive
-      flat
-      done-color="teal"
-      :contracted="$q.screen.lt.md"
-    >
-      <q-step
-        :name="1"
-        title="Artículos"
-        :caption="caption"
-        icon="shopping_basket"
-        active-icon="shopping_basket"
-        :done="step > 1"
-        class="q-pb-sm"
+    <div class="row justify-center">
+      <q-stepper
+        v-model="step"
+        class="col-xs-12 col-sm-12 col-md-9"
+        ref="stepper"
+        color="primary"
+        animated
+        keep-alive
+        flat
+        done-color="teal"
+        :contracted="$q.screen.lt.md"
       >
-        <h-order-item
-          class="q-mb-sm"
-          v-for="(item) in order.items"
-          :key="item.data.id"
-          v-model="item.data"
-        />
-        <q-btn
-          icon="add"
-          label="Agregar artículo"
-          color="accent"
-          class="full-width"
-          rounded
-          dense
-          outline
-          no-caps
-          @click="order.items.push(order.items[0])"
-        />
-      </q-step>
+        <q-step
+          :name="1"
+          title="Artículos"
+          :caption="caption"
+          icon="shopping_basket"
+          active-icon="shopping_basket"
+          :done="step > 1"
+          class="q-pb-sm"
+        >
+          <h-order-item
+            class="q-mb-sm"
+            v-for="(item) in order.items"
+            :key="item.data.id"
+            v-model="item.data"
+          />
+          <q-btn
+            icon="add"
+            label="Agregar artículo"
+            color="accent"
+            class="full-width"
+            rounded
+            dense
+            outline
+            no-caps
+            @click="order.items.push(order.items[0])"
+          />
+        </q-step>
 
-      <q-step
-        :name="2"
-        title="Cliente"
-        :caption="caption"
-        icon="more"
-        active-icon="more"
-        :done="step > 2"
-      >
-        <div class="bg-blue-1 q-pa-sm q-mt-xs h-rounded-borders-20">
-          <div class="q-gutter-y-sm">
-            <!-- Order description -->
-            <q-input label="Descripción" standout dense input-class="text-black">
-              <template v-slot:prepend>
-                <q-icon name="notes"/>
-              </template>
-            </q-input>
-            <!-- Customer search -->
-            <h-customer-search/>
+        <q-step
+          :name="2"
+          title="Cliente"
+          :caption="caption"
+          icon="more"
+          active-icon="more"
+          :done="step > 2"
+        >
+          <div class="bg-blue-1 q-pa-sm q-mt-xs h-rounded-borders-20">
+            <div class="q-gutter-y-sm">
+              <!-- Order description -->
+              <q-input label="Descripción" standout dense input-class="text-black">
+                <template v-slot:prepend>
+                  <q-icon name="notes"/>
+                </template>
+              </q-input>
+              <!-- Customer search -->
+              <h-customer-search/>
+            </div>
           </div>
-        </div>
-      </q-step>
+        </q-step>
 
-      <q-step
-        :name="3"
-        title="Confirmación"
-        :caption="caption"
-        icon="rate_review"
-        active-icon="rate_review"
-      >
-        <h-order-summary/>
-      </q-step>
-      <template v-if="$q.screen.lt.md" v-slot:message>
-        <div
-          class="text-subtitle2 bg-blue-1 text-primary q-mb-md q-pl-lg q-pr-lg h-rounded-borders-20"
-        >{{caption}}</div>
-      </template>
-      <template v-slot:navigation>
-        <q-stepper-navigation class="float-right q-mt-md q-gutter-x-md">
-          <q-btn
-            v-if="step > 1"
-            @click="$refs.stepper.previous()"
-            color="primary"
-            icon="arrow_back"
-            size="lg"
-            dense
-            round
-            flat
-          />
-          <q-btn
-            v-if="step < 3"
-            @click="$refs.stepper.next()"
-            color="primary"
-            icon="arrow_forward"
-            size="lg"
-            dense
-            round
-            flat
-          />
-          <q-btn
-            v-if="step === 3"
-            @click="submit()"
-            color="teal"
-            icon="send"
-            size="lg"
-            dense
-            round
-            flat
-          />
-        </q-stepper-navigation>
-      </template>
-    </q-stepper>
+        <q-step
+          :name="3"
+          title="Confirmación"
+          :caption="caption"
+          icon="rate_review"
+          active-icon="rate_review"
+        >
+          <h-order-summary/>
+        </q-step>
+        <template v-if="$q.screen.lt.md" v-slot:message>
+          <div
+            class="text-subtitle2 bg-blue-1 text-primary q-mb-md q-pl-lg q-pr-lg h-rounded-borders-20"
+          >{{caption}}</div>
+        </template>
+        <template v-slot:navigation>
+          <q-stepper-navigation class="float-right q-mt-md q-gutter-x-md">
+            <q-btn
+              v-if="step > 1"
+              @click="$refs.stepper.previous()"
+              color="primary"
+              icon="arrow_back"
+              size="lg"
+              dense
+              round
+              flat
+            />
+            <q-btn
+              v-if="step < 3"
+              @click="$refs.stepper.next()"
+              color="primary"
+              icon="arrow_forward"
+              size="lg"
+              dense
+              round
+              flat
+            />
+            <q-btn
+              v-if="step === 3"
+              @click="submit()"
+              color="teal"
+              icon="send"
+              size="lg"
+              dense
+              round
+              flat
+            />
+          </q-stepper-navigation>
+        </template>
+      </q-stepper>
+    </div>
   </q-page>
 </template>
 
