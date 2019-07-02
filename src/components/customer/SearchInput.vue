@@ -4,12 +4,14 @@
     dense
     use-input
     hide-selected
+    hide-bottom-space
+    hide-dropdown-icon
     input-class="text-black"
     fill-input
     clearable
     label="Cliente"
-    dropdown-icon
     popup-content-style="max-height: 60vh"
+    @input="$emit('input', $event)"
     @filter="filter"
     v-model="selected"
     :options="options"

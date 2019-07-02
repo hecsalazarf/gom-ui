@@ -1,0 +1,17 @@
+###### Order creation #########
+mutation CreateOrder($data: OrderMutationInp!) {
+  createOrder (data: $data) {
+    uid
+    name
+    stage
+    createdAt
+    issuedTo {
+      edges {
+        node {
+          uid
+          name1
+        }
+      }
+    }
+  }
+}

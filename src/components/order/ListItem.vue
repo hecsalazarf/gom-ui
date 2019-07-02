@@ -92,6 +92,8 @@ export default {
         case 'CLOSED':
           icon = { name: 'cancel_presentation', color: 'negative' }
           break
+        default:
+          icon = { name: 'edit', color: 'negative' } // default, not implemented
       }
       return icon
     },
