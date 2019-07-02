@@ -152,6 +152,10 @@ export default {
       type: Object,
       default: () => {},
       required: true
+    },
+    readonly: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -237,6 +241,13 @@ export default {
       this.editMode = false // disable edit mode
     },
     save () {
+      // if readonly and available data, emit submit event only
+      if (this.readonly && Object.entries(this.data).length > 0) {
+        this.editMode = false
+        this.$emit('change', this.item)
+        return
+      }
+
       let promises = []
       if (Object.entries(this.data).length > 0) {
         promises.push(this.saveItem())
@@ -313,7 +324,11 @@ export default {
           color: 'primary'
         })
         .onOk(() => {
-          this.deleteIt()
+          if (this.readonly) {
+            this.$emit('delete', this.item)
+          } else {
+            this.deleteIt()
+          }
         })
     }
   },

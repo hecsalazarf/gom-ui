@@ -40,7 +40,7 @@
             type="number"
             step="0.01"
             min="0"
-            v-model.number="model.price"
+            v-model.number="model.price.amount"
             :rules="[ val => !!val || 'Campo obligatorio', val => val < 100000 || 'Ups, muy caro' ]"
             hide-bottom-space
           >
@@ -100,12 +100,21 @@ const { mapGetters } = createNamespacedHelpers('GomState')
 
 export default {
   name: 'HNewItem',
+  props: {
+    readonly: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
       model: {
         description: '',
         code: '',
-        price: 0,
+        price: {
+          amount: 0,
+          currency: 'MXN'
+        },
         quantity: 1,
         provider: ''
       }
@@ -123,6 +132,10 @@ export default {
       this.$emit('reset')
     },
     save () {
+      if (this.readonly) {
+        this.$emit('submit', this.model)
+        return
+      }
       this.$apollo
         .mutate({
           mutation: AddItemsToOrder,
@@ -195,8 +208,8 @@ export default {
                   pricing: [
                     {
                       node: {
-                        amount: this.model.price,
-                        currency: 'MXN' // default
+                        amount: this.model.price.amount,
+                        currency: this.model.price.currency // default
                       },
                       props: {
                         type: 'GENERAL'
