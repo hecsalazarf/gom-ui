@@ -62,7 +62,6 @@ export default {
   name: 'HNewCustomer',
   data () {
     return {
-      id: '',
       data: {},
       model: {
         name1: '',
@@ -85,7 +84,6 @@ export default {
           id: Auth.userId
         }
       })
-      this.id = data.createBP.uid
       cached.user.customers.edges.push({
         __typename: 'UserToBpEdge',
         node: data.createBP
@@ -109,26 +107,17 @@ export default {
           }
         },
         update: this.updateCache
-      }).then(res => this.onSuccess(res)).catch(err => this.onError(err))
-    },
-    onSuccess (response) {
-      this.$q.notify({
-        color: 'positive',
-        message: 'Cambios guardados',
-        icon: 'check_circle'
+      }).then(res => {
+        this.$router.push({ name: 'customerDetails', params: { id: res.data.createBP.uid } })
+      }).catch(error => {
+        this.$q.notify({
+          color: 'negative',
+          message: 'No pudimos crear al cliente :(',
+          icon: 'report_problem'
+        })
+        if (error.graphQLErrors.length > 0) console.error(error.graphQLErrors)
+        else console.log(error)
       })
-      this.$emit('submit')
-      this.$router.push({ name: 'customerDetails', params: { id: this.id } })
-    },
-    onError (error) {
-      console.log(error)
-      this.$q.notify({
-        color: 'negative',
-        message: 'No pudimos guardar los cambios :(',
-        icon: 'report_problem'
-      })
-      if (error.graphQLErrors.length > 0) console.error(error.graphQLErrors)
-      else console.log(error)
     }
   },
   computed: {
