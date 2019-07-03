@@ -26,6 +26,7 @@
             readonly
             @delete="order.items.splice(index, 1)"
             @change="order.items.splice(index, 1, { data: $event })"
+            @edit-mode="$event ? editCounter++ : editCounter--"
             v-for="(item, index) in order.items"
             :key="index"
             :value="item.data"
@@ -153,6 +154,7 @@ export default {
   data () {
     return {
       step: 1,
+      editCounter: 0, // counter that handles items being modified
       order: {
         name: '',
         customer: null,
@@ -253,11 +255,12 @@ export default {
     nextStep () {
       switch (this.step) {
         case 1:
-          if (this.order.items.length > 0) this.$refs.stepper.next()
+          // Continue to next step only if there's at least one item and no item is being edited
+          if (this.order.items.length > 0 && this.editCounter === 0) this.$refs.stepper.next()
           else {
             this.$q.notify({
               color: 'negative',
-              message: 'Agrega al menos un artículo',
+              message: this.editCounter > 0 ? 'Finalice las modificaciones pendientes' : 'Agrega al menos un artículo',
               icon: 'report_problem'
             })
           }

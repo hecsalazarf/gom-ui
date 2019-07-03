@@ -170,6 +170,9 @@ export default {
   watch: {
     value (val) {
       this.item = JSON.parse(JSON.stringify(val))
+    },
+    editMode (val) {
+      this.$emit('edit-mode', val)
     }
   },
   methods: {
