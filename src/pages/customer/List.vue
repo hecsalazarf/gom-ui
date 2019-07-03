@@ -1,5 +1,8 @@
 <template>
-  <q-page padding class="flex">
+  <q-page
+    padding
+    class="flex"
+  >
     <q-list class="full-width">
       <h-contact-group
         v-for="group in groups"
@@ -15,9 +18,15 @@
       transition-show="slide-up"
       transition-hide="slide-down"
     >
-      <h-new-customer @reset="$refs.newCustomer.hide()" class="new-customer-dialog"/>
+      <h-new-customer
+        class="new-customer-dialog"
+        @reset="$refs.newCustomer.hide()"
+      />
     </q-dialog>
-    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+    <q-page-sticky
+      position="bottom-right"
+      :offset="[18, 18]"
+    >
       <q-btn
         fab
         round
@@ -36,19 +45,19 @@ import { Auth } from 'src/helpers'
 import { QSpinnerBars } from 'quasar'
 
 export default {
-  props: {},
+  name: 'CustomerListPage',
   components: {
     'h-contact-group': () => import('components/customer/ContactGroup.vue'),
     'h-new-customer': () => import('components/customer/NewCustomer.vue')
   },
-  name: 'CustomerListPage',
+  props: {},
+  data () {
+    return {
+    }
+  },
   methods: {
     cancelD () {
       console.log('cancel')
-    }
-  },
-  data () {
-    return {
     }
   },
   apollo: {

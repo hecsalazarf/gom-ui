@@ -12,37 +12,37 @@
           <q-item-section side>
             <div class="row row q-gutter-x-md">
               <q-btn
+                v-show="!editMode"
                 icon="edit"
                 color="primary"
                 size="0.75em"
                 flat
                 dense
                 round
-                v-show="!editMode"
                 @click.stop="editMode = true"
               >
                 <q-tooltip>Editar</q-tooltip>
               </q-btn>
               <q-btn
+                v-if="editMode"
                 icon="clear"
                 color="red"
                 size="0.75em"
                 flat
                 dense
                 round
-                v-if="editMode"
                 @click.stop="clear()"
               >
                 <q-tooltip>Cancelar</q-tooltip>
               </q-btn>
               <q-btn
+                v-if="editMode"
                 icon="done"
                 color="teal"
                 size="0.75em"
                 flat
                 dense
                 round
-                v-if="editMode"
                 @click.stop="$refs.form.validate(true).then(out => { if(out) save() })"
               >
                 <q-tooltip>Guardar</q-tooltip>
@@ -54,11 +54,11 @@
           <q-form ref="form">
             <q-card-section class=" q-gutter-y-xs">
               <q-input
+                v-model="name"
                 dense
                 standout="bg-blue-1"
                 input-class="text-black"
                 label="Nombre del pedido"
-                v-model="name"
                 :readonly="!editMode"
                 :borderless="!editMode"
                 type="text"
@@ -67,16 +67,23 @@
                 hide-bottom-space
               />
               <q-select
+                v-model="status"
                 dense
                 color="red"
                 standout="bg-blue-1"
                 label="Estado"
-                v-model="status"
                 :options="statusOptions"
                 :readonly="!editMode"
                 :borderless="!editMode"
               />
-              <q-input dense prefix="$" label="Total" v-model="totalAmount" readonly borderless/>
+              <q-input
+                v-model="totalAmount"
+                dense
+                prefix="$"
+                label="Total"
+                readonly
+                borderless
+              />
             </q-card-section>
           </q-form>
         </q-card>
@@ -92,7 +99,13 @@
       >
         <q-card class="bg-blue-1">
           <q-card-section>
-            <q-input dense label="Nombre" v-model="customer" readonly borderless/>
+            <q-input
+              v-model="customer"
+              dense
+              label="Nombre"
+              readonly
+              borderless
+            />
           </q-card-section>
         </q-card>
       </q-expansion-item>
@@ -107,10 +120,22 @@
       >
         <q-card class="bg-blue-1">
           <q-card-section>
-            <q-input dense label="Pedido el" readonly borderless v-model="createdAt"/>
+            <q-input
+              v-model="createdAt"
+              dense
+              label="Pedido el"
+              readonly
+              borderless
+            />
           </q-card-section>
           <q-card-section>
-            <q-input dense label="Actualizado el" readonly borderless v-model="updatedAt"/>
+            <q-input
+              v-model="updatedAt"
+              dense
+              label="Actualizado el"
+              readonly
+              borderless
+            />
           </q-card-section>
         </q-card>
       </q-expansion-item>
@@ -147,6 +172,50 @@ export default {
       editMode: false,
       order: { ...this.value },
       data: {} // mutation variable
+    }
+  },
+  computed: {
+    customer () {
+      const name1 = this.order.customer.name1 ? this.order.customer.name1 : ''
+      const name2 = this.order.customer.name2 ? this.order.customer.name2 : ''
+      const lastName1 = this.order.customer.lastName1
+        ? this.order.customer.lastName1
+        : ''
+      const lastName2 = this.order.customer.lastName2
+        ? this.order.customer.lastName2
+        : ''
+      return `${name1} ${name2} ${lastName1} ${lastName2}`.replace(/\s+/g, ' ')
+    },
+    createdAt () {
+      return date.formatDate(this.order.createdAt, 'DD/MM/YYYY HH:mm:ss')
+    },
+    updatedAt () {
+      return date.formatDate(this.order.updatedAt, 'DD/MM/YYYY HH:mm:ss')
+    },
+    totalAmount () {
+      return this.order.items.reduce((acc, item) => acc + item.data.price.amount, 0)
+    },
+    status: {
+      get () {
+        return this.statusOptions.find(
+          status => status.value === this.order.stage
+        )
+      },
+      set (status) {
+        if (status !== this.value.stage) this.data.stage = status.value // if it changed, save it
+        else delete this.data.stage // otherwise remove key from data object
+        this.order.stage = status.value
+      }
+    },
+    name: {
+      get () {
+        return this.order.name
+      },
+      set (name) {
+        if (name !== this.value.name) this.data.name = name
+        else delete this.data.name
+        this.order.name = name
+      }
     }
   },
   watch: {
@@ -226,50 +295,6 @@ export default {
     ...mapActions([
       'emitEvent'
     ])
-  },
-  computed: {
-    customer () {
-      const name1 = this.order.customer.name1 ? this.order.customer.name1 : ''
-      const name2 = this.order.customer.name2 ? this.order.customer.name2 : ''
-      const lastName1 = this.order.customer.lastName1
-        ? this.order.customer.lastName1
-        : ''
-      const lastName2 = this.order.customer.lastName2
-        ? this.order.customer.lastName2
-        : ''
-      return `${name1} ${name2} ${lastName1} ${lastName2}`.replace(/\s+/g, ' ')
-    },
-    createdAt () {
-      return date.formatDate(this.order.createdAt, 'DD/MM/YYYY HH:mm:ss')
-    },
-    updatedAt () {
-      return date.formatDate(this.order.updatedAt, 'DD/MM/YYYY HH:mm:ss')
-    },
-    totalAmount () {
-      return this.order.items.reduce((acc, item) => acc + item.data.price.amount, 0)
-    },
-    status: {
-      get () {
-        return this.statusOptions.find(
-          status => status.value === this.order.stage
-        )
-      },
-      set (status) {
-        if (status !== this.value.stage) this.data.stage = status.value // if it changed, save it
-        else delete this.data.stage // otherwise remove key from data object
-        this.order.stage = status.value
-      }
-    },
-    name: {
-      get () {
-        return this.order.name
-      },
-      set (name) {
-        if (name !== this.value.name) this.data.name = name
-        else delete this.data.name
-        this.order.name = name
-      }
-    }
   }
 }
 </script>

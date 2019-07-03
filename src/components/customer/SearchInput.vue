@@ -1,5 +1,6 @@
 <template>
   <q-select
+    v-model="selected"
     standout
     dense
     use-input
@@ -11,27 +12,33 @@
     clearable
     label="Cliente"
     popup-content-style="max-height: 60vh"
-    @input="$emit('input', $event)"
-    @filter="filter"
-    v-model="selected"
     :options="options"
     :rules="[ val => val && Object.entries(val).length > 0 || 'Selecciona a un cliente' ]"
+    @input="$emit('input', $event)"
+    @filter="filter"
   >
     <template v-slot:no-option>
       <q-item>
-        <q-item-section class="text-grey">Sin resultados</q-item-section>
+        <q-item-section class="text-grey">
+          Sin resultados
+        </q-item-section>
       </q-item>
     </template>
 
     <template v-slot:prepend>
-      <q-icon name="contacts"/>
+      <q-icon name="contacts" />
     </template>
 
     <template v-slot:option="scope">
-      <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
+      <q-item
+        v-bind="scope.itemProps"
+        v-on="scope.itemEvents"
+      >
         <q-item-section>
           <q-item-label>{{ scope.opt.label }}</q-item-label>
-          <q-item-label caption>{{ scope.opt.phone }}</q-item-label>
+          <q-item-label caption>
+            {{ scope.opt.phone }}
+          </q-item-label>
         </q-item-section>
       </q-item>
     </template>

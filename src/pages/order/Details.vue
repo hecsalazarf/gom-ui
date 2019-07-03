@@ -1,5 +1,8 @@
 <template>
-  <q-page padding class="flex">
+  <q-page
+    padding
+    class="flex"
+  >
     <div class="row full-width justify-center content-start">
       <div class="col-xs-12 col-sm-12 col-md-8">
         <q-tabs
@@ -11,29 +14,50 @@
           align="justify"
           narrow-indicator
         >
-          <q-tab name="items" label="Articulos"/>
-          <q-tab name="details" label="Detalles"/>
+          <q-tab
+            name="items"
+            label="Articulos"
+          />
+          <q-tab
+            name="details"
+            label="Detalles"
+          />
         </q-tabs>
-        <q-separator/>
-        <q-tab-panels v-model="tab" animated swipeable keep-alive>
-          <q-tab-panel name="items" class="q-gutter-y-sm">
-            <h-order-item v-for="(item) in order.items" :key="item.data.id" v-model="item.data"/>
+        <q-separator />
+        <q-tab-panels
+          v-model="tab"
+          animated
+          swipeable
+          keep-alive
+        >
+          <q-tab-panel
+            name="items"
+            class="q-gutter-y-sm"
+          >
+            <h-order-item
+              v-for="(item) in order.items"
+              :key="item.data.id"
+              v-model="item.data"
+            />
           </q-tab-panel>
 
           <q-tab-panel name="details">
-            <h-order-details-tab :value="order"/>
+            <h-order-details-tab :value="order" />
           </q-tab-panel>
         </q-tab-panels>
       </div>
     </div>
     <q-dialog
+      ref="newItem"
       persistent
       :position="$q.platform.is.mobile ? 'bottom' : 'standard'"
       transition-show="slide-up"
       transition-hide="slide-down"
-      ref="newItem"
     >
-      <h-new-item @reset="$refs.newItem.hide()" @done="$refs.newItem.hide()"/>
+      <h-new-item
+        @reset="$refs.newItem.hide()"
+        @done="$refs.newItem.hide()"
+      />
     </q-dialog>
   </q-page>
 </template>
@@ -46,6 +70,11 @@ const { mapActions, mapGetters } = createNamespacedHelpers('GomState')
 
 export default {
   name: 'HOrderDetails',
+  components: {
+    'h-order-item': () => import('components/order/Item.vue'),
+    'h-order-details-tab': () => import('components/order/DetailsTab.vue'),
+    'h-new-item': () => import('components/order/NewItem.vue')
+  },
   props: {
     id: {
       type: String,
@@ -61,20 +90,18 @@ export default {
       }
     }
   },
-  components: {
-    'h-order-item': () => import('components/order/Item.vue'),
-    'h-order-details-tab': () => import('components/order/DetailsTab.vue'),
-    'h-new-item': () => import('components/order/NewItem.vue')
+  computed: {
+    ...mapGetters(['event'])
   },
-  methods: {
-    addItem () {
-      this.$refs.newItem.show()
+  watch: {
+    tab (newVal, oldVal) {
+      this.changeActiveOrderTab(newVal)
     },
-    ...mapActions([
-      'changeActiveOrder',
-      'changeActiveToolbar',
-      'changeActiveOrderTab'
-    ])
+    event (evt) {
+      if (evt.target === this.$options.name && this[evt.method]) {
+        this[evt.method](evt.args)
+      }
+    }
   },
   created () {
     /* this.$store.subscribeAction((action, state) => {
@@ -89,18 +116,15 @@ export default {
     this.changeActiveToolbar('h-order-toolbar')
     this.changeActiveOrderTab(this.tab)
   },
-  watch: {
-    tab (newVal, oldVal) {
-      this.changeActiveOrderTab(newVal)
+  methods: {
+    addItem () {
+      this.$refs.newItem.show()
     },
-    event (evt) {
-      if (evt.target === this.$options.name && this[evt.method]) {
-        this[evt.method](evt.args)
-      }
-    }
-  },
-  computed: {
-    ...mapGetters(['event'])
+    ...mapActions([
+      'changeActiveOrder',
+      'changeActiveToolbar',
+      'changeActiveOrderTab'
+    ])
   },
   apollo: {
     order () {

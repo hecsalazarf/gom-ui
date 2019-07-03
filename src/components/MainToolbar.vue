@@ -1,16 +1,32 @@
 <template>
   <q-toolbar>
-    <q-icon name="graphic_eq" class="text-white text-h4"/>
+    <q-icon
+      name="graphic_eq"
+      class="text-white text-h4"
+    />
     <q-toolbar-title>GOM</q-toolbar-title>
-    <q-btn flat round>
+    <q-btn
+      flat
+      round
+    >
       <q-menu>
         <q-list>
-          <q-item clickable v-close-popup @click="logout()">
-            <q-item-section class="text-body2">Salir</q-item-section>
+          <q-item
+            v-close-popup
+            clickable
+            @click="logout()"
+          >
+            <q-item-section class="text-body2">
+              Salir
+            </q-item-section>
           </q-item>
         </q-list>
       </q-menu>
-      <q-avatar color="accent" text-color="white" icon="person"/>
+      <q-avatar
+        color="accent"
+        text-color="white"
+        icon="person"
+      />
     </q-btn>
   </q-toolbar>
 </template>

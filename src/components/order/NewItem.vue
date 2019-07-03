@@ -1,95 +1,121 @@
 <template>
-    <q-card flat>
-      <q-form @submit="save()" @reset="clear()">
-        <q-card-section>
-          <div class="text-subtitle1 text-weight-medium">Nuevo artículo</div>
-        </q-card-section>
-        <q-card-section class="q-gutter-y-xs">
-          <q-input
-            autofocus
-            input-class="text-subtitle1 text-weight-medium text-black"
-            standout="bg-blue-1"
-            dense
-            label="Descripción"
-            v-model="model.description"
-            type="text"
-            maxlength="40"
-            :rules="[ val => !!val || 'Campo obligatorio', val => val.length <= 40 || 'Máximo 40 caracteres' ]"
-            hide-bottom-space
-          />
-          <q-input
-            input-class="text-caption text-black"
-            standout="bg-blue-1"
-            dense
-            label="Código"
-            v-model="model.code"
-            type="text"
-            maxlength="15"
-            :rules="[ val => val.length <= 15 || 'Máximo 15 caracteres' ]"
-            hide-bottom-space
-          />
-        </q-card-section>
-        <q-separator inset/>
-        <q-card-section class="q-gutter-y-xs">
-          <q-input
-            standout="bg-blue-1"
-            input-class="text-black"
-            dense
-            prefix="$"
-            label="Precio"
-            type="number"
-            step="0.01"
-            min="0"
-            v-model.number="model.price.amount"
-            :rules="[ val => !!val || 'Campo obligatorio', val => val < 100000 || 'Ups, muy caro' ]"
-            hide-bottom-space
-          >
-            <template v-slot:prepend>
-              <q-icon name="monetization_on" color="primary"/>
-            </template>
-          </q-input>
-          <q-input
-            dense
-            standout="bg-blue-1"
-            input-class="text-black"
-            label="Cantidad"
-            type="number"
-            min="1"
-            v-model.number="model.quantity"
-            :rules="[ val => val > 0 || 'Debe haber al menos 1', val => val < 10000 || 'Es demasiado' ]"
-            hide-bottom-space
-          >
-            <template v-slot:prepend>
-              <q-icon name="format_list_numbered" color="primary"/>
-            </template>
-          </q-input>
-          <q-input
-            dense
-            standout="bg-blue-1"
-            input-class="text-black"
-            label="Marca"
-            v-model="model.provider"
-            type="text"
-            maxlength="20"
-            :rules="[ val => val.length <= 20 || 'Máximo 20 caracteres' ]"
-            hide-bottom-space
-          >
-            <template v-slot:prepend>
-              <q-icon name="stars" color="primary"/>
-            </template>
-          </q-input>
-        </q-card-section>
-        <q-separator inset/>
-        <q-card-actions align="around">
-          <q-btn flat round color="red" icon="clear" type="reset">
-            <q-tooltip>Cancelar</q-tooltip>
-          </q-btn>
-          <q-btn flat round color="teal" icon="done" type="submit">
-            <q-tooltip>Guardar</q-tooltip>
-          </q-btn>
-        </q-card-actions>
-      </q-form>
-    </q-card>
+  <q-card flat>
+    <q-form
+      @submit="save()"
+      @reset="clear()"
+    >
+      <q-card-section>
+        <div class="text-subtitle1 text-weight-medium">
+          Nuevo artículo
+        </div>
+      </q-card-section>
+      <q-card-section class="q-gutter-y-xs">
+        <q-input
+          v-model="model.description"
+          autofocus
+          input-class="text-subtitle1 text-weight-medium text-black"
+          standout="bg-blue-1"
+          dense
+          label="Descripción"
+          type="text"
+          maxlength="40"
+          :rules="[ val => !!val || 'Campo obligatorio', val => val.length <= 40 || 'Máximo 40 caracteres' ]"
+          hide-bottom-space
+        />
+        <q-input
+          v-model="model.code"
+          input-class="text-caption text-black"
+          standout="bg-blue-1"
+          dense
+          label="Código"
+          type="text"
+          maxlength="15"
+          :rules="[ val => val.length <= 15 || 'Máximo 15 caracteres' ]"
+          hide-bottom-space
+        />
+      </q-card-section>
+      <q-separator inset />
+      <q-card-section class="q-gutter-y-xs">
+        <q-input
+          v-model.number="model.price.amount"
+          standout="bg-blue-1"
+          input-class="text-black"
+          dense
+          prefix="$"
+          label="Precio"
+          type="number"
+          step="0.01"
+          min="0"
+          :rules="[ val => !!val || 'Campo obligatorio', val => val < 100000 || 'Ups, muy caro' ]"
+          hide-bottom-space
+        >
+          <template v-slot:prepend>
+            <q-icon
+              name="monetization_on"
+              color="primary"
+            />
+          </template>
+        </q-input>
+        <q-input
+          v-model.number="model.quantity"
+          dense
+          standout="bg-blue-1"
+          input-class="text-black"
+          label="Cantidad"
+          type="number"
+          min="1"
+          :rules="[ val => val > 0 || 'Debe haber al menos 1', val => val < 10000 || 'Es demasiado' ]"
+          hide-bottom-space
+        >
+          <template v-slot:prepend>
+            <q-icon
+              name="format_list_numbered"
+              color="primary"
+            />
+          </template>
+        </q-input>
+        <q-input
+          v-model="model.provider"
+          dense
+          standout="bg-blue-1"
+          input-class="text-black"
+          label="Marca"
+          type="text"
+          maxlength="20"
+          :rules="[ val => val.length <= 20 || 'Máximo 20 caracteres' ]"
+          hide-bottom-space
+        >
+          <template v-slot:prepend>
+            <q-icon
+              name="stars"
+              color="primary"
+            />
+          </template>
+        </q-input>
+      </q-card-section>
+      <q-separator inset />
+      <q-card-actions align="around">
+        <q-btn
+          flat
+          round
+          color="red"
+          icon="clear"
+          type="reset"
+        >
+          <q-tooltip>Cancelar</q-tooltip>
+        </q-btn>
+        <q-btn
+          flat
+          round
+          color="teal"
+          icon="done"
+          type="submit"
+        >
+          <q-tooltip>Guardar</q-tooltip>
+        </q-btn>
+      </q-card-actions>
+    </q-form>
+  </q-card>
 </template>
 
 <script>
@@ -119,6 +145,38 @@ export default {
         provider: ''
       }
     }
+  },
+  computed: {
+    itemData () {
+      return {
+        edges: {
+          items: [
+            {
+              node: {
+                code: this.model.code,
+                quantity: this.model.quantity,
+                description: this.model.description,
+                provider: this.model.provider,
+                edges: {
+                  pricing: [
+                    {
+                      node: {
+                        amount: this.model.price.amount,
+                        currency: this.model.price.currency // default
+                      },
+                      props: {
+                        type: 'GENERAL'
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    ...mapGetters(['activeOrder'])
   },
   methods: {
     clear () {
@@ -192,38 +250,6 @@ export default {
       if (error.graphQLErrors.length > 0) console.error(error.graphQLErrors)
       else console.log(error)
     }
-  },
-  computed: {
-    itemData () {
-      return {
-        edges: {
-          items: [
-            {
-              node: {
-                code: this.model.code,
-                quantity: this.model.quantity,
-                description: this.model.description,
-                provider: this.model.provider,
-                edges: {
-                  pricing: [
-                    {
-                      node: {
-                        amount: this.model.price.amount,
-                        currency: this.model.price.currency // default
-                      },
-                      props: {
-                        type: 'GENERAL'
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          ]
-        }
-      }
-    },
-    ...mapGetters(['activeOrder'])
   }
 }
 </script>

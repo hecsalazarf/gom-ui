@@ -2,9 +2,9 @@
   <q-page padding>
     <div class="row justify-center">
       <q-stepper
+        ref="stepper"
         v-model="step"
         class="col-xs-12 col-sm-12 col-md-8"
-        ref="stepper"
         color="primary"
         animated
         keep-alive
@@ -22,14 +22,14 @@
           class="q-pb-sm"
         >
           <h-order-item
+            v-for="(item, index) in order.items"
+            :key="index"
             class="q-mb-sm"
             readonly
+            :value="item.data"
             @delete="order.items.splice(index, 1)"
             @change="order.items.splice(index, 1, { data: $event })"
             @edit-mode="$event ? editCounter++ : editCounter--"
-            v-for="(item, index) in order.items"
-            :key="index"
-            :value="item.data"
           />
           <q-btn
             icon="add"
@@ -53,11 +53,14 @@
           :done="step > 2"
         >
           <div class="bg-blue-1 q-pa-sm q-mt-xs h-rounded-borders-20">
-            <q-form class="q-gutter-y-sm" ref="form2">
+            <q-form
+              ref="form2"
+              class="q-gutter-y-sm"
+            >
               <!-- Order name -->
               <q-input
-                label="Descripción"
                 v-model="order.name"
+                label="Descripción"
                 standout
                 dense
                 input-class="text-black"
@@ -65,11 +68,11 @@
                 :rules="[ val => !!val || 'Campo obligatorio', val => val.length <= 40 || 'Máximo 40 caracteres' ]"
               >
                 <template v-slot:prepend>
-                  <q-icon name="notes"/>
+                  <q-icon name="notes" />
                 </template>
               </q-input>
               <!-- Customer search -->
-              <h-customer-search @input="order.customer = $event"/>
+              <h-customer-search @input="order.customer = $event" />
             </q-form>
           </div>
         </q-step>
@@ -81,56 +84,65 @@
           icon="rate_review"
           active-icon="rate_review"
         >
-          <h-order-summary :value="order"/>
+          <h-order-summary :value="order" />
         </q-step>
-        <template v-if="$q.screen.lt.md" v-slot:message>
+        <template
+          v-if="$q.screen.lt.md"
+          v-slot:message
+        >
           <div
             class="text-subtitle2 bg-blue-1 text-primary q-mb-md q-pl-lg q-pr-lg h-rounded-borders-20"
-          >{{caption}}</div>
+          >
+            {{ caption }}
+          </div>
         </template>
         <template v-slot:navigation>
           <q-stepper-navigation class="float-right q-mt-md q-gutter-x-md">
             <q-btn
               v-if="step > 1"
-              @click="$refs.stepper.previous()"
               color="primary"
               icon="arrow_back"
               size="lg"
               dense
               round
               flat
+              @click="$refs.stepper.previous()"
             />
             <q-btn
               v-if="step < 3"
-              @click="nextStep()"
               color="primary"
               icon="arrow_forward"
               size="lg"
               dense
               round
               flat
+              @click="nextStep()"
             />
             <q-btn
               v-if="step === 3"
-              @click="submit()"
               color="teal"
               icon="send"
               size="lg"
               dense
               round
               flat
+              @click="submit()"
             />
           </q-stepper-navigation>
         </template>
       </q-stepper>
       <q-dialog
+        ref="newItem"
         persistent
         :position="$q.platform.is.mobile ? 'bottom' : 'standard'"
         transition-show="slide-up"
         transition-hide="slide-down"
-        ref="newItem"
       >
-        <h-new-item readonly @reset="$refs.newItem.hide()" @submit="addItem($event)"/>
+        <h-new-item
+          readonly
+          @reset="$refs.newItem.hide()"
+          @submit="addItem($event)"
+        />
       </q-dialog>
     </div>
   </q-page>
@@ -160,6 +172,23 @@ export default {
         customer: null,
         items: []
       }
+    }
+  },
+  computed: {
+    caption () {
+      let caption
+      switch (this.step) {
+        case 1:
+          caption = 'Agrega los artículos a tu pedido'
+          break
+        case 2:
+          caption = 'Agrega una descripción y selecciona un cliente'
+          break
+        case 3:
+          caption = 'Confirma y envía tu pedido'
+          break
+      }
+      return caption
     }
   },
   created () {
@@ -280,23 +309,6 @@ export default {
       }
     },
     ...mapActions(['changeActiveToolbar'])
-  },
-  computed: {
-    caption () {
-      let caption
-      switch (this.step) {
-        case 1:
-          caption = 'Agrega los artículos a tu pedido'
-          break
-        case 2:
-          caption = 'Agrega una descripción y selecciona un cliente'
-          break
-        case 3:
-          caption = 'Confirma y envía tu pedido'
-          break
-      }
-      return caption
-    }
   },
   beforeRouteLeave (to, from, next) {
     this.changeActiveToolbar(null)

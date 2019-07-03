@@ -1,51 +1,73 @@
 <template>
-  <q-card class="h-rounded-borders-20" flat>
-    <q-form @submit="submit()" @reset="$emit('reset')">
+  <q-card
+    class="h-rounded-borders-20"
+    flat
+  >
+    <q-form
+      @submit="submit()"
+      @reset="$emit('reset')"
+    >
       <q-card-section>
-        <div class="text-subtitle1 text-weight-medium">Nuevo cliente</div>
+        <div class="text-subtitle1 text-weight-medium">
+          Nuevo cliente
+        </div>
       </q-card-section>
       <q-card-section class="q-gutter-y-xs">
         <q-input
+          v-model="fullName"
           autofocus
           input-class="text-black ellipsis"
           label="Nombre"
           standout="bg-blue-1"
           dense
           hide-bottom-space
-          v-model="fullName"
           type="text"
           maxlength="40"
           :rules="[ val=> !!val || 'Campo requerido', val=> val.length <= 40 || 'Máximo 40 caracteres' ]"
         />
         <q-input
+          v-model="phone"
           input-class="text-black ellipsis"
           label="Teléfono"
           standout="bg-blue-1"
           dense
           hide-bottom-space
-          v-model="phone"
           type="tel"
           mask="(##) #### ####"
           unmasked-value
           :rules="[ val=> !!val || 'Campo requerido', val => val.replace(/\s/g, '').length === 10 || 'Teléfono debe tener 10 dígitos']"
         />
         <q-input
+          v-model="email"
           input-class="text-black ellipsis"
           label="Correo electrónico"
           standout="bg-blue-1"
           dense
           hide-bottom-space
-          v-model="email"
           type="email"
           :rules="[ val=> val.length <= 256 || 'Máximo 256 caracteres' ]"
         />
       </q-card-section>
-      <q-separator inset/>
+      <q-separator inset />
       <q-card-actions align="around">
-        <q-btn icon="clear" color="red" dense flat round type="reset">
+        <q-btn
+          icon="clear"
+          color="red"
+          dense
+          flat
+          round
+          type="reset"
+        >
           <q-tooltip>Cancelar</q-tooltip>
         </q-btn>
-        <q-btn icon="done" color="teal" dense flat round type="submit">
+        <q-btn
+          icon="done"
+          color="teal"
+          dense
+          flat
+          round
+          type="submit"
+        >
           <q-tooltip>Guardar</q-tooltip>
         </q-btn>
       </q-card-actions>
@@ -74,50 +96,6 @@ export default {
           target: Auth.userId
         }
       }
-    }
-  },
-  methods: {
-    updateCache (cache, { data }) {
-      const cached = cache.readQuery({
-        query: UserCustomers,
-        variables: {
-          id: Auth.userId
-        }
-      })
-      cached.user.customers.edges.push({
-        __typename: 'UserToBpEdge',
-        node: data.createBP
-      })
-      // Update customer list cache
-      cache.writeQuery({
-        query: UserCustomers,
-        variables: {
-          id: Auth.userId
-        },
-        data: cached
-      })
-    },
-    submit () {
-      this.$apollo.mutate({
-        mutation: CreateCustomer,
-        variables: { data: { ...this.data, edges: { ...this.edges } } },
-        context: {
-          headers: {
-            'X-Csrf-Token': this.$q.cookies.get('csrf-token')
-          }
-        },
-        update: this.updateCache
-      }).then(res => {
-        this.$router.push({ name: 'customerDetails', params: { id: res.data.createBP.uid } })
-      }).catch(error => {
-        this.$q.notify({
-          color: 'negative',
-          message: 'No pudimos crear al cliente :(',
-          icon: 'report_problem'
-        })
-        if (error.graphQLErrors.length > 0) console.error(error.graphQLErrors)
-        else console.log(error)
-      })
     }
   },
   computed: {
@@ -171,6 +149,50 @@ export default {
           this.data.email = value
         } else delete this.data.email
       }
+    }
+  },
+  methods: {
+    updateCache (cache, { data }) {
+      const cached = cache.readQuery({
+        query: UserCustomers,
+        variables: {
+          id: Auth.userId
+        }
+      })
+      cached.user.customers.edges.push({
+        __typename: 'UserToBpEdge',
+        node: data.createBP
+      })
+      // Update customer list cache
+      cache.writeQuery({
+        query: UserCustomers,
+        variables: {
+          id: Auth.userId
+        },
+        data: cached
+      })
+    },
+    submit () {
+      this.$apollo.mutate({
+        mutation: CreateCustomer,
+        variables: { data: { ...this.data, edges: { ...this.edges } } },
+        context: {
+          headers: {
+            'X-Csrf-Token': this.$q.cookies.get('csrf-token')
+          }
+        },
+        update: this.updateCache
+      }).then(res => {
+        this.$router.push({ name: 'customerDetails', params: { id: res.data.createBP.uid } })
+      }).catch(error => {
+        this.$q.notify({
+          color: 'negative',
+          message: 'No pudimos crear al cliente :(',
+          icon: 'report_problem'
+        })
+        if (error.graphQLErrors.length > 0) console.error(error.graphQLErrors)
+        else console.log(error)
+      })
     }
   }
 }

@@ -18,18 +18,34 @@
         track-color="grey-3"
       />
     </q-avatar>
-    <q-toolbar-title class="text-subtitle1 text-weight-regular"/>
+    <q-toolbar-title class="text-subtitle1 text-weight-regular" />
     <div class="q-gutter-x-sm">
-      <q-btn flat dense icon="check_circle"/>
-      <q-btn flat dense icon="input"/>
-      <q-btn flat dense icon="cancel_presentation"/>
-      <q-btn flat dense icon="more_horiz">
+      <q-btn
+        flat
+        dense
+        icon="check_circle"
+      />
+      <q-btn
+        flat
+        dense
+        icon="input"
+      />
+      <q-btn
+        flat
+        dense
+        icon="cancel_presentation"
+      />
+      <q-btn
+        flat
+        dense
+        icon="more_horiz"
+      >
         <q-menu>
           <q-list dense>
             <q-item
               v-show="selectedOrders.length < availableOrders.length"
-              clickable
               v-close-popup
+              clickable
               @click="changeSelectedOrders(availableOrders)"
             >
               <q-item-section>Seleccionar todo</q-item-section>
@@ -56,14 +72,6 @@ export default {
       availableOrders: []
     }
   },
-  methods: {
-    updateAvailableOrders ({ data: { user } }) {
-      this.availableOrders = user.orders.edges.map(el => el.node.uid)
-    },
-    ...mapActions([
-      'changeSelectedOrders'
-    ])
-  },
   computed: {
     ...mapGetters([
       'selectedOrders'
@@ -82,6 +90,14 @@ export default {
   },
   beforeDestroy () {
     this.$q.addressbarColor.set() // back to default color
+  },
+  methods: {
+    updateAvailableOrders ({ data: { user } }) {
+      this.availableOrders = user.orders.edges.map(el => el.node.uid)
+    },
+    ...mapActions([
+      'changeSelectedOrders'
+    ])
   }
 }
 </script>

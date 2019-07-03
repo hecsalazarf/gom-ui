@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <h-customer-card :value="customer"/>
+    <h-customer-card :value="customer" />
   </q-page>
 </template>
 
@@ -12,14 +12,14 @@ import { QSpinnerBars } from 'quasar'
 
 export default {
   name: 'CustomerDetailsPage',
+  components: {
+    'h-customer-card': () => import('components/customer/Card.vue')
+  },
   props: {
     id: {
       type: String,
       required: true
     }
-  },
-  components: {
-    'h-customer-card': () => import('components/customer/Card.vue')
   },
   data () {
     return {

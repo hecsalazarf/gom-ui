@@ -1,14 +1,21 @@
 <template>
-  <q-card bordered flat class="bg-blue-1 h-rounded-borders-20 no-border q-pa-sm">
-    <q-form @submit="save()" @reset="clear()">
+  <q-card
+    bordered
+    flat
+    class="bg-blue-1 h-rounded-borders-20 no-border q-pa-sm"
+  >
+    <q-form
+      @submit="save()"
+      @reset="clear()"
+    >
       <div class="row">
         <q-card-section class="q-gutter-y-xs col-8 q-pa-xs">
           <q-input
+            v-model="description"
             input-class="text-subtitle1 text-weight-medium text-black"
             standout="bg-blue-1"
             dense
             label="Descripción"
-            v-model="description"
             :readonly="!editMode"
             :borderless="!editMode"
             type="text"
@@ -17,11 +24,11 @@
             hide-bottom-space
           />
           <q-input
+            v-model="code"
             input-class="text-caption text-black"
             standout="bg-blue-1"
             dense
             label="Código"
-            v-model="code"
             :readonly="!editMode"
             :borderless="!editMode"
             type="text"
@@ -33,18 +40,19 @@
         <q-card-section class="col-4 q-pr-xs q-pl-xs">
           <div class="row justify-end q-pr-sm">
             <q-btn
+              v-show="!editMode"
               icon="edit"
               color="primary"
               size="0.75em"
               flat
               dense
               round
-              v-show="!editMode"
               @click.stop="editMode = true"
             >
               <q-tooltip>Editar</q-tooltip>
             </q-btn>
             <q-btn
+              v-show="!editMode"
               class="q-ml-md"
               icon="delete"
               color="primary"
@@ -52,12 +60,12 @@
               flat
               dense
               round
-              v-show="!editMode"
               @click.stop="confirmDelete()"
             >
               <q-tooltip>Eliminar</q-tooltip>
             </q-btn>
             <q-btn
+              v-if="editMode"
               icon="clear"
               color="red"
               size="0.75em"
@@ -65,11 +73,11 @@
               dense
               round
               type="reset"
-              v-if="editMode"
             >
               <q-tooltip>Cancelar</q-tooltip>
             </q-btn>
             <q-btn
+              v-if="editMode"
               class="q-ml-md"
               icon="done"
               color="teal"
@@ -78,61 +86,57 @@
               dense
               round
               type="submit"
-              v-if="editMode"
             >
               <q-tooltip>Guardar</q-tooltip>
             </q-btn>
           </div>
         </q-card-section>
       </div>
-      <q-separator inset/>
-        <q-card-section class="q-gutter-xs q-pa-xs row">
-          <q-input
-            class="col-4"
-            standout="bg-blue-1"
-            input-class="text-black"
-            dense
-            type="number"
-            step="0.01"
-            label="Precio"
-            prefix="$"
-            v-model.number="price"
-            :readonly="!editMode"
-            :borderless="!editMode"
-            :rules="[ val => !!val || 'Campo obligatorio', val => val < 100000 || 'Ups, muy caro' ]"
-            hide-bottom-space
-          >
-          </q-input>
-          <q-input
-            class="col-3"
-            standout="bg-blue-1"
-            input-class="text-black"
-            dense
-            label="Cantidad"
-            v-model.number="quantity"
-            :readonly="!editMode"
-            :borderless="!editMode"
-            type="number"
-            :rules="[ val => val > 0 || 'Debe haber al menos 1', val => val < 10000 || 'Es demasiado' ]"
-            hide-bottom-space
-          >
-          </q-input>
-          <q-input
-            class="col"
-            standout="bg-blue-1"
-            input-class="text-black"
-            dense
-            label="Marca"
-            v-model="provider"
-            :readonly="!editMode"
-            :borderless="!editMode"
-            type="text"
-            maxlength="20"
-            :rules="[ val => val.length <= 20 || 'Máximo 20 caracteres' ]"
-            hide-bottom-space
-          >
-          </q-input>
-        </q-card-section>
+      <q-separator inset />
+      <q-card-section class="q-gutter-xs q-pa-xs row">
+        <q-input
+          v-model.number="price"
+          class="col-4"
+          standout="bg-blue-1"
+          input-class="text-black"
+          dense
+          type="number"
+          step="0.01"
+          label="Precio"
+          prefix="$"
+          :readonly="!editMode"
+          :borderless="!editMode"
+          :rules="[ val => !!val || 'Campo obligatorio', val => val < 100000 || 'Ups, muy caro' ]"
+          hide-bottom-space
+        />
+        <q-input
+          v-model.number="quantity"
+          class="col-3"
+          standout="bg-blue-1"
+          input-class="text-black"
+          dense
+          label="Cantidad"
+          :readonly="!editMode"
+          :borderless="!editMode"
+          type="number"
+          :rules="[ val => val > 0 || 'Debe haber al menos 1', val => val < 10000 || 'Es demasiado' ]"
+          hide-bottom-space
+        />
+        <q-input
+          v-model="provider"
+          class="col"
+          standout="bg-blue-1"
+          input-class="text-black"
+          dense
+          label="Marca"
+          :readonly="!editMode"
+          :borderless="!editMode"
+          type="text"
+          maxlength="20"
+          :rules="[ val => val.length <= 20 || 'Máximo 20 caracteres' ]"
+          hide-bottom-space
+        />
+      </q-card-section>
     </q-form>
   </q-card>
 </template>
@@ -166,6 +170,66 @@ export default {
       // naive deep copy, for more complex one, use a differente approach
       item: JSON.parse(JSON.stringify(this.value))
     }
+  },
+  computed: {
+    code: {
+      get () {
+        return this.item.code
+      },
+      set (code) {
+        if (code !== this.value.code) this.data.code = code // check changes
+        else delete this.data.code // if no changes, remove it to avoid unnecessary save
+        this.item.code = code
+      }
+    },
+    quantity: {
+      get () {
+        return this.item.quantity
+      },
+      set (quantity) {
+        if (quantity !== this.value.quantity) this.data.quantity = quantity
+        else delete this.data.quantity
+        this.item.quantity = quantity
+      }
+    },
+    description: {
+      get () {
+        return this.item.description
+      },
+      set (description) {
+        if (description !== this.value.description) this.data.description = description
+        else delete this.data.description
+        this.item.description = description
+      }
+    },
+    provider: {
+      get () {
+        return this.item.provider
+      },
+      set (provider) {
+        if (provider !== this.value.provider) this.data.provider = provider
+        else delete this.data.provider
+        this.item.provider = provider
+      }
+    },
+    price: {
+      get () {
+        return this.item.price.amount
+      },
+      set (amount) {
+        if (amount !== this.value.price.amount) {
+          this.edges.pricing = {
+            data: {
+              amount: amount,
+              currency: 'MXN' // default
+            },
+            id: this.item.price.uid
+          }
+        } else delete this.edges.pricing
+        this.item.price.amount = amount
+      }
+    },
+    ...mapGetters(['activeOrder'])
   },
   watch: {
     value (val) {
@@ -334,66 +398,6 @@ export default {
           }
         })
     }
-  },
-  computed: {
-    code: {
-      get () {
-        return this.item.code
-      },
-      set (code) {
-        if (code !== this.value.code) this.data.code = code // check changes
-        else delete this.data.code // if no changes, remove it to avoid unnecessary save
-        this.item.code = code
-      }
-    },
-    quantity: {
-      get () {
-        return this.item.quantity
-      },
-      set (quantity) {
-        if (quantity !== this.value.quantity) this.data.quantity = quantity
-        else delete this.data.quantity
-        this.item.quantity = quantity
-      }
-    },
-    description: {
-      get () {
-        return this.item.description
-      },
-      set (description) {
-        if (description !== this.value.description) this.data.description = description
-        else delete this.data.description
-        this.item.description = description
-      }
-    },
-    provider: {
-      get () {
-        return this.item.provider
-      },
-      set (provider) {
-        if (provider !== this.value.provider) this.data.provider = provider
-        else delete this.data.provider
-        this.item.provider = provider
-      }
-    },
-    price: {
-      get () {
-        return this.item.price.amount
-      },
-      set (amount) {
-        if (amount !== this.value.price.amount) {
-          this.edges.pricing = {
-            data: {
-              amount: amount,
-              currency: 'MXN' // default
-            },
-            id: this.item.price.uid
-          }
-        } else delete this.edges.pricing
-        this.item.price.amount = amount
-      }
-    },
-    ...mapGetters(['activeOrder'])
   }
 }
 </script>

@@ -1,7 +1,9 @@
 <template>
   <q-card class="q-ma-xs bg-blue-1 h-rounded-borders-20">
     <q-card-section class="column items-center">
-      <div class="col text-subtitle1 text-weight-medium">{{ value.name }}</div>
+      <div class="col text-subtitle1 text-weight-medium">
+        {{ value.name }}
+      </div>
       <div class="col">
         para
         <span class="text-italic">{{ value.customer.label }}</span>
@@ -11,9 +13,9 @@
       <div class="col-6">
         <ul class="no-margin q-pl-md">
           <li
-            class="text-weight-light text-subtitle1"
             v-for="(item, index) in value.items"
             :key="index"
+            class="text-weight-light text-subtitle1"
           >
             {{ item.data.quantity }}
             <span>{{ item.data.description }}</span>

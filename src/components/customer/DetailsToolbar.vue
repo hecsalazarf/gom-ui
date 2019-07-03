@@ -1,19 +1,33 @@
 <template>
   <q-toolbar>
-    <q-btn class="q-mr-sm" icon="arrow_back_ios" flat dense @click="$router.back()"/>
+    <q-btn
+      class="q-mr-sm"
+      icon="arrow_back_ios"
+      flat
+      dense
+      @click="$router.back()"
+    />
     <div class="column items-start justify-center content-start ellipsis">
-      <div class="col-5 text-subtitle1 text-weight-medium">{{fullName}}</div>
+      <div class="col-5 text-subtitle1 text-weight-medium">
+        {{ fullName }}
+      </div>
     </div>
-    <q-space/>
-    <q-btn flat dense icon="more_horiz">
+    <q-space />
+    <q-btn
+      flat
+      dense
+      icon="more_horiz"
+    >
       <q-menu>
         <q-list>
           <q-item
-            clickable
             v-close-popup
+            clickable
           >
             <q-item-section>
-              <q-item-label class="text-body2">Opcion 1</q-item-label>
+              <q-item-label class="text-body2">
+                Opcion 1
+              </q-item-label>
             </q-item-section>
           </q-item>
         </q-list>
@@ -37,6 +51,13 @@ export default {
       }
     }
   },
+  computed: {
+    fullName () {
+      if (this.header.lastName1 === '') return this.header.name1
+      else return `${this.header.name1} ${this.header.lastName1}`
+    },
+    ...mapGetters(['activeCustomer'])
+  },
   created () {
     this.$apollo
       .watchQuery({
@@ -54,13 +75,6 @@ export default {
         lastName1: bp.lastName1
       }
     }
-  },
-  computed: {
-    fullName () {
-      if (this.header.lastName1 === '') return this.header.name1
-      else return `${this.header.name1} ${this.header.lastName1}`
-    },
-    ...mapGetters(['activeCustomer'])
   }
 }
 </script>

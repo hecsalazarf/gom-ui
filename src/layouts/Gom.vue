@@ -1,18 +1,39 @@
 <template>
   <q-layout view="lhh lpr lFf">
-    <q-header reveal :reveal-offset="100">
-      <transition mode="out-in" leave-active-class="animated fadeOut">
-        <component :is="activeToolbar"/>
+    <q-header
+      reveal
+      :reveal-offset="100"
+    >
+      <transition
+        mode="out-in"
+        leave-active-class="animated fadeOut"
+      >
+        <component :is="activeToolbar" />
       </transition>
     </q-header>
     <q-footer v-show="$route.name === 'orders' || $route.name === 'customers'">
-      <q-tabs dense no-caps v-model="tab" active-color="white">
-        <q-route-tab name="orders" :to="{ name: 'orders' }" label="Pedidos" icon="shopping_cart"/>
-        <q-route-tab name="customers" :to="{ name: 'customers' }" label="Clientes" icon="contacts"/>
+      <q-tabs
+        v-model="tab"
+        dense
+        no-caps
+        active-color="white"
+      >
+        <q-route-tab
+          name="orders"
+          :to="{ name: 'orders' }"
+          label="Pedidos"
+          icon="shopping_cart"
+        />
+        <q-route-tab
+          name="customers"
+          :to="{ name: 'customers' }"
+          label="Clientes"
+          icon="contacts"
+        />
       </q-tabs>
     </q-footer>
     <q-page-container>
-      <router-view/>
+      <router-view />
     </q-page-container>
   </q-layout>
 </template>
@@ -36,15 +57,15 @@ export default {
       tab: 'orders'
     }
   },
-  methods: {
-    openURL,
-    ...mapActions(['changeActiveToolbar'])
-  },
   computed: {
     ...mapGetters(['activeToolbar'])
   },
   created () {
     this.changeActiveToolbar('h-main-toolbar')
+  },
+  methods: {
+    openURL,
+    ...mapActions(['changeActiveToolbar'])
   }
 }
 </script>

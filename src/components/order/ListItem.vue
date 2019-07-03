@@ -1,27 +1,52 @@
 <template>
   <div>
     <q-item
-      clickable
-      @click="handleClick($event)"
       v-touch-hold.mouse="handleHold"
+      clickable
       :active="isActive"
       active-class="bg-teal-1 text-grey-8"
+      @click="handleClick($event)"
     >
-      <q-item-section side top v-show="selectedOrders.length > 0">
-        <q-checkbox ref="selectionEl" v-model="selected" :val="value.id"/>
+      <q-item-section
+        v-show="selectedOrders.length > 0"
+        side
+        top
+      >
+        <q-checkbox
+          ref="selectionEl"
+          v-model="selected"
+          :val="value.id"
+        />
       </q-item-section>
 
       <q-item-section>
-        <q-item-label class="text-body1 text-weight-medium">{{value.name}}</q-item-label>
-        <q-item-label class="text-body2 text-weight-light" lines="1">{{value.customer}}</q-item-label>
+        <q-item-label class="text-body1 text-weight-medium">
+          {{ value.name }}
+        </q-item-label>
+        <q-item-label
+          class="text-body2 text-weight-light"
+          lines="1"
+        >
+          {{ value.customer }}
+        </q-item-label>
       </q-item-section>
 
-      <q-item-section side top>
-        <q-item-label>{{this.createdAt}}</q-item-label>
-        <q-icon :name="this.icon.name" :color="this.icon.color"/>
+      <q-item-section
+        side
+        top
+      >
+        <q-item-label>{{ createdAt }}</q-item-label>
+        <q-icon
+          :name="icon.name"
+          :color="icon.color"
+        />
       </q-item-section>
     </q-item>
-    <q-separator v-if="separator" inset spaced/>
+    <q-separator
+      v-if="separator"
+      inset
+      spaced
+    />
   </div>
 </template>
 
@@ -46,28 +71,6 @@ export default {
   },
   data () {
     return {}
-  },
-  watch: {
-    selected (newVal) {
-      if (newVal.length > 0) this.changeActiveToolbar('h-selection-toolbar')
-      else this.changeActiveToolbar(null)
-    }
-  },
-  methods: {
-    handleHold ({ evt, ...info }) {
-      this.$refs.selectionEl.toggle()
-    },
-    handleClick (evt) {
-      if (this.selectedOrders.length > 0) {
-        this.$refs.selectionEl.toggle()
-      } else {
-        this.$router.push({
-          name: 'orderDetails',
-          params: { id: this.value.id }
-        })
-      }
-    },
-    ...mapActions(['changeSelectedOrders', 'changeActiveToolbar'])
   },
   computed: {
     createdAt () {
@@ -110,7 +113,28 @@ export default {
     },
     ...mapGetters(['selectedOrders'])
   },
-  mounted () {}
+  watch: {
+    selected (newVal) {
+      if (newVal.length > 0) this.changeActiveToolbar('h-selection-toolbar')
+      else this.changeActiveToolbar(null)
+    }
+  },
+  methods: {
+    handleHold ({ evt, ...info }) {
+      this.$refs.selectionEl.toggle()
+    },
+    handleClick (evt) {
+      if (this.selectedOrders.length > 0) {
+        this.$refs.selectionEl.toggle()
+      } else {
+        this.$router.push({
+          name: 'orderDetails',
+          params: { id: this.value.id }
+        })
+      }
+    },
+    ...mapActions(['changeSelectedOrders', 'changeActiveToolbar'])
+  }
 }
 </script>
 

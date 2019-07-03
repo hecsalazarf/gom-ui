@@ -1,21 +1,30 @@
 <template>
   <div class="row no-wrap items-center full-width">
     <q-input
+      v-model="termFilter"
       input-class="h-filter-input"
       class="full-width"
       color="primary"
-      v-model="termFilter"
       dense
       debounce="500"
       clearable
       clear-icon="clear"
       :disable="isDisabled"
     />
-    <q-btn :disable="isDisabled" dense :flat="!activeFilters" :outline="activeFilters" icon="filter_list" color="primary">
+    <q-btn
+      :disable="isDisabled"
+      dense
+      :flat="!activeFilters"
+      :outline="activeFilters"
+      icon="filter_list"
+      color="primary"
+    >
       <q-menu>
         <q-list dense>
           <q-item>
-            <q-item-section class="text-weight-medium">Filtrar por</q-item-section>
+            <q-item-section class="text-weight-medium">
+              Filtrar por
+            </q-item-section>
           </q-item>
           <q-item v-close-popup>
             <q-item-section top>
@@ -75,6 +84,24 @@ export default {
       filterBy: new Map()
     }
   },
+  computed: {
+    activeFilters () {
+      return this.statusFilters.length > 0
+    },
+    isDisabled () {
+      return this.disable
+    }
+  },
+  watch: {
+    statusFilters (status) {
+      this.setFilter('status', status)
+      this.$emit('filter', this.filterBy)
+    },
+    termFilter (term) {
+      this.setFilter('term', term)
+      this.$emit('filter', this.filterBy)
+    }
+  },
   methods: {
     setFilter (key, value) {
       if (!value) {
@@ -99,24 +126,6 @@ export default {
       } else {
         this.filterBy.delete(key)
       }
-    }
-  },
-  watch: {
-    statusFilters (status) {
-      this.setFilter('status', status)
-      this.$emit('filter', this.filterBy)
-    },
-    termFilter (term) {
-      this.setFilter('term', term)
-      this.$emit('filter', this.filterBy)
-    }
-  },
-  computed: {
-    activeFilters () {
-      return this.statusFilters.length > 0
-    },
-    isDisabled () {
-      return this.disable
     }
   }
 }

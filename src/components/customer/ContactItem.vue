@@ -1,16 +1,27 @@
 <template>
   <div>
     <q-slide-item>
-      <q-item clickable v-ripple @click="$router.push({name: 'customerDetails', params: { id: value.id }})">
+      <q-item
+        v-ripple
+        clickable
+        @click="$router.push({name: 'customerDetails', params: { id: value.id }})"
+      >
         <q-item-section avatar>
-          <q-avatar color="primary" text-color="white">{{value.charName}}</q-avatar>
+          <q-avatar
+            color="primary"
+            text-color="white"
+          >
+            {{ value.charName }}
+          </q-avatar>
         </q-item-section>
         <q-item-section>
-          <q-item-label class="text-subtitle1">{{fullName}}</q-item-label>
+          <q-item-label class="text-subtitle1">
+            {{ fullName }}
+          </q-item-label>
         </q-item-section>
       </q-item>
     </q-slide-item>
-    <q-separator v-if="separator"/>
+    <q-separator v-if="separator" />
   </div>
 </template>
 
@@ -22,7 +33,7 @@ export default {
       type: Boolean,
       default: false
     },
-    'avatar-char': {
+    'avatarChar': {
       type: String,
       default: 'AC'
     },
