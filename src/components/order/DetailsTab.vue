@@ -66,13 +66,8 @@
                 :rules="[ val => !!val || '* Campo obligatorio', val => val.length <= 40 || 'Máximo 40 caracteres' ]"
                 hide-bottom-space
               />
-              <q-select
+              <h-status-select
                 v-model="status"
-                dense
-                color="red"
-                standout="bg-blue-1"
-                label="Estado"
-                :options="statusOptions"
                 :readonly="!editMode"
                 :borderless="!editMode"
               />
@@ -154,6 +149,9 @@ const { mapActions } = createNamespacedHelpers('GomState')
 
 export default {
   name: 'HOrderDetailsTab',
+  components: {
+    'h-status-select': () => import('components/order/StatusSelect.vue')
+  },
   props: {
     value: {
       type: Object,
@@ -163,12 +161,6 @@ export default {
   },
   data () {
     return {
-      statusOptions: [
-        { label: 'Nuevo', value: 'OPEN', icon: 'check' },
-        { label: 'Entregado', value: 'WON', icon: 'check' },
-        { label: 'Cancelado', value: 'CLOSED', icon: 'cancel_presentation' },
-        { label: 'En Proceso', value: 'IN_PROCESS', icon: 'input' }
-      ],
       editMode: false,
       order: { ...this.value },
       data: {} // mutation variable
@@ -197,9 +189,7 @@ export default {
     },
     status: {
       get () {
-        return this.statusOptions.find(
-          status => status.value === this.order.stage
-        )
+        return this.order.stage
       },
       set (status) {
         if (status !== this.value.stage) this.data.stage = status.value // if it changed, save it
