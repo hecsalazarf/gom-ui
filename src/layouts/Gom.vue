@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { openURL } from 'quasar'
+import { QSpinnerBars } from 'quasar'
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapActions } = createNamespacedHelpers('GomState')
 
@@ -62,9 +62,11 @@ export default {
   },
   created () {
     this.changeActiveToolbar('h-main-toolbar')
+    this.$q.loading.setDefaults({
+      spinner: QSpinnerBars // default spinner
+    })
   },
   methods: {
-    openURL,
     ...mapActions(['changeActiveToolbar'])
   }
 }

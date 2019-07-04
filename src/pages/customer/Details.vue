@@ -8,7 +8,6 @@
 import { createNamespacedHelpers } from 'vuex'
 const { mapActions } = createNamespacedHelpers('GomState')
 import CustomerDetails from 'src/graphql/queries/CustomerDetails.gql'
-import { QSpinnerBars } from 'quasar'
 
 export default {
   name: 'CustomerDetailsPage',
@@ -64,7 +63,7 @@ export default {
           }
         },
         watchLoading (isLoading, countModifier) {
-          if (isLoading) this.$q.loading.show({ spinner: QSpinnerBars })
+          if (isLoading) this.$q.loading.show()
           else this.$q.loading.hide()
         },
         variables () {

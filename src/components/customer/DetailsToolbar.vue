@@ -53,8 +53,10 @@ export default {
   },
   computed: {
     fullName () {
-      if (this.header.lastName1 === '') return this.header.name1
-      else return `${this.header.name1} ${this.header.lastName1}`
+      if (this.header.lastName1 === '' ||
+        !this.header.lastName1) { // check it's not null. Fix (#15)
+        return this.header.name1
+      } else return `${this.header.name1} ${this.header.lastName1}`
     },
     ...mapGetters(['activeCustomer'])
   },

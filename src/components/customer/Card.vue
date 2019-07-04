@@ -157,7 +157,8 @@ export default {
     fullName: {
       get () {
         // Turn first letter to uppercase
-        if (this.model.lastName1 === '') {
+        if (this.model.lastName1 === '' ||
+            !this.model.lastName1) { // check it's not null. Fix (#15)
           return (
             this.model.name1.charAt(0).toUpperCase() + this.model.name1.slice(1)
           )
@@ -277,20 +278,20 @@ export default {
         this.editMode = false
         return
       }
-
-      this.$apollo
-        .mutate({
-          mutation: UpdateCustomer,
-          variables: { id: this.value.id, data: this.data },
-          context: {
-            headers: {
-              'X-Csrf-Token': this.$q.cookies.get('csrf-token')
-            }
-          },
-          update: this.updateCache
-        })
+      this.$q.loading.show()
+      this.$apollo.mutate({
+        mutation: UpdateCustomer,
+        variables: { id: this.value.id, data: this.data },
+        context: {
+          headers: {
+            'X-Csrf-Token': this.$q.cookies.get('csrf-token')
+          }
+        },
+        update: this.updateCache
+      })
         .then(res => {
           this.editMode = false
+          this.$q.loading.hide()
           this.$q.notify({
             color: 'positive',
             message: 'Cambios guardados',
@@ -298,7 +299,7 @@ export default {
           })
         })
         .catch(error => {
-          console.log(error)
+          this.$q.loading.hide()
           this.$q.notify({
             color: 'negative',
             message: 'No pudimos guardar los cambios :(',

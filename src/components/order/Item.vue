@@ -33,7 +33,6 @@
             :borderless="!editMode"
             type="text"
             maxlength="15"
-            :rules="[ val => val.length <= 15 || 'Máximo 15 caracteres' ]"
             hide-bottom-space
           />
         </q-card-section>
@@ -100,10 +99,12 @@
           standout="bg-blue-1"
           input-class="text-black"
           dense
-          type="number"
-          step="0.01"
           label="Precio"
+          type="tel"
           prefix="$"
+          mask="#.##"
+          fill-mask="0"
+          reverse-fill-mask
           :readonly="!editMode"
           :borderless="!editMode"
           :rules="[ val => !!val || 'Campo obligatorio', val => val < 100000 || 'Ups, muy caro' ]"
@@ -133,7 +134,6 @@
           :borderless="!editMode"
           type="text"
           maxlength="20"
-          :rules="[ val => val.length <= 20 || 'Máximo 20 caracteres' ]"
           hide-bottom-space
         />
       </q-card-section>
@@ -214,7 +214,7 @@ export default {
     },
     price: {
       get () {
-        return this.item.price.amount
+        return this.item.price.amount.toString() // toString() to guarantee proper masked value (#11)
       },
       set (amount) {
         if (amount !== this.value.price.amount) {
@@ -287,17 +287,17 @@ export default {
       }
     },
     deleteIt () {
-      this.$apollo
-        .mutate({
-          mutation: RemoveItems,
-          variables: { orderId: this.activeOrder, items: [this.item.id] },
-          context: {
-            headers: {
-              'X-Csrf-Token': this.$q.cookies.get('csrf-token')
-            }
-          },
-          update: this.updateCache
-        })
+      this.$q.loading.show()
+      this.$apollo.mutate({
+        mutation: RemoveItems,
+        variables: { orderId: this.activeOrder, items: [this.item.id] },
+        context: {
+          headers: {
+            'X-Csrf-Token': this.$q.cookies.get('csrf-token')
+          }
+        },
+        update: this.updateCache
+      })
         .then(res => this.onSuccess(res))
         .catch(err => this.onError(err))
     },
@@ -323,6 +323,7 @@ export default {
         promises.push(this.savePrice())
       }
       if (promises.length > 0) {
+        this.$q.loading.show()
         Promise.all(promises)
           .then(res => this.onSuccess(res))
           .catch(err => this.onError(err))
@@ -353,6 +354,7 @@ export default {
       })
     },
     onSuccess (response) {
+      this.$q.loading.hide()
       this.editMode = false
       this.$q.notify({
         color: 'positive',
@@ -361,7 +363,7 @@ export default {
       })
     },
     onError (error) {
-      console.log(error)
+      this.$q.loading.hide()
       this.$q.notify({
         color: 'negative',
         message: 'No pudimos guardar los cambios :(',

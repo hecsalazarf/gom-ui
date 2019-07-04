@@ -64,7 +64,6 @@
 
 <script>
 import OrderDetails from 'src/graphql/queries/OrderDetails.gql'
-import { QSpinnerBars } from 'quasar'
 import { createNamespacedHelpers } from 'vuex'
 const { mapActions, mapGetters } = createNamespacedHelpers('GomState')
 
@@ -166,7 +165,7 @@ export default {
           }
         },
         watchLoading (isLoading, countModifier) {
-          if (isLoading) this.$q.loading.show({ spinner: QSpinnerBars })
+          if (isLoading) this.$q.loading.show()
           else this.$q.loading.hide()
         },
         variables () {

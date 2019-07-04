@@ -274,6 +274,7 @@ export default {
         this.editMode = false
         return // Do not save if no changes
       }
+      this.$q.loading.show()
       this.$apollo.mutate({
         mutation: UpdateOrder,
         variables: { id: this.order.id, data: this.data },
@@ -285,8 +286,10 @@ export default {
         update: this.updateCache
       }).then(res => {
         this.editMode = false
+        this.$q.loading.hide()
         this.$q.notify({ color: 'positive', message: 'Cambios guardados', icon: 'check_circle' })
       }).catch(err => {
+        this.$q.loading.hide()
         this.$q.notify({ color: 'negative', message: 'No pudimos guardar los cambios :(', icon: 'report_problem' })
         if (err.graphQLErrors.length > 0) console.error(err.graphQLErrors)
         else console.log(err)

@@ -152,6 +152,7 @@
 import CreateOrder from 'src/graphql/mutations/CreateOrder.gql'
 import UserOrders from 'src/graphql/queries/UserOrders.gql'
 import { Auth } from 'src/helpers'
+import { throttle } from 'quasar'
 import { createNamespacedHelpers } from 'vuex'
 const { mapActions } = createNamespacedHelpers('GomState')
 
@@ -254,6 +255,7 @@ export default {
           }
         }
       })
+      this.$q.loading.show()
       this.$apollo.mutate({
         mutation: CreateOrder,
         variables: { data }, // ,
@@ -264,8 +266,10 @@ export default {
         },
         update: this.updateCache
       }).then(res => {
+        this.$q.loading.hide()
         this.$router.replace({ name: 'orderDetails', params: { id: res.data.createOrder.uid } })
       }).catch(error => {
+        this.$q.loading.hide()
         this.$q.notify({
           color: 'negative',
           message: 'No pudimos crear el pedido :(',
@@ -281,13 +285,16 @@ export default {
       })
       this.$refs.newItem.hide()
     },
-    nextStep () {
+    notify: throttle(function (options) {
+      this.$q.notify(options)
+    }, 3000),
+    nextStep: throttle(function () {
       switch (this.step) {
         case 1:
           // Continue to next step only if there's at least one item and no item is being edited
           if (this.order.items.length > 0 && this.editCounter === 0) this.$refs.stepper.next()
           else {
-            this.$q.notify({
+            this.notify({
               color: 'negative',
               message: this.editCounter > 0 ? 'Finalice las modificaciones pendientes' : 'Agrega al menos un artículo',
               icon: 'report_problem'
@@ -298,7 +305,7 @@ export default {
           this.$refs.form2.validate(true).then(out => {
             if (out) this.$refs.stepper.next()
             else {
-              this.$q.notify({
+              this.notify({
                 color: 'negative',
                 message: 'Completa los campos',
                 icon: 'report_problem'
@@ -307,7 +314,7 @@ export default {
           })
           break
       }
-    },
+    }, 500),
     ...mapActions(['changeActiveToolbar'])
   },
   beforeRouteLeave (to, from, next) {

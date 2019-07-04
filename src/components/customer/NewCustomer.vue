@@ -101,8 +101,17 @@ export default {
   computed: {
     fullName: {
       get () {
-        if (this.model.lastName1 === '') return this.model.name1
-        else return `${this.model.name1} ${this.model.lastName1}`
+        // Turn first letter to uppercase
+        if (this.model.lastName1 === '' ||
+            !this.model.lastName1) { // check it's not null. Fix (#15)
+          return (
+            this.model.name1.charAt(0).toUpperCase() + this.model.name1.slice(1)
+          )
+        } else {
+          return `${this.model.name1.charAt(0).toUpperCase() +
+            this.model.name1.slice(1)} ${this.model.lastName1.charAt(0).toUpperCase() +
+            this.model.lastName1.slice(1)}`
+        }
       },
       set (value) {
         // get splitted name and assign it to the corresponding variable
@@ -173,6 +182,7 @@ export default {
       })
     },
     submit () {
+      this.$q.loading.show()
       this.$apollo.mutate({
         mutation: CreateCustomer,
         variables: { data: { ...this.data, edges: { ...this.edges } } },
@@ -183,8 +193,10 @@ export default {
         },
         update: this.updateCache
       }).then(res => {
+        this.$q.loading.hide()
         this.$router.push({ name: 'customerDetails', params: { id: res.data.createBP.uid } })
       }).catch(error => {
+        this.$q.loading.hide()
         this.$q.notify({
           color: 'negative',
           message: 'No pudimos crear al cliente :(',

@@ -47,8 +47,10 @@ export default {
   },
   computed: {
     fullName () {
-      if (this.value.lastName1 === '') return this.value.name1
-      else return `${this.value.name1} ${this.value.lastName1}`
+      if (this.value.lastName1 === '' ||
+          !this.value.lastName1) { // check it's not null. Fix (#15)
+        return this.value.name1
+      } else return `${this.value.name1} ${this.value.lastName1}`
     }
   }
 }

@@ -45,7 +45,6 @@
 <script>
 import UserOrders from 'src/graphql/queries/UserOrders.gql'
 import { Auth } from 'src/helpers'
-import { QSpinnerBars } from 'quasar'
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters } = createNamespacedHelpers('GomState')
 
@@ -145,7 +144,7 @@ export default {
           return this.allOrders
         },
         watchLoading (isLoading, countModifier) {
-          if (isLoading) this.$q.loading.show({ spinner: QSpinnerBars })
+          if (isLoading) this.$q.loading.show()
           else this.$q.loading.hide()
         },
         variables () {

@@ -42,7 +42,6 @@
 <script>
 import UserCustomers from 'src/graphql/queries/UserCustomers.gql'
 import { Auth } from 'src/helpers'
-import { QSpinnerBars } from 'quasar'
 
 export default {
   name: 'CustomerListPage',
@@ -110,7 +109,7 @@ export default {
           }, [])
         },
         watchLoading (isLoading, countModifier) {
-          if (isLoading) this.$q.loading.show({ spinner: QSpinnerBars })
+          if (isLoading) this.$q.loading.show()
           else this.$q.loading.hide()
         },
         variables () {

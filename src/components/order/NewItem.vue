@@ -30,7 +30,6 @@
           label="Código"
           type="text"
           maxlength="15"
-          :rules="[ val => val.length <= 15 || 'Máximo 15 caracteres' ]"
           hide-bottom-space
         />
       </q-card-section>
@@ -43,9 +42,10 @@
           dense
           prefix="$"
           label="Precio"
-          type="number"
-          step="0.01"
-          min="0"
+          type="tel"
+          mask="#.##"
+          fill-mask="0"
+          reverse-fill-mask
           :rules="[ val => !!val || 'Campo obligatorio', val => val < 100000 || 'Ups, muy caro' ]"
           hide-bottom-space
         >
@@ -82,7 +82,6 @@
           label="Marca"
           type="text"
           maxlength="20"
-          :rules="[ val => val.length <= 20 || 'Máximo 20 caracteres' ]"
           hide-bottom-space
         >
           <template v-slot:prepend>
@@ -153,10 +152,10 @@ export default {
           items: [
             {
               node: {
-                code: this.model.code,
+                code: this.model.code === '' ? undefined : this.model.code,
                 quantity: this.model.quantity,
                 description: this.model.description,
-                provider: this.model.provider,
+                provider: this.model.provider === '' ? undefined : this.model.provider,
                 edges: {
                   pricing: [
                     {
@@ -194,19 +193,36 @@ export default {
         this.$emit('submit', this.model)
         return
       }
-      this.$apollo
-        .mutate({
-          mutation: AddItemsToOrder,
-          variables: { id: this.activeOrder, data: this.itemData },
-          context: {
-            headers: {
-              'X-Csrf-Token': this.$q.cookies.get('csrf-token')
-            }
-          },
-          update: this.updateCache
+      this.$q.loading.show()
+      this.$apollo.mutate({
+        mutation: AddItemsToOrder,
+        variables: { id: this.activeOrder, data: this.itemData },
+        context: {
+          headers: {
+            'X-Csrf-Token': this.$q.cookies.get('csrf-token')
+          }
+        },
+        update: this.updateCache
+      })
+        .then(res => {
+          this.$q.loading.hide()
+          this.$q.notify({
+            color: 'positive',
+            message: 'Cambios guardados',
+            icon: 'check_circle'
+          })
+          this.$emit('done')
         })
-        .then(res => this.onSuccess(res))
-        .catch(err => this.onError(err))
+        .catch(error => {
+          this.$q.loading.hide()
+          this.$q.notify({
+            color: 'negative',
+            message: 'No pudimos guardar los cambios :(',
+            icon: 'report_problem'
+          })
+          if (error.graphQLErrors.length > 0) console.error(error.graphQLErrors)
+          else console.log(error)
+        })
     },
     updateCache (cache, { data }) {
       try {
@@ -231,24 +247,6 @@ export default {
       } catch (err) {
         console.log(err)
       }
-    },
-    onSuccess (response) {
-      this.$q.notify({
-        color: 'positive',
-        message: 'Cambios guardados',
-        icon: 'check_circle'
-      })
-      this.$emit('done')
-    },
-    onError (error) {
-      console.log(error)
-      this.$q.notify({
-        color: 'negative',
-        message: 'No pudimos guardar los cambios :(',
-        icon: 'report_problem'
-      })
-      if (error.graphQLErrors.length > 0) console.error(error.graphQLErrors)
-      else console.log(error)
     }
   }
 }
