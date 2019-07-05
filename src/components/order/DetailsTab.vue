@@ -182,7 +182,9 @@ export default {
       return date.formatDate(this.order.updatedAt, 'DD/MM/YYYY HH:mm:ss')
     },
     totalAmount () {
-      return this.order.items.reduce((acc, item) => acc + item.data.price.amount, 0)
+      return this.order.items.reduce(
+        (acc, item) => acc + item.data.price.amount,
+        0).toFixed(2) // toFixed() prevents floating point inaccuracy
     },
     status: {
       get () {
