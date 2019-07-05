@@ -15,7 +15,20 @@ function createApolloClient (ssr = false) {
     }
   })
 
-  const cache = new InMemoryCache()
+  const cache = new InMemoryCache({
+    /*
+    dataIdFromObject() changes the cache normalization key,
+    which results in the correct cache automatic updates
+    https://www.apollographql.com/docs/react/advanced/caching/#normalization
+     */
+    dataIdFromObject: object => {
+      if (object.__typename && object.uid !== undefined) {
+        return `${object.__typename}:${object.uid}`
+      }
+      return null
+    }
+  })
+
   // If on the client, recover the injected state
   if (!ssr) {
     if (typeof window !== 'undefined') {
