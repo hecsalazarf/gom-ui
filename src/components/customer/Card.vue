@@ -134,9 +134,6 @@
 
 <script>
 import UpdateCustomer from 'src/graphql/mutations/UpdateCustomer.gql'
-import CustomerDetails from 'src/graphql/queries/CustomerDetails.gql'
-import UserCustomers from 'src/graphql/queries/UserCustomers.gql'
-import { Auth } from 'src/helpers'
 
 export default {
   name: 'CustomerCard',
@@ -227,47 +224,6 @@ export default {
     }
   },
   methods: {
-    updateCache (cache, { data }) {
-      try {
-        let cached = cache.readQuery({
-          query: CustomerDetails,
-          variables: {
-            id: this.value.id
-          }
-        })
-        cached.bp = { ...cached.bp, ...data.updateBP }
-
-        // Update customer details cache
-        cache.writeQuery({
-          query: CustomerDetails,
-          variables: {
-            id: this.value.id
-          },
-          data: cached
-        })
-
-        cached = cache.readQuery({
-          query: UserCustomers,
-          variables: {
-            id: Auth.userId
-          }
-        })
-        const customer = cached.user.customers.edges
-        const index = customer.findIndex(el => el.node.uid === this.value.id)
-        customer[index].node = { ...customer[index].node, ...data.updateBP }
-
-        // Update customer list cache
-        cache.writeQuery({
-          query: UserCustomers,
-          variables: {
-            id: Auth.userId
-          },
-          data: cached
-        })
-      } catch (err) {
-        if (err.name !== 'Invariant Violation') console.error(err)
-      }
-    },
     clear () {
       this.model = { ...this.value }
       this.data = {}
@@ -286,8 +242,7 @@ export default {
           headers: {
             'X-Csrf-Token': this.$q.cookies.get('csrf-token')
           }
-        },
-        update: this.updateCache
+        }
       })
         .then(res => {
           this.editMode = false

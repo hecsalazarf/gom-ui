@@ -120,6 +120,7 @@
           :readonly="!editMode"
           :borderless="!editMode"
           type="number"
+          step="0.01"
           :rules="[ val => val > 0 || 'Debe haber al menos 1', val => val < 10000 || 'Es demasiado' ]"
           hide-bottom-space
         />
@@ -242,46 +243,27 @@ export default {
   methods: {
     updateCache (cache, { data }) {
       try {
-        // Read order details cache
-        let cached = cache.readQuery({
-          query: OrderDetails,
-          variables: {
-            id: this.activeOrder
-          }
-        })
-        const items = cached.order.items.edges
-        const index = items.findIndex(({ node }) => node.uid === this.item.id)
-
-        if (data.updateItem) {
-          // item data
-          items[index].node = { ...items[index].node, ...data.updateItem }
-        }
-
-        if (data.updatePrice) {
-          // pricing data
-          const pricing = items[index].node.pricing.edges
-          const iprice = pricing.findIndex(
-            ({ node }) => node.uid === this.edges.pricing.id
-          )
-          pricing[iprice].node = {
-            ...pricing[iprice].node,
-            ...data.updatePrice
-          }
-        }
-
         if (data.removeItems) {
           // item removal
+          // Read order details cache
+          let cached = cache.readQuery({
+            query: OrderDetails,
+            variables: {
+              id: this.activeOrder
+            }
+          })
+          const items = cached.order.items.edges
+          const index = items.findIndex(({ node }) => node.uid === this.item.id)
           items.splice(index, 1)
+          // Update order details cache
+          cache.writeQuery({
+            query: OrderDetails,
+            variables: {
+              id: this.activeOrder
+            },
+            data: cached
+          })
         }
-
-        // Update order details cache
-        cache.writeQuery({
-          query: OrderDetails,
-          variables: {
-            id: this.activeOrder
-          },
-          data: cached
-        })
       } catch (err) {
         console.log(err)
       }

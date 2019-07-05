@@ -141,9 +141,6 @@
 <script>
 import { date } from 'quasar'
 import UpdateOrder from 'src/graphql/mutations/UpdateOrder.gql'
-import OrderDetails from 'src/graphql/queries/OrderDetails.gql'
-import UserOrders from 'src/graphql/queries/UserOrders.gql'
-import { Auth } from 'src/helpers'
 import { createNamespacedHelpers } from 'vuex'
 const { mapActions } = createNamespacedHelpers('GomState')
 
@@ -214,46 +211,6 @@ export default {
     }
   },
   methods: {
-    updateCache (cache, { data: { updateOrder } }) {
-      try {
-        // Read order details cache
-        let cached = cache.readQuery({
-          query: OrderDetails,
-          variables: {
-            id: this.order.id
-          }
-        })
-        cached.order = { ...cached.order, ...updateOrder }
-        // Update order details cache
-        cache.writeQuery({
-          query: OrderDetails,
-          variables: {
-            id: this.order.id
-          },
-          data: cached
-        })
-        // Read orders cache
-        cached = cache.readQuery({
-          query: UserOrders,
-          variables: {
-            id: Auth.userId
-          }
-        })
-        const orders = cached.user.orders.edges
-        const index = orders.findIndex(({ node }) => node.uid === this.order.id)
-        orders[index].node = { ...orders[index].node, ...updateOrder }
-        // Update orders cache
-        cache.writeQuery({
-          query: UserOrders,
-          variables: {
-            id: Auth.userId
-          },
-          data: cached
-        })
-      } catch (err) {
-        console.err(err)
-      }
-    },
     clear () {
       this.order = { ...this.value } // revert changes
       this.data = {} // reset temporary changes
@@ -272,8 +229,7 @@ export default {
           headers: {
             'X-Csrf-Token': this.$q.cookies.get('csrf-token')
           }
-        },
-        update: this.updateCache
+        }
       }).then(res => {
         this.editMode = false
         this.$q.loading.hide()

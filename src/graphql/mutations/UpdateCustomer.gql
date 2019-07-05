@@ -1,6 +1,7 @@
 ### Update BP ###
 mutation UpdateBP($id: String!, $data: BpUpdateInp!) {
  updateBP(id: $id, data: $data) {
+  uid
  	name1
   lastName1
   email
