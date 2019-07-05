@@ -66,7 +66,7 @@ export default {
     mapOptions (options) {
       return options.map(el => {
         let fullName
-        if (el.node.lastName1 === '') fullName = el.node.name1
+        if (el.node.lastName1 === '' || !el.node.lastName1) fullName = el.node.name1
         else fullName = `${el.node.name1} ${el.node.lastName1}`
         return {
           value: el.node.uid,

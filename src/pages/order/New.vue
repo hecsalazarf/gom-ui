@@ -318,6 +318,31 @@ export default {
     ...mapActions(['changeActiveToolbar'])
   },
   beforeRouteLeave (to, from, next) {
+    if (this.order.items.length > 0) {
+      this.$q.dialog({
+        title: 'Tienes un pedido en proceso',
+        message: 'Al continuar perderás los cambios ¿Continuar?',
+        position: 'bottom',
+        persistent: true,
+        cancel: {
+          label: 'No',
+          color: 'primary',
+          flat: true
+        },
+        ok: {
+          label: 'Sí',
+          color: 'primary',
+          flat: true
+        },
+        stackButtons: false,
+        color: 'primary'
+      }).onOk(() => {
+        this.changeActiveToolbar(null)
+        next()
+      }).onCancel(() => next(false))
+      return
+    }
+
     this.changeActiveToolbar(null)
     next()
   }
