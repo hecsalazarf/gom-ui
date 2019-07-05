@@ -39,6 +39,17 @@
               :key="item.data.id"
               v-model="item.data"
             />
+            <q-btn
+              icon="add"
+              label="Agregar artículo"
+              color="accent"
+              class="full-width"
+              rounded
+              dense
+              outline
+              no-caps
+              @click="$refs.newItem.show()"
+            />
           </q-tab-panel>
 
           <q-tab-panel name="details">
@@ -116,9 +127,6 @@ export default {
     this.changeActiveOrderTab(this.tab)
   },
   methods: {
-    addItem () {
-      this.$refs.newItem.show()
-    },
     ...mapActions([
       'changeActiveOrder',
       'changeActiveToolbar',
