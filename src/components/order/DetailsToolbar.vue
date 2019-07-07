@@ -40,14 +40,14 @@
       </div>
     </div>
     <q-space />
-    <q-btn
+    <!-- <q-btn
       v-if="activeOrder"
       flat
       dense
       icon="more_horiz"
-    >
-      <!-- no-refocus to prevent input to lose focus in NewItemComponent -->
-      <q-menu no-refocus>
+    > -->
+    <!-- no-refocus to prevent input to lose focus in NewItemComponent -->
+    <!-- <q-menu no-refocus>
         <q-list>
           <q-item
             v-if="activeOrderTab === 'items'"
@@ -61,7 +61,7 @@
           </q-item>
         </q-list>
       </q-menu>
-    </q-btn>
+    </q-btn> -->
   </q-toolbar>
 </template>
 

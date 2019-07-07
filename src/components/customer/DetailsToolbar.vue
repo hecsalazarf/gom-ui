@@ -13,7 +13,7 @@
       </div>
     </div>
     <q-space />
-    <q-btn
+    <!-- <q-btn
       flat
       dense
       icon="more_horiz"
@@ -32,7 +32,7 @@
           </q-item>
         </q-list>
       </q-menu>
-    </q-btn>
+    </q-btn> -->
   </q-toolbar>
 </template>
 
