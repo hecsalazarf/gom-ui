@@ -147,6 +147,7 @@ import UpdateItem from 'src/graphql/mutations/UpdateItem.gql'
 import UpdatePrice from 'src/graphql/mutations/UpdatePrice.gql'
 import OrderDetails from 'src/graphql/queries/OrderDetails.gql'
 import RemoveItems from 'src/graphql/mutations/RemoveItems.gql'
+import gql from 'graphql-tag'
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters } = createNamespacedHelpers('GomState')
 
@@ -291,7 +292,9 @@ export default {
     },
     save () {
       // if readonly and available data, emit submit event only
-      if (this.readonly && Object.entries(this.data).length > 0) {
+      const count = Object.entries(this.data).length
+      const edges = Object.entries(this.edges).length
+      if (this.readonly && (count > 0 || edges > 0)) {
         this.editMode = false
         this.$emit('change', this.item)
         return
@@ -307,6 +310,23 @@ export default {
       if (promises.length > 0) {
         this.$q.loading.show()
         Promise.all(promises)
+          .then(res => {
+            this.$apollo.mutate({
+              mutation: gql`
+                mutation UpdateOrder($id: String!, $data: OrderUpdateInp!) {
+                  updateOrder(id: $id, data: $data) {
+                    uid
+                    updatedAt
+                  }
+                }`,
+              variables: { id: this.activeOrder, data: {} },
+              context: {
+                headers: {
+                  'X-Csrf-Token': this.$q.cookies.get('csrf-token')
+                }
+              }
+            })
+          })
           .then(res => this.onSuccess(res))
           .catch(err => this.onError(err))
       } else this.editMode = false

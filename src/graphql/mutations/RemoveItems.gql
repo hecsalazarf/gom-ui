@@ -2,5 +2,6 @@
 mutation RemoveItems($orderId: String!, $items: [ID!]) {
 	removeItems(orderId: $orderId, items: $items) {
    uid
+   updatedAt
   }
 }
