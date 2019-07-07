@@ -1,10 +1,12 @@
 <template>
-  <q-toolbar>
+  <q-toolbar class="bg-white">
     <q-icon
       name="graphic_eq"
-      class="text-white text-h4"
+      class="text-blue-grey-9 text-h4"
     />
-    <q-toolbar-title>GOM</q-toolbar-title>
+    <q-toolbar-title class="text-blue-grey-9">
+      GOM
+    </q-toolbar-title>
     <q-btn
       flat
       round

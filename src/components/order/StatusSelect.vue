@@ -3,7 +3,7 @@
     v-model="status"
     dense
     color="red"
-    standout="bg-blue-1"
+    standout="bg-secondary"
     label="Estado"
     :options="options | validOptions(value, rules)"
     :readonly="readonly"

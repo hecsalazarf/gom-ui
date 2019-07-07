@@ -2,7 +2,7 @@
   <q-card
     bordered
     flat
-    class="bg-blue-1 h-rounded-borders-20 no-border q-pa-sm"
+    class="bg-secondary h-rounded-borders-20 no-border q-pa-sm"
   >
     <q-form
       @submit="save()"
@@ -13,7 +13,7 @@
           <q-input
             v-model="description"
             input-class="text-subtitle1 text-weight-medium text-black"
-            standout="bg-blue-1"
+            standout="bg-secondary"
             dense
             label="Descripción"
             :readonly="!editMode"
@@ -26,7 +26,7 @@
           <q-input
             v-model="code"
             input-class="text-caption text-black"
-            standout="bg-blue-1"
+            standout="bg-secondary"
             dense
             label="Código"
             :readonly="!editMode"
@@ -41,7 +41,7 @@
             <q-btn
               v-show="!editMode"
               icon="edit"
-              color="primary"
+              color="accent"
               size="0.75em"
               flat
               dense
@@ -54,7 +54,7 @@
               v-show="!editMode"
               class="q-ml-md"
               icon="delete"
-              color="primary"
+              color="accent"
               size="0.75em"
               flat
               dense
@@ -96,7 +96,7 @@
         <q-input
           v-model.number="price"
           class="col-4"
-          standout="bg-blue-1"
+          standout="bg-secondary"
           input-class="text-black"
           dense
           label="Precio"
@@ -113,7 +113,7 @@
         <q-input
           v-model.number="quantity"
           class="col-3"
-          standout="bg-blue-1"
+          standout="bg-secondary"
           input-class="text-black"
           dense
           label="Cantidad"
@@ -127,7 +127,7 @@
         <q-input
           v-model="provider"
           class="col"
-          standout="bg-blue-1"
+          standout="bg-secondary"
           input-class="text-black"
           dense
           label="Marca"

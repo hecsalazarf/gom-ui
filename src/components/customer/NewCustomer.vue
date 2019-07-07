@@ -18,7 +18,7 @@
           autofocus
           input-class="text-black ellipsis"
           label="Nombre"
-          standout="bg-blue-1"
+          standout="bg-secondary"
           dense
           hide-bottom-space
           type="text"
@@ -29,7 +29,7 @@
           v-model="phone"
           input-class="text-black ellipsis"
           label="Teléfono"
-          standout="bg-blue-1"
+          standout="bg-secondary"
           dense
           hide-bottom-space
           type="tel"
@@ -41,7 +41,7 @@
           v-model="email"
           input-class="text-black ellipsis"
           label="Correo electrónico"
-          standout="bg-blue-1"
+          standout="bg-secondary"
           dense
           hide-bottom-space
           type="email"

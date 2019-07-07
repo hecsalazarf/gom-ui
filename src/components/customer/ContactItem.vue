@@ -8,7 +8,7 @@
       >
         <q-item-section avatar>
           <q-avatar
-            color="primary"
+            color="customers"
             text-color="white"
           >
             {{ value.charName }}

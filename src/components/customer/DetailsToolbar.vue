@@ -3,12 +3,13 @@
     <q-btn
       class="q-mr-sm"
       icon="arrow_back_ios"
+      color="primary"
       flat
       dense
       @click="$router.back()"
     />
     <div class="column items-start justify-center content-start ellipsis">
-      <div class="col-5 text-subtitle1 text-weight-medium">
+      <div class="col-5 text-subtitle1 text-weight-medium text-primary">
         {{ fullName }}
       </div>
     </div>

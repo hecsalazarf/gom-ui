@@ -6,6 +6,7 @@
         v-model="step"
         class="col-xs-12 col-sm-12 col-md-8"
         color="primary"
+        active-color="accent"
         animated
         keep-alive
         flat
@@ -52,7 +53,7 @@
           active-icon="more"
           :done="step > 2"
         >
-          <div class="bg-blue-1 q-pa-sm q-mt-xs h-rounded-borders-20">
+          <div class="bg-secondary q-pa-sm q-mt-xs h-rounded-borders-20">
             <q-form
               ref="form2"
               class="q-gutter-y-sm"
@@ -91,7 +92,7 @@
           v-slot:message
         >
           <div
-            class="text-subtitle2 bg-blue-1 text-primary q-mb-md q-pl-lg q-pr-lg h-rounded-borders-20"
+            class="text-subtitle2 bg-secondary text-primary q-mb-md q-pl-lg q-pr-lg h-rounded-borders-20"
           >
             {{ caption }}
           </div>
