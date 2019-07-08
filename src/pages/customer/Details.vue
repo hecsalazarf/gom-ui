@@ -51,9 +51,12 @@ export default {
           }
         },
         update (data) {
-          if (Object.entries(data).length === 0) {
-            return []
+          if (!data.bp) {
+            // if no data is availabe, back to previous page
+            this.$router.back()
+            return {}
           }
+
           return {
             id: data.bp.uid,
             name1: data.bp.name1,

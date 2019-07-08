@@ -168,6 +168,7 @@ export default {
     return {
       step: 1,
       editCounter: 0, // counter that handles items being modified
+      submitted: false, // flag to identify when order was submitted
       order: {
         name: '',
         customer: null,
@@ -196,6 +197,22 @@ export default {
     this.changeActiveToolbar('h-order-toolbar')
   },
   methods: {
+    queryOrders () {
+      this.$apollo.query({
+        query: UserOrders,
+        context: {
+          headers: {
+            'X-Csrf-Token': this.$q.cookies.get('csrf-token')
+          }
+        },
+        variables: {
+          id: Auth.userId
+        },
+        fetchPolicy: 'network-only' // Bypass cache in case query has been fetched before
+      }).then(res => {
+        // Nothing to do
+      }).catch(err => console.error(err))
+    },
     updateCache (cache, { data }) {
       try {
         const cached = cache.readQuery({
@@ -204,6 +221,15 @@ export default {
             id: Auth.userId
           }
         })
+
+        if (!cached.user.orders.edges) {
+          /* If cache is empty but query has been executed,
+          fetch orders to update cache
+          for the first time (#18) */
+          this.queryOrders()
+          return
+        }
+
         cached.user.orders.edges.unshift({
           __typename: 'UserToOrderEdge',
           node: data.createOrder
@@ -218,7 +244,15 @@ export default {
           data: cached
         })
       } catch (err) {
-        console.err(err)
+        if (err.name === 'Invariant Violation') {
+          /* When UserCustomers query has not been executed, there is no
+          cache with the specified ID and this error is thrown. So the query
+          is executed to update cache for the first time (#18)
+          */
+          this.queryOrders()
+        } else {
+          console.error(err)
+        }
       }
     },
     submit () {
@@ -266,6 +300,7 @@ export default {
         },
         update: this.updateCache
       }).then(res => {
+        this.submitted = true
         this.$q.loading.hide()
         this.$router.replace({ name: 'orderDetails', params: { id: res.data.createOrder.uid } })
       }).catch(error => {
@@ -276,7 +311,7 @@ export default {
           icon: 'report_problem'
         })
         if (error.graphQLErrors.length > 0) console.error(error.graphQLErrors)
-        else console.log(error)
+        else console.error(error)
       })
     },
     addItem (item) {
@@ -318,7 +353,8 @@ export default {
     ...mapActions(['changeActiveToolbar'])
   },
   beforeRouteLeave (to, from, next) {
-    if (this.order.items.length > 0) {
+    // Emit a dialog if an order is in process and has not been submitted (#19)
+    if (this.order.items.length > 0 && !this.submitted) {
       this.$q.dialog({
         title: 'Tienes un pedido en proceso',
         message: 'Al continuar perderás los cambios ¿Continuar?',

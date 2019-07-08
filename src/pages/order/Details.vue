@@ -146,7 +146,9 @@ export default {
           }
         },
         update (data) {
-          if (Object.entries(data).length === 0) {
+          if (!data.order) {
+            // if no data is availabe, back to previous page
+            this.$router.back()
             return {}
           }
           const items = data.order.items.edges.map(edge => {

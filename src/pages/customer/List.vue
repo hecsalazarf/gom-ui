@@ -72,10 +72,11 @@ export default {
           }
         },
         update (data) {
-          if (Object.entries(data).length === 0) {
+          const customers = data.user.customers.edges
+          if (!customers) {
+            // If no customer, return an empty array
             return []
           }
-          let customers = data.user.customers.edges
           customers.sort((first, second) => {
             if (first.node.name1 < second.node.name1) return -1
             if (first.node.name1 > second.node.name1) return 1

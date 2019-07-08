@@ -216,7 +216,7 @@ export default {
     },
     price: {
       get () {
-        return this.item.price.amount.toString() // toString() to guarantee proper masked value (#11)
+        return this.item.price.amount.toFixed(2) // toFixed(2)) to guarantee proper masked value (#11, #20)
       },
       set (amount) {
         if (amount !== this.value.price.amount) {

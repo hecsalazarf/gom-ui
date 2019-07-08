@@ -161,25 +161,52 @@ export default {
     }
   },
   methods: {
-    updateCache (cache, { data }) {
-      const cached = cache.readQuery({
+    queryCustomers () {
+      this.$apollo.query({
         query: UserCustomers,
-        variables: {
-          id: Auth.userId
-        }
-      })
-      cached.user.customers.edges.push({
-        __typename: 'UserToBpEdge',
-        node: data.createBP
-      })
-      // Update customer list cache
-      cache.writeQuery({
-        query: UserCustomers,
+        context: {
+          headers: {
+            'X-Csrf-Token': this.$q.cookies.get('csrf-token')
+          }
+        },
         variables: {
           id: Auth.userId
         },
-        data: cached
-      })
+        fetchPolicy: 'network-only' // Bypass cache in case query has been fetched before
+      }).then(res => {
+        // Nothing to do
+      }).catch(err => console.error(err))
+    },
+    updateCache (cache, { data }) {
+      try {
+        const cached = cache.readQuery({
+          query: UserCustomers,
+          variables: {
+            id: Auth.userId
+          }
+        })
+        if (!cached.user.customers.edges) {
+          /* If cache is empty but query has been executed,
+          fetch customers to update cache
+          for the first time (#18) */
+          this.queryCustomers()
+          return
+        }
+        cached.user.customers.edges.push({
+          __typename: 'UserToBpEdge',
+          node: data.createBP
+        })
+        // Update customer list cache
+        cache.writeQuery({
+          query: UserCustomers,
+          variables: {
+            id: Auth.userId
+          },
+          data: cached
+        })
+      } catch (err) {
+        console.error(err)
+      }
     },
     submit () {
       this.$q.loading.show()

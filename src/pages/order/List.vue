@@ -9,7 +9,7 @@
     >
       <q-bar class="bg-white q-mb-lg">
         <h-filter-input
-          :disable="selectedOrders.length > 0"
+          :disable="selectedOrders.length > 0 || orders.length === 0"
           @filter="filter($event)"
         />
       </q-bar>
@@ -59,7 +59,7 @@ export default {
   data () {
     return {
       allOrders: [],
-      orders: {}
+      orders: []
     }
   },
   computed: {
@@ -127,10 +127,12 @@ export default {
           }
         },
         update (data) {
-          if (Object.entries(data).length === 0) {
+          const orders = data.user.orders.edges
+          if (!orders) {
+            // If no orders, return an empty array
             return []
           }
-          this.allOrders = data.user.orders.edges.map(edge => {
+          this.allOrders = orders.map(edge => {
             return {
               data: {
                 id: edge.node.uid,
