@@ -15,12 +15,12 @@
           narrow-indicator
         >
           <q-tab
-            name="items"
-            label="Articulos"
-          />
-          <q-tab
             name="details"
             label="Detalles"
+          />
+          <q-tab
+            name="items"
+            label="Articulos"
           />
         </q-tabs>
         <q-separator />
@@ -94,7 +94,7 @@ export default {
   },
   data () {
     return {
-      tab: 'items',
+      tab: 'details',
       order: {
         items: [] // initialize items to avoid undefined errors
       }
