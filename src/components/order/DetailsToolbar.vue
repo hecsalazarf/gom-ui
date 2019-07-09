@@ -1,15 +1,16 @@
 <template>
-  <q-toolbar>
+  <q-toolbar class="bg-white">
     <q-btn
       class="q-mr-sm"
       icon="arrow_back_ios"
+      color="primary"
       flat
       dense
       @click="$router.back()"
     />
     <div
       v-if="!activeOrder"
-      class="col-5 text-subtitle1"
+      class="col-5 text-subtitle1 text-primary"
     >
       Nuevo pedido
     </div>
@@ -32,10 +33,10 @@
       v-if="activeOrder"
       class="column self-stretch q-ml-md items-start justify-start content-start ellipsis"
     >
-      <div class="col-5 text-subtitle1">
+      <div class="col-5 text-subtitle1 text-primary">
         {{ header.name }}
       </div>
-      <div class="col text-subtitle2 text-weight-regular">
+      <div class="col text-subtitle2 text-weight-regular text-primary">
         {{ customer }}
       </div>
     </div>

@@ -3,6 +3,8 @@
     <q-header
       reveal
       :reveal-offset="100"
+      elevated
+      class="bg-white"
     >
       <transition
         mode="out-in"
@@ -11,24 +13,28 @@
         <component :is="activeToolbar" />
       </transition>
     </q-header>
-    <q-footer v-show="$route.name === 'orders' || $route.name === 'customers'">
+    <q-footer
+      v-show="$route.name === 'orders' || $route.name === 'customers'"
+      elevated
+    >
       <q-tabs
         v-model="tab"
         dense
         no-caps
-        active-color="white"
       >
         <q-route-tab
           name="orders"
           :to="{ name: 'orders' }"
           label="Pedidos"
           icon="shopping_cart"
+          class="orders-tab"
         />
         <q-route-tab
           name="customers"
           :to="{ name: 'customers' }"
           label="Clientes"
           icon="contacts"
+          class="customers-tab"
         />
       </q-tabs>
     </q-footer>
@@ -72,5 +78,9 @@ export default {
 }
 </script>
 
-<style>
+<style lang="stylus" scoped>
+/deep/ .orders-tab .q-tab__icon, /deep/ .orders-tab .q-tab__label
+  color: $green-12
+/deep/ .customers-tab .q-tab__icon, /deep/ .customers-tab .q-tab__label
+  color: $customers
 </style>

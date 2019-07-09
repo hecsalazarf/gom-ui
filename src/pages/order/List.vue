@@ -13,7 +13,7 @@
           @filter="filter($event)"
         />
       </q-bar>
-      <q-list class="bg-blue-1 h-rounded-borders-20">
+      <q-list class="bg-secondary h-rounded-borders-20">
         <h-list-item
           v-for="(order, index) in orders"
           ref="item"

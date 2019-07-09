@@ -2,7 +2,7 @@
   <q-card flat>
     <q-list class="q-gutter-y-sm">
       <q-expansion-item
-        class="bg-blue-1 h-rounded-borders-20"
+        class="bg-secondary h-rounded-borders-20"
         default-opened
         switch-toggle-side
         header-class="text-subtitle1 text-weight-medium text-primary"
@@ -14,7 +14,7 @@
               <q-btn
                 v-show="!editMode"
                 icon="edit"
-                color="primary"
+                color="accent"
                 size="0.75em"
                 flat
                 dense
@@ -50,13 +50,13 @@
             </div>
           </q-item-section>
         </template>
-        <q-card class="bg-blue-1">
+        <q-card class="bg-secondary">
           <q-form ref="form">
             <q-card-section class=" q-gutter-y-xs">
               <q-input
                 v-model="name"
                 dense
-                standout="bg-blue-1"
+                standout="bg-secondary"
                 input-class="text-black"
                 label="Nombre del pedido"
                 :readonly="!editMode"
@@ -85,14 +85,14 @@
       </q-expansion-item>
 
       <q-expansion-item
-        class="bg-blue-1 h-rounded-borders-20"
+        class="bg-secondary h-rounded-borders-20"
         icon="perm_identity"
         switch-toggle-side
         label="Cliente"
         default-opened
         header-class="text-subtitle1 text-weight-medium text-primary"
       >
-        <q-card class="bg-blue-1">
+        <q-card class="bg-secondary">
           <q-card-section>
             <q-input
               v-model="customer"
@@ -106,14 +106,14 @@
       </q-expansion-item>
 
       <q-expansion-item
-        class="bg-blue-1 h-rounded-borders-20"
+        class="bg-secondary h-rounded-borders-20"
         icon="date_range"
         switch-toggle-side
         label="Fechas"
         default-opened
         header-class="text-subtitle1 text-weight-medium text-primary"
       >
-        <q-card class="bg-blue-1">
+        <q-card class="bg-secondary">
           <q-card-section>
             <q-input
               v-model="createdAt"

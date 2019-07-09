@@ -14,7 +14,7 @@
           v-model="model.description"
           autofocus
           input-class="text-subtitle1 text-weight-medium text-black"
-          standout="bg-blue-1"
+          standout="bg-secondary"
           dense
           label="Descripción"
           type="text"
@@ -25,7 +25,7 @@
         <q-input
           v-model="model.code"
           input-class="text-caption text-black"
-          standout="bg-blue-1"
+          standout="bg-secondary"
           dense
           label="Código"
           type="text"
@@ -37,7 +37,7 @@
       <q-card-section class="q-gutter-y-xs">
         <q-input
           v-model.number="model.price.amount"
-          standout="bg-blue-1"
+          standout="bg-secondary"
           input-class="text-black"
           dense
           prefix="$"
@@ -59,7 +59,7 @@
         <q-input
           v-model.number="model.quantity"
           dense
-          standout="bg-blue-1"
+          standout="bg-secondary"
           input-class="text-black"
           label="Cantidad"
           type="number"
@@ -77,7 +77,7 @@
         <q-input
           v-model="model.provider"
           dense
-          standout="bg-blue-1"
+          standout="bg-secondary"
           input-class="text-black"
           label="Marca"
           type="text"

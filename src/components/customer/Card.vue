@@ -5,13 +5,13 @@
         style="z-index: 100"
         size="5em"
         text-color="white"
-        color="primary"
+        color="customers"
       >
         {{ avatarText }}
       </q-avatar>
     </div>
     <q-card
-      class="col-xs-12 col-sm-8 col-md-6 col-6 no-shadow bg-blue-1 q-pt-lg h-rounded-borders-20 relative-position"
+      class="col-xs-12 col-sm-8 col-md-6 col-6 no-shadow bg-secondary q-pt-lg h-rounded-borders-20 relative-position"
       style="transform: translate(0, -35px);"
     >
       <q-card-section class="row justify-center">
@@ -24,7 +24,7 @@
             class="col-8"
             input-class="text-h6 text-black text-center ellipsis"
             placeholder="Nombre"
-            standout="bg-blue-1"
+            standout="bg-secondary"
             dense
             hide-bottom-space
             :readonly="!editMode"
@@ -38,7 +38,7 @@
             class="col-8"
             input-class="text-subtitle1 text-black text-center ellipsis"
             placeholder="Teléfono"
-            standout="bg-blue-1"
+            standout="bg-secondary"
             dense
             hide-bottom-space
             :borderless="!editMode"
@@ -53,7 +53,7 @@
             class="col-8"
             input-class="text-subtitle1 text-black text-center ellipsis"
             placeholder="Correo electrónico"
-            standout="bg-blue-1"
+            standout="bg-secondary"
             dense
             hide-bottom-space
             :borderless="!editMode"
@@ -70,7 +70,7 @@
       <q-card-actions align="center">
         <q-btn
           icon="phone"
-          color="primary"
+          color="accent"
           size="1.3em"
           dense
           flat
@@ -82,7 +82,7 @@
         </q-btn>
         <q-btn
           icon="email"
-          color="primary"
+          color="accent"
           size="1.3em"
           dense
           flat
@@ -100,7 +100,7 @@
           round
           flat
           icon="edit"
-          color="primary"
+          color="accent"
           @click="editMode = !editMode"
         >
           <q-tooltip>Editar</q-tooltip>

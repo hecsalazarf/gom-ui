@@ -7,7 +7,7 @@
         </q-item-label>
       </q-item-section>
     </q-item>
-    <div class="h-rounded-borders-20 bg-blue-1">
+    <div class="h-rounded-borders-20 bg-secondary">
       <h-contact-item
         v-for="(contact, index) in value"
         :key="contact.data.id"
