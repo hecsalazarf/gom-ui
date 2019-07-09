@@ -19,10 +19,13 @@ export default {
     validOptions (options, status, rules) {
       /* Filter status options so that user can only select
       the valid ones. 'rules' data prop states which are valid */
-      return options.filter(
-        opt => opt.value === status || // Always return the current status
+      if (status in rules) {
+        return options.filter(
+          opt => opt.value === status || // Always return the current status
         rules[status].includes(opt.value) // Then check that rules include the proposed option
-      )
+        )
+      }
+      return options
     }
   },
   props: {

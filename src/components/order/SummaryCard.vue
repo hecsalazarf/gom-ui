@@ -45,7 +45,7 @@ export default {
   computed: {
     totalAmount () {
       return this.value.items.reduce(
-        (acc, item) => acc + item.data.price.amount,
+        (acc, item) => acc + (item.data.price.amount * item.data.quantity),
         0).toFixed(2) // toFixed() prevents floating point inaccuracy
     }
   }

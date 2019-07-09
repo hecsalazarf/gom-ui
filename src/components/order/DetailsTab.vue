@@ -165,15 +165,32 @@ export default {
   },
   computed: {
     customer () {
-      const name1 = this.order.customer.name1 ? this.order.customer.name1 : ''
-      const name2 = this.order.customer.name2 ? this.order.customer.name2 : ''
+      if (typeof this.order.customer === 'undefined') {
+        return ''
+      }
+
+      const name1 = this.order.customer.name1
       const lastName1 = this.order.customer.lastName1
+
+      // Turn first letter to uppercase
+      if (lastName1 === '' ||
+            !lastName1) { // check it's not null. Fix (#15)
+        return (
+          name1.charAt(0).toUpperCase() + name1.slice(1)
+        )
+      } else {
+        return `${name1.charAt(0).toUpperCase() +
+            name1.slice(1)} ${lastName1.charAt(0).toUpperCase() +
+            lastName1.slice(1)}`
+      }
+
+      /*  const lastName1 = this.order.customer.lastName1
         ? this.order.customer.lastName1
         : ''
       const lastName2 = this.order.customer.lastName2
         ? this.order.customer.lastName2
         : ''
-      return `${name1} ${name2} ${lastName1} ${lastName2}`.replace(/\s+/g, ' ')
+      return `${name1} ${name2} ${lastName1} ${lastName2}`.replace(/\s+/g, ' ') */
     },
     createdAt () {
       return date.formatDate(this.order.createdAt, 'DD/MM/YYYY HH:mm:ss')
@@ -183,11 +200,14 @@ export default {
     },
     totalAmount () {
       return this.order.items.reduce(
-        (acc, item) => acc + item.data.price.amount,
+        (acc, item) => acc + (item.data.price.amount * item.data.quantity),
         0).toFixed(2) // toFixed() prevents floating point inaccuracy
     },
     status: {
       get () {
+        if (typeof this.order.stage === 'undefined') {
+          return ''
+        }
         return this.order.stage
       },
       set (status) {

@@ -8,36 +8,23 @@
       @submit="save()"
       @reset="clear()"
     >
-      <div class="row">
-        <q-card-section class="q-gutter-y-xs col-8 q-pa-xs">
-          <q-input
-            v-model="description"
-            input-class="text-subtitle1 text-weight-medium text-black"
-            standout="bg-blue-1"
-            dense
-            label="Descripción"
-            :readonly="!editMode"
-            :borderless="!editMode"
-            type="text"
-            maxlength="40"
-            :rules="[ val => !!val || 'Campo obligatorio', val => val.length <= 40 || 'Máximo 40 caracteres' ]"
-            hide-bottom-space
-          />
-          <q-input
-            v-model="code"
-            input-class="text-caption text-black"
-            standout="bg-blue-1"
-            dense
-            label="Código"
-            :readonly="!editMode"
-            :borderless="!editMode"
-            type="text"
-            maxlength="15"
-            hide-bottom-space
-          />
-        </q-card-section>
-        <q-card-section class="col-4 q-pr-xs q-pl-xs">
-          <div class="row justify-end q-pr-sm">
+      <q-card-section class="q-gutter-xs row q-pa-xs">
+        <q-input
+          v-model="description"
+          class="col-7"
+          input-class="text-subtitle1 text-weight-medium text-black"
+          standout="bg-blue-1"
+          dense
+          label="Descripción"
+          :readonly="!editMode"
+          :borderless="!editMode"
+          type="text"
+          maxlength="40"
+          :rules="[ val => !!val || 'Campo obligatorio', val => val.length <= 40 || 'Máximo 40 caracteres' ]"
+          hide-bottom-space
+        />
+        <div class="col">
+          <div class="row justify-end full-width">
             <q-btn
               v-show="!editMode"
               icon="edit"
@@ -89,9 +76,35 @@
               <q-tooltip>Guardar</q-tooltip>
             </q-btn>
           </div>
-        </q-card-section>
-      </div>
-      <q-separator inset />
+        </div>
+        <q-input
+          v-model="code"
+          class="col-7"
+          input-class="text-caption text-black"
+          standout="bg-blue-1"
+          dense
+          label="Código"
+          :readonly="!editMode"
+          :borderless="!editMode"
+          type="text"
+          maxlength="15"
+          hide-bottom-space
+        />
+        <q-input
+          v-model="provider"
+          class="col"
+          standout="bg-blue-1"
+          input-class="text-black"
+          dense
+          label="Marca"
+          :readonly="!editMode"
+          :borderless="!editMode"
+          type="text"
+          maxlength="20"
+          hide-bottom-space
+        />
+      </q-card-section>
+      <q-separator />
       <q-card-section class="q-gutter-xs q-pa-xs row">
         <q-input
           v-model.number="price"
@@ -125,16 +138,16 @@
           hide-bottom-space
         />
         <q-input
-          v-model="provider"
+          v-model="total"
           class="col"
+          input-class="text-weight-medium text-black"
           standout="bg-blue-1"
-          input-class="text-black"
+          readonly
           dense
-          label="Marca"
-          :readonly="!editMode"
-          :borderless="!editMode"
+          label="Total"
+          prefix="$"
+          borderless
           type="text"
-          maxlength="20"
           hide-bottom-space
         />
       </q-card-section>
@@ -230,6 +243,9 @@ export default {
         } else delete this.edges.pricing
         this.item.price.amount = amount
       }
+    },
+    total () {
+      return (+this.price * this.quantity).toFixed(2)
     },
     ...mapGetters(['activeOrder'])
   },
@@ -407,6 +423,5 @@ export default {
 </script>
 
 <style scoped lang="stylus">
-.q-card__section + .q-card__section
-  padding-top: 16px
+
 </style>
