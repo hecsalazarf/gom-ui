@@ -59,7 +59,9 @@ export default {
   data () {
     return {
       allOrders: [],
-      orders: []
+      orders: [],
+      refetch: false // refetch flag. See refresh() method
+
     }
   },
   computed: {
@@ -72,12 +74,22 @@ export default {
   },
   methods: {
     refresh (done) {
+      /* refetch flag that indicates a refetch operation. It prevents
+      loading window during refetch. This is a very naive approach, however,
+      as a first attempt is tolerable */
+      this.refetch = true
       this.$apollo.queries.orders.refetch({
         variables: {
           id: Auth.userId
         }
-      }).then(() => done())
-        .catch(() => done())
+      }).then(() => {
+        this.refetch = false
+        done()
+      })
+        .catch(() => {
+          this.refetch = false
+          done()
+        })
 
       // FOLLOWING CODE USED FOR PAGINATION
       /* this.$apollo.queries.orders.fetchMore({
@@ -146,7 +158,8 @@ export default {
           return this.allOrders
         },
         watchLoading (isLoading, countModifier) {
-          if (isLoading) this.$q.loading.show()
+          /* Loading window is not shown when refetch is executed */
+          if (isLoading && !this.refetch) this.$q.loading.show()
           else this.$q.loading.hide()
         },
         variables () {

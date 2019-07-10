@@ -10,7 +10,10 @@
         <template v-slot:header>
           <q-item-section>Resumen</q-item-section>
           <q-item-section side>
-            <div class="row row q-gutter-x-md">
+            <div
+              v-if="!readonly"
+              class="row row q-gutter-x-md"
+            >
               <q-btn
                 v-show="!editMode"
                 icon="edit"
@@ -154,6 +157,10 @@ export default {
       type: Object,
       default: () => {},
       required: true
+    },
+    readonly: {
+      type: Boolean,
+      default: false
     }
   },
   data () {

@@ -105,13 +105,13 @@ export default {
           // Filter values
           done(() => {
             const filtered = data.user.customers.edges.filter(customer => {
-              if (customer.node.name1.toLowerCase().includes(value)) {
+              if (customer.node.name1 && customer.node.name1.toLowerCase().includes(value)) {
                 return true
               }
-              if (customer.node.lastName1.toLowerCase().includes(value)) {
+              if (customer.node.lastName1 && customer.node.lastName1.toLowerCase().includes(value)) {
                 return true
               }
-              if (customer.node.phone.includes(value)) {
+              if (customer.node.phone && customer.node.phone.includes(value)) {
                 return true
               }
               return false

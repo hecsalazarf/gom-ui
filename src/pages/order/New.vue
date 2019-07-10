@@ -26,7 +26,7 @@
             v-for="(item, index) in order.items"
             :key="index"
             class="q-mb-sm"
-            readonly
+            no-mutations
             :value="item.data"
             @delete="order.items.splice(index, 1)"
             @change="order.items.splice(index, 1, { data: $event })"
@@ -140,7 +140,7 @@
         transition-hide="slide-down"
       >
         <h-new-item
-          readonly
+          no-mutations
           @reset="$refs.newItem.hide()"
           @submit="addItem($event)"
         />

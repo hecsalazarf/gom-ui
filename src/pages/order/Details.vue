@@ -30,16 +30,28 @@
           swipeable
           keep-alive
         >
+          <q-tab-panel name="details">
+            <h-order-details-tab
+              :value="order"
+              :readonly="readonly"
+            />
+          </q-tab-panel>
+
           <q-tab-panel
             name="items"
             class="q-gutter-y-sm"
           >
+            <!-- Item is readonly if satifies rule readonly-order -->
+            <!-- Item cannot be removed (no-removable) if it's the last one -->
             <h-order-item
               v-for="(item) in order.items"
               :key="item.data.id"
               v-model="item.data"
+              :readonly="readonly"
+              :no-removable="order.items.length === 1"
             />
             <q-btn
+              v-if="!readonly"
               icon="add"
               label="Agregar artículo"
               color="accent"
@@ -50,10 +62,6 @@
               no-caps
               @click="$refs.newItem.show()"
             />
-          </q-tab-panel>
-
-          <q-tab-panel name="details">
-            <h-order-details-tab :value="order" />
           </q-tab-panel>
         </q-tab-panels>
       </div>
@@ -75,6 +83,8 @@
 
 <script>
 import OrderDetails from 'src/graphql/queries/OrderDetails.gql'
+import { Engine } from 'json-rules-engine'
+import { EditableOrder } from 'src/rules/order'
 import { createNamespacedHelpers } from 'vuex'
 const { mapActions, mapGetters } = createNamespacedHelpers('GomState')
 
@@ -94,6 +104,8 @@ export default {
   },
   data () {
     return {
+      rulesEngine: new Engine(), // JSON rules engine
+      readonly: true,
       tab: 'details',
       order: {
         items: [] // initialize items to avoid undefined errors
@@ -104,13 +116,23 @@ export default {
     ...mapGetters(['event'])
   },
   watch: {
-    tab (newVal, oldVal) {
+    /* tab (newVal, oldVal) {
       this.changeActiveOrderTab(newVal)
     },
     event (evt) {
       if (evt.target === this.$options.name && this[evt.method]) {
         this[evt.method](evt.args)
       }
+    }, */
+    'order.stage' (val) {
+      /* Check if order is readonly */
+      this.rulesEngine.run({ status: val }).then(events => {
+        if (events.findIndex(event => event.type === 'readonly-order') > -1) {
+          this.readonly = true // Mark order as readonly
+        } else {
+          this.readonly = false // Order can be edited
+        }
+      })
     }
   },
   created () {
@@ -125,6 +147,9 @@ export default {
     this.changeActiveOrder(this.id)
     this.changeActiveToolbar('h-order-toolbar')
     this.changeActiveOrderTab(this.tab)
+
+    /* Business rules */
+    this.rulesEngine.addRule(EditableOrder) // Add readonly-order rule
   },
   methods: {
     ...mapActions([

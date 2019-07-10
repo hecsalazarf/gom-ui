@@ -126,7 +126,7 @@ const { mapGetters } = createNamespacedHelpers('GomState')
 export default {
   name: 'HNewItem',
   props: {
-    readonly: {
+    noMutations: {
       type: Boolean,
       default: false
     }
@@ -189,7 +189,7 @@ export default {
       this.$emit('reset')
     },
     save () {
-      if (this.readonly) {
+      if (this.noMutations) {
         this.$emit('submit', this.model)
         return
       }

@@ -24,7 +24,10 @@
           hide-bottom-space
         />
         <div class="col">
-          <div class="row justify-end full-width">
+          <div
+            v-if="!readonly"
+            class="row justify-end full-width"
+          >
             <q-btn
               v-show="!editMode"
               icon="edit"
@@ -38,7 +41,7 @@
               <q-tooltip>Editar</q-tooltip>
             </q-btn>
             <q-btn
-              v-show="!editMode"
+              v-if="!(noRemovable || editMode)"
               class="q-ml-md"
               icon="delete"
               color="accent"
@@ -172,7 +175,15 @@ export default {
       default: () => {},
       required: true
     },
+    noMutations: {
+      type: Boolean,
+      default: false
+    },
     readonly: {
+      type: Boolean,
+      default: false
+    },
+    noRemovable: {
       type: Boolean,
       default: false
     }
@@ -307,10 +318,10 @@ export default {
       this.editMode = false // disable edit mode
     },
     save () {
-      // if readonly and available data, emit submit event only
+      // if noMutations and available data, emit submit event only
       const count = Object.entries(this.data).length
       const edges = Object.entries(this.edges).length
-      if (this.readonly && (count > 0 || edges > 0)) {
+      if (this.noMutations && (count > 0 || edges > 0)) {
         this.editMode = false
         this.$emit('change', this.item)
         return
@@ -411,7 +422,7 @@ export default {
           color: 'primary'
         })
         .onOk(() => {
-          if (this.readonly) {
+          if (this.noMutations) {
             this.$emit('delete', this.item)
           } else {
             this.deleteIt()
