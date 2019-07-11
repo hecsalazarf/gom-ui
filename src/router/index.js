@@ -13,7 +13,19 @@ Vue.use(VueRouter)
 
 export default function (/* { store, ssrContext } */) {
   const Router = new VueRouter({
-    scrollBehavior: () => ({ x: 0, y: 0 }),
+    scrollBehavior: (to, from, savedPosition) => {
+      if (savedPosition) {
+        /* Delay the response so that scrolling
+        seems smooth */
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve(savedPosition)
+          }, 300)
+        })
+      } else {
+        return { x: 0, y: 0 }
+      }
+    },
     routes,
 
     // Leave these as is and change from quasar.conf.js instead!
