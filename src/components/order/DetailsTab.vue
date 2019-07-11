@@ -97,13 +97,23 @@
       >
         <q-card class="bg-secondary">
           <q-card-section>
-            <q-input
-              v-model="customer"
+            <q-field
               dense
               label="Nombre"
               readonly
               borderless
-            />
+              stack-label
+            >
+              <template v-slot:default>
+                <router-link :to="{ name: 'customerDetails', params: { id: typeof order.customer === 'undefined' ? '1' : order.customer.uid }}">
+                  <div
+                    class="self-center full-width all-pointer-events"
+                  >
+                    {{ customer }}
+                  </div>
+                </router-link>
+              </template>
+            </q-field>
           </q-card-section>
         </q-card>
       </q-expansion-item>

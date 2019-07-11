@@ -21,3 +21,7 @@ export function changeSelectedOrders (context, orders) {
 export function changeActiveCustomer (context, customer) {
   context.commit('setActiveCustomer', customer)
 }
+
+export function changeMoreOrders (context, moreOrders) {
+  context.commit('setMoreOrders', moreOrders)
+}

@@ -25,3 +25,7 @@ export function setSelectedOrders (state, orders) {
 export function setActiveCustomer (state, customer) {
   state.activeCustomer = customer
 }
+
+export function setMoreOrders (state, moreOrders) {
+  state.moreOrders = moreOrders
+}

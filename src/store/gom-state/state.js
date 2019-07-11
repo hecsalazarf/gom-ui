@@ -3,6 +3,7 @@ export default {
   activeOrder: null,
   activeOrderTab: null,
   selectedOrders: [],
+  moreOrders: true,
 
   /* Customer */
   activeCustomer: null,

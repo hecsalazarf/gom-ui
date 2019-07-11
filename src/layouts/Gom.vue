@@ -17,10 +17,12 @@
       v-show="$route.name === 'orders' || $route.name === 'customers'"
       elevated
     >
+      <!-- click.native scrolls to top -->
       <q-tabs
         v-model="tab"
         dense
         no-caps
+        @click.native="setScrollPosition(getScrollTarget($el), 0, 200)"
       >
         <q-route-tab
           name="orders"
@@ -45,7 +47,8 @@
 </template>
 
 <script>
-import { QSpinnerBars } from 'quasar'
+import { QSpinnerBars, scroll } from 'quasar'
+const { setScrollPosition, getScrollTarget } = scroll
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapActions } = createNamespacedHelpers('GomState')
 
@@ -73,6 +76,8 @@ export default {
     })
   },
   methods: {
+    getScrollTarget,
+    setScrollPosition,
     ...mapActions(['changeActiveToolbar'])
   }
 }

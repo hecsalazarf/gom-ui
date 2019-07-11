@@ -17,8 +17,8 @@
           :name="1"
           title="Artículos"
           caption="Agrega los artículos a tu pedido"
-          icon="shopping_basket"
-          active-icon="shopping_basket"
+          icon="shop"
+          active-icon="shop"
           :done="step > 1"
           class="q-pb-sm"
         >
@@ -49,8 +49,8 @@
           :name="2"
           title="Cliente"
           caption="Agrega una descripción y selecciona un cliente"
-          icon="more"
-          active-icon="more"
+          icon="assignment_ind"
+          active-icon="assignment_ind"
           :done="step > 2"
         >
           <div class="bg-secondary q-pa-sm q-mt-xs h-rounded-borders-20">
@@ -82,8 +82,8 @@
           :name="3"
           title="Confirmación"
           caption="Confirma y envía tu pedido"
-          icon="rate_review"
-          active-icon="rate_review"
+          icon="shopping_basket"
+          active-icon="shopping_basket"
         >
           <h-order-summary :value="order" />
         </q-step>
@@ -207,7 +207,9 @@ export default {
           }
         },
         variables: {
-          id: Auth.userId
+          id: Auth.userId,
+          first: 1,
+          offset: 0 // First call does not skip orders
         },
         fetchPolicy: 'network-only' // Bypass cache in case query has been fetched before
       }).then(res => {

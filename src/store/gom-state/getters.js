@@ -21,3 +21,7 @@ export function selectedOrders (state) {
 export function activeCustomer (state) {
   return state.activeCustomer
 }
+
+export function moreOrders (state) {
+  return state.moreOrders
+}

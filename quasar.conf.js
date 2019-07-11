@@ -70,7 +70,8 @@ module.exports = function (ctx) {
         'QDialog',
         'QStepper',
         'QStep',
-        'QStepperNavigation'
+        'QStepperNavigation',
+        'QField'
       ],
 
       directives: [

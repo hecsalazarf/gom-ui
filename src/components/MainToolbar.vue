@@ -10,6 +10,9 @@
     <q-btn
       flat
       round
+      dense
+      icon="more_vert"
+      color="primary"
     >
       <q-menu>
         <q-list>
@@ -24,11 +27,6 @@
           </q-item>
         </q-list>
       </q-menu>
-      <q-avatar
-        color="accent"
-        text-color="white"
-        icon="person"
-      />
     </q-btn>
   </q-toolbar>
 </template>

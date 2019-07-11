@@ -1,8 +1,13 @@
 ###### Query user orders #########
-query UserOrders($id: String!) {
-	user(id: $id) {
+query UserOrders($id: String!, $first: Int, $offset: Int) {
+	user(id: $id){
     uid
-    orders {
+    # Since these queries are cached by both the initial
+    # query and their parameters, a problem arises when later
+    # retrieving or updating paginated queries in the cache.
+    # To solve this Apollo Client suggests @connection directive to specify
+    # a custom store key for results. See more https://www.apollographql.com/docs/react/advanced/caching/
+    orders(first: $first, offset: $offset) @connection(key: "orders", filter: ["id"]) {
       edges {
         node {
           uid

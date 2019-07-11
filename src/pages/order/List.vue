@@ -7,21 +7,39 @@
       class="full-width"
       @refresh="refresh"
     >
-      <q-bar class="bg-white q-mb-lg">
-        <h-filter-input
-          :disable="selectedOrders.length > 0 || orders.length === 0"
-          @filter="filter($event)"
-        />
-      </q-bar>
-      <q-list class="bg-secondary h-rounded-borders-20">
-        <h-list-item
-          v-for="(order, index) in orders"
-          ref="item"
-          :key="order.id"
-          v-model="order.data"
-          :separator="index < ordersMaxIndex"
-        />
-      </q-list>
+      <div class="column q-gutter-y-md">
+        <q-bar class="bg-white">
+          <h-filter-input
+            :disable="selectedOrders.length > 0 || orders.length === 0"
+            @filter="filter($event)"
+          />
+        </q-bar>
+        <q-list class="bg-secondary h-rounded-borders-20">
+          <h-list-item
+            v-for="(order, index) in orders"
+            ref="item"
+            :key="order.id"
+            v-model="order.data"
+            :separator="index < ordersMaxIndex"
+          />
+        </q-list>
+        <q-btn
+          v-if="allOrders.length > 0 && moreOrders"
+          icon="expand_more"
+          color="accent"
+          label="Ver más"
+          :loading="loading > 0 && fetchMoreFlag"
+          no-caps
+          flat
+          dense
+          rounded
+          @click="fetchMore()"
+        >
+          <template v-slot:loading>
+            <q-spinner-bars />
+          </template>
+        </q-btn>
+      </div>
     </q-pull-to-refresh>
     <q-page-sticky
       position="bottom-right"
@@ -46,7 +64,7 @@
 import UserOrders from 'src/graphql/queries/UserOrders.gql'
 import { Auth } from 'src/helpers'
 import { createNamespacedHelpers } from 'vuex'
-const { mapGetters } = createNamespacedHelpers('GomState')
+const { mapGetters, mapActions } = createNamespacedHelpers('GomState')
 
 export default {
   name: 'OrdersListPage',
@@ -60,8 +78,10 @@ export default {
     return {
       allOrders: [],
       orders: [],
-      refetch: false // refetch flag. See refresh() method
-
+      refetchFlag: false, // refetch flag. See refresh() method
+      fetchMoreFlag: false, // fetchMore flag. See fetchMore() method
+      ordersPerBlock: 15,
+      loading: 0 // Loading state that will be incremented when the query is loading and decremented when it no longer is,
     }
   },
   computed: {
@@ -69,44 +89,75 @@ export default {
       return this.orders.length - 1
     },
     ...mapGetters([
-      'selectedOrders'
+      'selectedOrders',
+      'moreOrders'
     ])
   },
   methods: {
+    fetchMore () {
+      /* fetchMore flag that indicates a pagination operation. It prevents
+      loading window during fetchMore. This is a very naive approach, however,
+      as a first attempt is tolerable */
+      this.fetchMoreFlag = true
+
+      this.$apollo.queries.orders.fetchMore({
+        variables: {
+          id: Auth.userId,
+          first: this.ordersPerBlock,
+          offset: this.allOrders.length
+        },
+        updateQuery: this.updateQuery
+      })
+        .then(res => {
+          this.fetchMoreFlag = false
+        })
+        .catch(err => {
+          this.fetchMoreFlag = false
+          console.error(err)
+        })
+    },
+    updateQuery (previousResult, { fetchMoreResult, variables }) {
+      if (!fetchMoreResult.user.orders.edges) {
+        /* If orders is null return the same cache and set more to false */
+        this.changeMoreOrders(false)
+        return {
+          user: previousResult.user
+        }
+      }
+      if (fetchMoreResult.user.orders.edges.length < this.ordersPerBlock) {
+        /* If the orders length is less than ordersPerBlock, it means it's the
+            last block, so more is set to false */
+        this.changeMoreOrders(false)
+      }
+      previousResult.user.orders.edges.push(...fetchMoreResult.user.orders.edges)
+      return {
+        user: {
+          __typename: previousResult.user.__typename,
+          orders: previousResult.user.orders,
+          uid: fetchMoreResult.user.uid
+        }
+      }
+    },
     refresh (done) {
       /* refetch flag that indicates a refetch operation. It prevents
       loading window during refetch. This is a very naive approach, however,
       as a first attempt is tolerable */
-      this.refetch = true
+      this.refetchFlag = true
+      this.changeMoreOrders(true) // reset more
       this.$apollo.queries.orders.refetch({
         variables: {
-          id: Auth.userId
+          id: Auth.userId,
+          first: this.ordersPerBlock,
+          offset: 0 // First call does not skip orders
         }
       }).then(() => {
-        this.refetch = false
+        this.refetchFlag = false
         done()
       })
         .catch(() => {
-          this.refetch = false
+          this.refetchFlag = false
           done()
         })
-
-      // FOLLOWING CODE USED FOR PAGINATION
-      /* this.$apollo.queries.orders.fetchMore({
-        variables: {
-          id: Auth.userId
-        },
-        updateQuery (previousResult, { fetchMoreResult }) {
-          previousResult.user.orders.edges.unshift(...fetchMoreResult.user.orders.edges)
-          return {
-            user: {
-              __typename: previousResult.user.__typename,
-              orders: previousResult.user.orders,
-              uid: fetchMoreResult.user.uid
-            }
-          }
-        }
-      }) */
     },
     filter (params) {
       this.orders = this.allOrders.filter(order => {
@@ -124,7 +175,8 @@ export default {
         }
         return true
       })
-    }
+    },
+    ...mapActions(['changeMoreOrders'])
   },
   apollo: {
     orders () {
@@ -159,12 +211,15 @@ export default {
         },
         watchLoading (isLoading, countModifier) {
           /* Loading window is not shown when refetch is executed */
-          if (isLoading && !this.refetch) this.$q.loading.show()
+          if (isLoading && !this.refetchFlag && !this.fetchMoreFlag) this.$q.loading.show()
           else this.$q.loading.hide()
         },
+        loadingKey: 'loading',
         variables () {
           return {
-            id: Auth.userId
+            id: Auth.userId,
+            first: this.ordersPerBlock,
+            offset: 0 // First call does not skip orders
           }
         }
       }

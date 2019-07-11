@@ -32,6 +32,16 @@
           maxlength="15"
           hide-bottom-space
         />
+        <q-input
+          v-model="model.provider"
+          dense
+          standout="bg-secondary"
+          input-class="text-black"
+          label="Marca"
+          type="text"
+          maxlength="20"
+          hide-bottom-space
+        />
       </q-card-section>
       <q-separator inset />
       <q-card-section class="q-gutter-y-xs">
@@ -70,23 +80,6 @@
           <template v-slot:prepend>
             <q-icon
               name="format_list_numbered"
-              color="primary"
-            />
-          </template>
-        </q-input>
-        <q-input
-          v-model="model.provider"
-          dense
-          standout="bg-secondary"
-          input-class="text-black"
-          label="Marca"
-          type="text"
-          maxlength="20"
-          hide-bottom-space
-        >
-          <template v-slot:prepend>
-            <q-icon
-              name="stars"
               color="primary"
             />
           </template>
