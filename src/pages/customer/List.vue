@@ -63,11 +63,6 @@ export default {
     groups () {
       return {
         query: UserCustomers,
-        context: {
-          headers: {
-            'X-Csrf-Token': this.$q.cookies.get('csrf-token')
-          }
-        },
         update (data) {
           if (typeof data.user === 'undefined' || !data.user.customers.edges) {
             // If no customer, return an empty array

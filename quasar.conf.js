@@ -8,7 +8,7 @@ module.exports = function (ctx) {
       'i18n',
       'axios',
       'addressbar-color',
-      'apollo-vue'
+      'vue-apollo'
     ],
 
     css: [
@@ -149,6 +149,7 @@ module.exports = function (ctx) {
 
     // animations: 'all', // --- includes all animations
     animations: [
+      'fadeIn',
       'fadeOut',
       'slideOutUp',
       'slideInUp'

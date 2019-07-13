@@ -162,11 +162,6 @@ export default {
     order () {
       return {
         query: OrderDetails,
-        context: {
-          headers: {
-            'X-Csrf-Token': this.$q.cookies.get('csrf-token')
-          }
-        },
         update (data) {
           if (typeof data.order === 'undefined' || !data.order) {
             // if no data is availabe, back to previous page

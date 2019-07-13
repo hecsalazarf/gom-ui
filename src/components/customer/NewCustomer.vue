@@ -164,11 +164,6 @@ export default {
     queryCustomers () {
       this.$apollo.query({
         query: UserCustomers,
-        context: {
-          headers: {
-            'X-Csrf-Token': this.$q.cookies.get('csrf-token')
-          }
-        },
         variables: {
           id: Auth.userId
         },
@@ -213,11 +208,6 @@ export default {
       this.$apollo.mutate({
         mutation: CreateCustomer,
         variables: { data: { ...this.data, edges: { ...this.edges } } },
-        context: {
-          headers: {
-            'X-Csrf-Token': this.$q.cookies.get('csrf-token')
-          }
-        },
         update: this.updateCache
       }).then(res => {
         this.$q.loading.hide()

@@ -33,7 +33,22 @@ class ApolloClientProvider {
     })
 
     /*
-    The Apollo link for Graphql network
+    Create middleware to set CSRF header.
+    See https://www.apollographql.com/docs/react/advanced/network-layer/
+    */
+    const csrfMiddleware = new ApolloLink((operation, forward) => {
+      const { $q } = this.router.app // Extract quasar instance
+      operation.setContext(({ headers = {} }) => ({
+        headers: {
+          ...headers,
+          'X-Csrf-Token': $q.cookies.get('csrf-token')
+        }
+      }))
+      return forward(operation)
+    })
+
+    /*
+    The Apollo link for GraphQL network.
     See https://www.apollographql.com/docs/link/links/http/
     */
     const httpLink = createHttpLink({
@@ -50,6 +65,7 @@ class ApolloClientProvider {
     */
     const link = ApolloLink.from([
       errorLink,
+      csrfMiddleware,
       httpLink
     ])
 

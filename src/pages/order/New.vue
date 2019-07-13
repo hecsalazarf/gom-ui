@@ -201,11 +201,6 @@ export default {
     queryOrders () {
       this.$apollo.query({
         query: UserOrders,
-        context: {
-          headers: {
-            'X-Csrf-Token': this.$q.cookies.get('csrf-token')
-          }
-        },
         variables: {
           id: Auth.userId,
           first: 1,
@@ -295,12 +290,7 @@ export default {
       this.$q.loading.show()
       this.$apollo.mutate({
         mutation: CreateOrder,
-        variables: { data }, // ,
-        context: {
-          headers: {
-            'X-Csrf-Token': this.$q.cookies.get('csrf-token')
-          }
-        },
+        variables: { data },
         update: this.updateCache
       }).then(res => {
         this.submitted = true

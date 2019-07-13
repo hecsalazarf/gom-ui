@@ -80,11 +80,6 @@ export default {
       this.$apollo
         .query({
           query: UserCustomers,
-          context: {
-            headers: {
-              'X-Csrf-Token': this.$q.cookies.get('csrf-token')
-            }
-          },
           variables: {
             id: Auth.userId
           }

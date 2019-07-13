@@ -23,22 +23,29 @@
             :separator="index < ordersMaxIndex"
           />
         </q-list>
-        <q-btn
-          v-if="allOrders.length > 0 && moreOrders"
-          icon="expand_more"
-          color="accent"
-          label="Ver más"
-          :loading="loading > 0 && fetchMoreFlag"
-          no-caps
-          flat
-          dense
-          rounded
-          @click="fetchMore()"
+        <!-- Transition prevents displaying button abruptly -->
+        <transition
+          mode="out-in"
+          enter-active-class="animated fadeIn"
         >
-          <template v-slot:loading>
-            <q-spinner-bars />
-          </template>
-        </q-btn>
+          <q-btn
+            v-show="allOrders.length > 0 && moreOrders"
+            icon="expand_more"
+            color="accent"
+            label="Ver más"
+            :loading="loading > 0 && fetchMoreFlag"
+            no-caps
+            flat
+            dense
+            rounded
+            style="animation-duration: 3000ms;"
+            @click="fetchMore()"
+          >
+            <template v-slot:loading>
+              <q-spinner-bars />
+            </template>
+          </q-btn>
+        </transition>
       </div>
     </q-pull-to-refresh>
     <q-page-sticky
@@ -181,11 +188,14 @@ export default {
     orders () {
       return {
         query: UserOrders,
+        /*
+        Context can also be set per request
         context: {
           headers: {
             'X-Csrf-Token': this.$q.cookies.get('csrf-token')
           }
         },
+        */
         update (data) {
           if (typeof data.user === 'undefined' || !data.user.orders.edges) {
             // If no orders, return an empty array

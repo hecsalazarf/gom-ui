@@ -301,11 +301,6 @@ export default {
       this.$apollo.mutate({
         mutation: RemoveItems,
         variables: { orderId: this.activeOrder, items: [this.item.id] },
-        context: {
-          headers: {
-            'X-Csrf-Token': this.$q.cookies.get('csrf-token')
-          }
-        },
         update: this.updateCache
       })
         .then(res => this.onSuccess(res))
@@ -345,12 +340,7 @@ export default {
                     updatedAt
                   }
                 }`,
-              variables: { id: this.activeOrder, data: {} },
-              context: {
-                headers: {
-                  'X-Csrf-Token': this.$q.cookies.get('csrf-token')
-                }
-              }
+              variables: { id: this.activeOrder, data: {} }
             })
           })
           .then(res => this.onSuccess(res))
@@ -360,11 +350,6 @@ export default {
       return this.$apollo.mutate({
         mutation: UpdateItem,
         variables: { id: this.item.id, data: this.data },
-        context: {
-          headers: {
-            'X-Csrf-Token': this.$q.cookies.get('csrf-token')
-          }
-        },
         update: this.updateCache
       })
     },
@@ -372,11 +357,6 @@ export default {
       return this.$apollo.mutate({
         mutation: UpdatePrice,
         variables: { id: this.edges.pricing.id, data: this.edges.pricing.data },
-        context: {
-          headers: {
-            'X-Csrf-Token': this.$q.cookies.get('csrf-token')
-          }
-        },
         update: this.updateCache
       })
     },

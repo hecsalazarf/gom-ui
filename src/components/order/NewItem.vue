@@ -190,11 +190,6 @@ export default {
       this.$apollo.mutate({
         mutation: AddItemsToOrder,
         variables: { id: this.activeOrder, data: this.itemData },
-        context: {
-          headers: {
-            'X-Csrf-Token': this.$q.cookies.get('csrf-token')
-          }
-        },
         update: this.updateCache
       })
         .then(res => {

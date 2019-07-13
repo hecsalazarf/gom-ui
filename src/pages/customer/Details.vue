@@ -42,11 +42,6 @@ export default {
     customer () {
       return {
         query: CustomerDetails,
-        context: {
-          headers: {
-            'X-Csrf-Token': this.$q.cookies.get('csrf-token')
-          }
-        },
         update (data) {
           if (typeof data.bp === 'undefined' || !data.bp) {
             // if no data is availabe, back to previous page

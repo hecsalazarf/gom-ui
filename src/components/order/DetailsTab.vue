@@ -263,12 +263,7 @@ export default {
       this.$q.loading.show()
       this.$apollo.mutate({
         mutation: UpdateOrder,
-        variables: { id: this.order.id, data: this.data },
-        context: {
-          headers: {
-            'X-Csrf-Token': this.$q.cookies.get('csrf-token')
-          }
-        }
+        variables: { id: this.order.id, data: this.data }
       }).then(res => {
         this.editMode = false
         this.$q.loading.hide()
