@@ -63,20 +63,17 @@ export default {
     groups () {
       return {
         query: UserCustomers,
-        error: err => {
-          console.log(err)
-        },
         context: {
           headers: {
             'X-Csrf-Token': this.$q.cookies.get('csrf-token')
           }
         },
         update (data) {
-          const customers = data.user.customers.edges
-          if (!customers) {
+          if (typeof data.user === 'undefined' || !data.user.customers.edges) {
             // If no customer, return an empty array
             return []
           }
+          const customers = data.user.customers.edges
           customers.sort((first, second) => {
             if (first.node.name1 < second.node.name1) return -1
             if (first.node.name1 > second.node.name1) return 1

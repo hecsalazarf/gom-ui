@@ -253,16 +253,6 @@ export default {
             icon: 'check_circle'
           })
         })
-        .catch(error => {
-          this.$q.loading.hide()
-          this.$q.notify({
-            color: 'negative',
-            message: 'No pudimos guardar los cambios :(',
-            icon: 'report_problem'
-          })
-          if (error.graphQLErrors.length > 0) console.error(error.graphQLErrors)
-          else console.log(error)
-        })
     }
   }
 }

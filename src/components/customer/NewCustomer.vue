@@ -175,7 +175,7 @@ export default {
         fetchPolicy: 'network-only' // Bypass cache in case query has been fetched before
       }).then(res => {
         // Nothing to do
-      }).catch(err => console.error(err))
+      })
     },
     updateCache (cache, { data }) {
       try {
@@ -222,15 +222,6 @@ export default {
       }).then(res => {
         this.$q.loading.hide()
         this.$router.push({ name: 'customerDetails', params: { id: res.data.createBP.uid } })
-      }).catch(error => {
-        this.$q.loading.hide()
-        this.$q.notify({
-          color: 'negative',
-          message: 'No pudimos crear al cliente :(',
-          icon: 'report_problem'
-        })
-        if (error.graphQLErrors.length > 0) console.error(error.graphQLErrors)
-        else console.log(error)
       })
     }
   }

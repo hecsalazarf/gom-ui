@@ -111,9 +111,8 @@ export default {
         .then(res => {
           this.fetchMoreFlag = false
         })
-        .catch(err => {
+        .catch(() => {
           this.fetchMoreFlag = false
-          console.error(err)
         })
     },
     updateQuery (previousResult, { fetchMoreResult, variables }) {
@@ -182,21 +181,17 @@ export default {
     orders () {
       return {
         query: UserOrders,
-        error: err => {
-          console.log(err)
-        },
         context: {
           headers: {
             'X-Csrf-Token': this.$q.cookies.get('csrf-token')
           }
         },
         update (data) {
-          const orders = data.user.orders.edges
-          if (!orders) {
+          if (typeof data.user === 'undefined' || !data.user.orders.edges) {
             // If no orders, return an empty array
             return []
           }
-          this.allOrders = orders.map(edge => {
+          this.allOrders = data.user.orders.edges.map(edge => {
             return {
               data: {
                 id: edge.node.uid,

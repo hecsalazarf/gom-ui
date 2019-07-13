@@ -214,7 +214,7 @@ export default {
         fetchPolicy: 'network-only' // Bypass cache in case query has been fetched before
       }).then(res => {
         // Nothing to do
-      }).catch(err => console.error(err))
+      })
     },
     updateCache (cache, { data }) {
       try {
@@ -306,15 +306,6 @@ export default {
         this.submitted = true
         this.$q.loading.hide()
         this.$router.replace({ name: 'orderDetails', params: { id: res.data.createOrder.uid } })
-      }).catch(error => {
-        this.$q.loading.hide()
-        this.$q.notify({
-          color: 'negative',
-          message: 'No pudimos crear el pedido :(',
-          icon: 'report_problem'
-        })
-        if (error.graphQLErrors.length > 0) console.error(error.graphQLErrors)
-        else console.error(error)
       })
     },
     addItem (item) {

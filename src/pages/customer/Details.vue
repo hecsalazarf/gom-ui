@@ -42,16 +42,13 @@ export default {
     customer () {
       return {
         query: CustomerDetails,
-        error: err => {
-          console.log(err)
-        },
         context: {
           headers: {
             'X-Csrf-Token': this.$q.cookies.get('csrf-token')
           }
         },
         update (data) {
-          if (!data.bp) {
+          if (typeof data.bp === 'undefined' || !data.bp) {
             // if no data is availabe, back to previous page
             this.$router.back()
             return {}

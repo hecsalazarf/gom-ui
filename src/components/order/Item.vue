@@ -309,7 +309,6 @@ export default {
         update: this.updateCache
       })
         .then(res => this.onSuccess(res))
-        .catch(err => this.onError(err))
     },
     clear () {
       this.item = JSON.parse(JSON.stringify(this.value)) // revert changes
@@ -355,7 +354,6 @@ export default {
             })
           })
           .then(res => this.onSuccess(res))
-          .catch(err => this.onError(err))
       } else this.editMode = false
     },
     saveItem () {
@@ -390,16 +388,6 @@ export default {
         message: 'Cambios guardados',
         icon: 'check_circle'
       })
-    },
-    onError (error) {
-      this.$q.loading.hide()
-      this.$q.notify({
-        color: 'negative',
-        message: 'No pudimos guardar los cambios :(',
-        icon: 'report_problem'
-      })
-      if (error.graphQLErrors.length > 0) console.error(error.graphQLErrors)
-      else console.log(error)
     },
     confirmDelete () {
       this.$q

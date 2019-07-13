@@ -273,11 +273,6 @@ export default {
         this.editMode = false
         this.$q.loading.hide()
         this.$q.notify({ color: 'positive', message: 'Cambios guardados', icon: 'check_circle' })
-      }).catch(err => {
-        this.$q.loading.hide()
-        this.$q.notify({ color: 'negative', message: 'No pudimos guardar los cambios :(', icon: 'report_problem' })
-        if (err.graphQLErrors.length > 0) console.error(err.graphQLErrors)
-        else console.log(err)
       })
     },
     ...mapActions([

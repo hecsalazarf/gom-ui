@@ -162,16 +162,13 @@ export default {
     order () {
       return {
         query: OrderDetails,
-        error: err => {
-          console.log(err)
-        },
         context: {
           headers: {
             'X-Csrf-Token': this.$q.cookies.get('csrf-token')
           }
         },
         update (data) {
-          if (!data.order) {
+          if (typeof data.order === 'undefined' || !data.order) {
             // if no data is availabe, back to previous page
             this.$router.back()
             return {}

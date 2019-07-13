@@ -33,6 +33,8 @@
 
 <script>
 import { Session } from 'src/helpers'
+const { logout } = Session
+
 export default {
   name: 'HMainToolbar',
   data () {
@@ -58,7 +60,7 @@ export default {
         stackButtons: false,
         color: 'primary'
       }).onOk(() => {
-        Session.logout.call(this)
+        logout.call(this)
       })
     }
   }
