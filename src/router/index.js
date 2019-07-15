@@ -34,6 +34,8 @@ export default function (/* { store, ssrContext } */) {
     mode: process.env.VUE_ROUTER_MODE,
     base: process.env.VUE_ROUTER_BASE
   })
-  Router.beforeEach(GlobalGuards.beforeEach)
+
+  // Bind to Router to execute functionality for each router instance
+  Router.beforeEach(GlobalGuards.beforeEach.bind(Router))
   return Router
 }
