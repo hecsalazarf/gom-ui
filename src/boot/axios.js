@@ -1,9 +1,25 @@
 import axios from 'axios'
 
-axios.defaults.baseURL = '/api'
-axios.defaults.headers.post['Content-Type'] = 'application/json'
-axios.defaults.headers.post['Accept'] = 'application/json'
+class AxiosProvider {
+  constructor () {
+    this.baseURL = '/api'
+    this.headers = {
+      post: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    }
+  }
+
+  createInstance () {
+    this.instance = axios.create({
+      baseURL: this.baseURL,
+      headers: this.headers
+    })
+    return this.instance
+  }
+}
 
 export default async ({ Vue }) => {
-  Vue.prototype.$axios = axios
+  Vue.prototype.$axios = new AxiosProvider().createInstance()
 }
