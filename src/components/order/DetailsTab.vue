@@ -263,7 +263,13 @@ export default {
       this.$q.loading.show()
       this.$apollo.mutate({
         mutation: UpdateOrder,
-        variables: { id: this.order.id, data: this.data }
+        variables: {
+          where: {
+            uid: this.order.id
+          },
+          data: this.data
+        }
+        /* { id: this.order.id, data: this.data } */
       }).then(res => {
         this.editMode = false
         this.$q.loading.hide()

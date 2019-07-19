@@ -1,9 +1,0 @@
-### Update price ###
-mutation UpdatePrice($id: String!, $data: PriceMutationInp!) {
-  updatePrice(id:$id, data: $data) {
-    uid
-    amount
-    currency
-    uid
-  }
-}

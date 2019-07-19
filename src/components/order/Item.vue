@@ -160,10 +160,8 @@
 
 <script>
 import UpdateItem from 'src/graphql/mutations/UpdateItem.gql'
-import UpdatePrice from 'src/graphql/mutations/UpdatePrice.gql'
-import OrderDetails from 'src/graphql/queries/OrderDetails.gql'
 import RemoveItems from 'src/graphql/mutations/RemoveItems.gql'
-import gql from 'graphql-tag'
+// import gql from 'graphql-tag'
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters } = createNamespacedHelpers('GomState')
 
@@ -192,7 +190,6 @@ export default {
     return {
       editMode: false,
       data: {},
-      edges: {},
       // naive deep copy, for more complex one, use a differente approach
       item: JSON.parse(JSON.stringify(this.value))
     }
@@ -244,14 +241,18 @@ export default {
       },
       set (amount) {
         if (amount !== this.value.price.amount) {
-          this.edges.pricing = {
-            data: {
-              amount: amount,
-              currency: 'MXN' // default
-            },
-            id: this.item.price.uid
+          this.data.pricing = {
+            update: {
+              data: {
+                amount: amount,
+                currency: 'MXN' // defaul
+              },
+              where: {
+                uid: this.item.price.uid
+              }
+            }
           }
-        } else delete this.edges.pricing
+        } else delete this.data.pricing
         this.item.price.amount = amount
       }
     },
@@ -269,103 +270,70 @@ export default {
     }
   },
   methods: {
-    updateCache (cache, { data }) {
-      try {
-        if (data.removeItems) {
-          // item removal
-          // Read order details cache
-          let cached = cache.readQuery({
-            query: OrderDetails,
-            variables: {
-              id: this.activeOrder
-            }
-          })
-          const items = cached.order.items.edges
-          const index = items.findIndex(({ node }) => node.uid === this.item.id)
-          items.splice(index, 1)
-          // Update order details cache
-          cache.writeQuery({
-            query: OrderDetails,
-            variables: {
-              id: this.activeOrder
-            },
-            data: cached
-          })
-        }
-      } catch (err) {
-        console.log(err)
-      }
-    },
     deleteIt () {
       this.$q.loading.show()
       this.$apollo.mutate({
         mutation: RemoveItems,
-        variables: { orderId: this.activeOrder, items: [this.item.id] },
-        update: this.updateCache
+        variables: {
+          data: {
+            items: {
+              delete: {
+                uid: this.item.id
+              }
+            }
+          },
+          where: {
+            uid: this.activeOrder
+          }
+        }
       })
         .then(res => this.onSuccess(res))
     },
     clear () {
       this.item = JSON.parse(JSON.stringify(this.value)) // revert changes
       this.data = {} // reset temporary changes
-      this.edges = {}
       this.editMode = false // disable edit mode
     },
     save () {
       // if noMutations and available data, emit submit event only
-      const count = Object.entries(this.data).length
-      const edges = Object.entries(this.edges).length
-      if (this.noMutations && (count > 0 || edges > 0)) {
+      if (this.noMutations && (Object.entries(this.data).length > 0)) {
         this.editMode = false
         this.$emit('change', this.item)
         return
       }
-
-      let promises = []
-      if (Object.entries(this.data).length > 0) {
-        promises.push(this.saveItem())
-      }
-      if (Object.entries(this.edges).length > 0 && this.edges.pricing) {
-        promises.push(this.savePrice())
-      }
-      if (promises.length > 0) {
-        this.$q.loading.show()
-        Promise.all(promises)
-          .then(res => {
-            this.$apollo.mutate({
-              mutation: gql`
-                mutation UpdateOrder($id: String!, $data: OrderUpdateInp!) {
-                  updateOrder(id: $id, data: $data) {
-                    uid
-                    updatedAt
-                  }
-                }`,
-              variables: { id: this.activeOrder, data: {} }
-            })
-          })
-          .then(res => this.onSuccess(res))
-      } else this.editMode = false
-    },
-    saveItem () {
-      return this.$apollo.mutate({
+      this.$q.loading.show()
+      this.$apollo.mutate({
         mutation: UpdateItem,
-        variables: { id: this.item.id, data: this.data },
-        update: this.updateCache
-      })
-    },
-    savePrice () {
-      return this.$apollo.mutate({
-        mutation: UpdatePrice,
-        variables: { id: this.edges.pricing.id, data: this.edges.pricing.data },
-        update: this.updateCache
-      })
+        variables: {
+          data: {
+            items: {
+              update: {
+                where: {
+                  uid: this.item.id
+                },
+                data: this.data
+              }
+            }
+          },
+          where: {
+            uid: this.activeOrder
+          }
+        }
+      }).then(res => this.onSuccess(res))
     },
     onSuccess (response) {
       this.$q.loading.hide()
       this.editMode = false
       this.$q.notify({
         color: 'positive',
-        message: this.$t('notifications.positive.changes_saved'),
+        /*
+        * When an item is deleted, the Vue i18n instance is set to null in
+        * the component, causing a null type error during the notification
+        * execution. To prevent it, $t() is taken from the root instance.
+        * This issue is detailed in:
+        * https://github.com/kazupon/vue-i18n/issues/184#issuecomment-481379038
+        */
+        message: this.$root.$t('notifications.positive.changes_saved'),
         icon: 'check_circle'
       })
     },

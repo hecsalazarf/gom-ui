@@ -1,10 +1,20 @@
-###### Update item #########
-mutation UpdateItem($id: String!, $data: ItemMutationInp!) {
-	updateItem(id: $id, data: $data) {
+mutation UpdateOrderItem ($data: OrderUpdateInput!, $where: OrderWhereUniqueInput!) {
+  updateOrder(data: $data, where: $where) {
     uid
-  	code
-    quantity
-    description
-    provider
+    updatedAt
+    items {
+      uid
+      code
+      quantity
+    	description
+    	provider
+      updatedAt
+      pricing {
+        uid
+    		amount
+    		currency
+        updatedAt
+      }
+    }
   }
 }

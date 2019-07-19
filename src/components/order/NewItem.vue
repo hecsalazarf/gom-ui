@@ -112,7 +112,6 @@
 
 <script>
 import AddItemsToOrder from 'src/graphql/mutations/AddItemsToOrder.gql'
-import OrderDetails from 'src/graphql/queries/OrderDetails.gql'
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters } = createNamespacedHelpers('GomState')
 
@@ -139,35 +138,35 @@ export default {
     }
   },
   computed: {
-    itemData () {
-      return {
-        edges: {
-          items: [
-            {
-              node: {
-                code: this.model.code === '' ? undefined : this.model.code,
-                quantity: this.model.quantity,
-                description: this.model.description,
-                provider: this.model.provider === '' ? undefined : this.model.provider,
-                edges: {
-                  pricing: [
-                    {
-                      node: {
-                        amount: this.model.price.amount,
-                        currency: this.model.price.currency // default
-                      },
-                      props: {
-                        type: 'GENERAL'
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          ]
-        }
-      }
-    },
+    // itemData () {
+    //   return {
+    //     edges: {
+    //       items: [
+    //         {
+    //           node: {
+    //             code: this.model.code === '' ? undefined : this.model.code,
+    //             quantity: this.model.quantity,
+    //             description: this.model.description,
+    //             provider: this.model.provider === '' ? undefined : this.model.provider,
+    //             edges: {
+    //               pricing: [
+    //                 {
+    //                   node: {
+    //                     amount: this.model.price.amount,
+    //                     currency: this.model.price.currency // default
+    //                   },
+    //                   props: {
+    //                     type: 'GENERAL'
+    //                   }
+    //                 }
+    //               ]
+    //             }
+    //           }
+    //         }
+    //       ]
+    //     }
+    //   }
+    // },
     ...mapGetters(['activeOrder'])
   },
   methods: {
@@ -189,8 +188,28 @@ export default {
       this.$q.loading.show()
       this.$apollo.mutate({
         mutation: AddItemsToOrder,
-        variables: { id: this.activeOrder, data: this.itemData },
-        update: this.updateCache
+        variables: {
+          data: {
+            items: {
+              create: {
+                code: this.model.code === '' ? undefined : this.model.code,
+                quantity: this.model.quantity,
+                description: this.model.description,
+                provider: this.model.provider === '' ? undefined : this.model.provider,
+                pricing: {
+                  create: {
+                    amount: this.model.price.amount,
+                    currency: this.model.price.currency
+                  }
+                }
+              }
+            }
+          },
+          where: {
+            uid: this.activeOrder
+          }
+        }
+        // update: this.updateCache // LEFT FOR REFERENCE
       })
         .then(res => {
           this.$q.loading.hide()
@@ -201,14 +220,16 @@ export default {
           })
           this.$emit('done')
         })
-    },
+    }/* , LEFT FOR REFERENCE
     updateCache (cache, { data }) {
       try {
         // Read order details cache
         let cached = cache.readQuery({
           query: OrderDetails,
           variables: {
-            id: this.activeOrder
+            where: {
+              uid: this.activeOrder
+            }
           }
         })
 
@@ -225,7 +246,7 @@ export default {
       } catch (err) {
         console.log(err)
       }
-    }
+    } */
   }
 }
 </script>

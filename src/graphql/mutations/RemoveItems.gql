@@ -1,7 +1,21 @@
-###### Remove items from order #########
-mutation RemoveItems($orderId: String!, $items: [ID!]) {
-	removeItems(orderId: $orderId, items: $items) {
-   uid
-   updatedAt
+mutation DeleteOrderItem ($data: OrderUpdateInput!, $where: OrderWhereUniqueInput!) {
+  updateOrder(data: $data, where: $where) {
+    uid
+    updatedAt
+    items {
+      uid
+      code
+      quantity
+    	description
+    	provider
+      updatedAt
+      pricing {
+        uid
+    		amount
+    		currency
+        updatedAt
+        type
+      }
+    }
   }
 }

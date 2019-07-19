@@ -1,6 +1,5 @@
-###### Update order #########
-mutation UpdateOrder($id: String!, $data: OrderUpdateInp!) {
-	updateOrder(id: $id, data: $data) {
+mutation UpdateOrder ($data: OrderUpdateInput!, $where: OrderWhereUniqueInput!) {
+  updateOrder(data: $data, where: $where) {
     uid
     name
     stage
