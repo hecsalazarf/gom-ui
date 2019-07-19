@@ -23,7 +23,7 @@
             v-model="fullName"
             class="col-8"
             input-class="text-h6 text-black text-center ellipsis"
-            placeholder="Nombre"
+            :placeholder="$t('customer.name')"
             standout="bg-secondary"
             dense
             hide-bottom-space
@@ -31,13 +31,13 @@
             :borderless="!editMode"
             type="text"
             maxlength="40"
-            :rules="[ val=> !!val || 'Campo requerido', val=> val.length <= 40 || 'Máximo 40 caracteres' ]"
+            :rules="[ val => !!val || $t('app.rules.required'), val=> val.length <= 40 || $t('app.rules.max_length', { count: 40 }) ]"
           />
           <q-input
             v-model="phone"
             class="col-8"
             input-class="text-subtitle1 text-black text-center ellipsis"
-            placeholder="Teléfono"
+            :placeholder="$tc('customer.phone', 1)"
             standout="bg-secondary"
             dense
             hide-bottom-space
@@ -46,20 +46,20 @@
             type="tel"
             mask="(##) #### ####"
             unmasked-value
-            :rules="[ val=> !!val || 'Campo requerido', val => val.replace(/\s/g, '').length === 10 || 'Teléfono debe tener 10 dígitos']"
+            :rules="[ val=> !!val || $t('app.rules.required'), val => val.replace(/\s/g, '').length === 10 || $t('customer.rules.phone_length', { count: 10 })]"
           />
           <q-input
             v-model="email"
             class="col-8"
             input-class="text-subtitle1 text-black text-center ellipsis"
-            placeholder="Correo electrónico"
+            :placeholder="$t('customer.email')"
             standout="bg-secondary"
             dense
             hide-bottom-space
             :borderless="!editMode"
             :readonly="!editMode"
             type="email"
-            :rules="[ val=> val.length <= 256 || 'Máximo 256 caracteres' ]"
+            :rules="[ val=> val.length <= 256 || $t('app.rules.max_length', { count: 256 }) ]"
           />
         </q-form>
       </q-card-section>
@@ -78,7 +78,7 @@
           :href="`tel:${phone}`"
           :disable="editMode || phone === ''"
         >
-          <q-tooltip>Llamar por teléfono</q-tooltip>
+          <q-tooltip>{{ $t('customer.make_call') }}</q-tooltip>
         </q-btn>
         <q-btn
           icon="email"
@@ -90,7 +90,7 @@
           :href="`mailto:${email}`"
           :disable="editMode || email === ''"
         >
-          <q-tooltip>Enviar correo</q-tooltip>
+          <q-tooltip>{{ $t('customer.send_email') }}</q-tooltip>
         </q-btn>
       </q-card-actions>
       <q-card-actions class="absolute-top-right">
@@ -103,7 +103,7 @@
           color="accent"
           @click="editMode = !editMode"
         >
-          <q-tooltip>Editar</q-tooltip>
+          <q-tooltip>{{ $t('app.edit') }}</q-tooltip>
         </q-btn>
         <q-btn
           v-if="editMode"
@@ -114,7 +114,7 @@
           color="red"
           @click="clear()"
         >
-          <q-tooltip>Cancelar</q-tooltip>
+          <q-tooltip>{{ $t('app.abort') }}</q-tooltip>
         </q-btn>
         <q-btn
           v-if="editMode"
@@ -125,7 +125,7 @@
           color="teal"
           @click="$refs.form.validate(true).then(out => { if(out) save() })"
         >
-          <q-tooltip>Guardar</q-tooltip>
+          <q-tooltip>{{ $t('app.save') }}</q-tooltip>
         </q-btn>
       </q-card-actions>
     </q-card>
@@ -244,7 +244,7 @@ export default {
           this.$q.loading.hide()
           this.$q.notify({
             color: 'positive',
-            message: 'Cambios guardados',
+            message: this.$t('notifications.positive.changes_saved'),
             icon: 'check_circle'
           })
         })

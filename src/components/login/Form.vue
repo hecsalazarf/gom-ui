@@ -12,10 +12,10 @@
       clearable
       items-aligned
       type="email"
-      label="Usuario"
+      :label="$t('app.user_name')"
       :disable="loading"
       lazy-rules
-      :rules="[val => !!val || 'Campo requerido']"
+      :rules="[val => !!val || $t('app.rules.required')]"
     >
       <template v-slot:prepend>
         <q-icon
@@ -33,10 +33,10 @@
       borderless
       items-aligned
       :type="isPwd ? 'password' : 'text'"
-      label="Contraseña"
+      :label="$t('app.password')"
       :disable="loading"
       lazy-rules
-      :rules="[val => !!val || 'Campo requerido']"
+      :rules="[val => !!val || $t('app.rules.required')]"
     >
       <template v-slot:prepend>
         <q-icon
@@ -55,7 +55,7 @@
     <q-btn
       rounded
       class="full-width q-mt-lg"
-      label="Iniciar sesión"
+      :label="$t('app.sign_in')"
       type="submit"
       color="primary"
       :loading="loading"

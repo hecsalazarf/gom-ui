@@ -5,7 +5,7 @@
         {{ value.name }}
       </div>
       <div class="col">
-        para
+        {{ $t('app.to') }}
         <span class="text-italic">{{ value.customer.label }}</span>
       </div>
     </q-card-section>

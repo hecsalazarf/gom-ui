@@ -6,7 +6,7 @@
     >
       <q-card-section>
         <div class="text-subtitle1 text-weight-medium">
-          Nuevo artículo
+          {{ $t('item.new') }}
         </div>
       </q-card-section>
       <q-card-section class="q-gutter-y-xs">
@@ -16,10 +16,10 @@
           input-class="text-subtitle1 text-weight-medium text-black"
           standout="bg-secondary"
           dense
-          label="Descripción"
+          :label="$t('item.description')"
           type="text"
           maxlength="40"
-          :rules="[ val => !!val || 'Campo obligatorio', val => val.length <= 40 || 'Máximo 40 caracteres' ]"
+          :rules="[ val => !!val || $t('app.rules.required'), val => val.length <= 40 || $t('app.rules.max_length', { count: 40 }) ]"
           hide-bottom-space
         />
         <q-input
@@ -27,7 +27,7 @@
           input-class="text-caption text-black"
           standout="bg-secondary"
           dense
-          label="Código"
+          :label="$t('item.code')"
           type="text"
           maxlength="15"
           hide-bottom-space
@@ -37,7 +37,7 @@
           dense
           standout="bg-secondary"
           input-class="text-black"
-          label="Marca"
+          :label="$t('item.provider')"
           type="text"
           maxlength="20"
           hide-bottom-space
@@ -51,12 +51,12 @@
           input-class="text-black"
           dense
           prefix="$"
-          label="Precio"
+          :label="$tc('pricing.label', 1)"
           type="tel"
           mask="#.##"
           fill-mask="0"
           reverse-fill-mask
-          :rules="[ val => !!val || 'Campo obligatorio', val => val < 100000 || 'Ups, muy caro' ]"
+          :rules="[ val => !!val || $t('app.rules.required'), val => val < 100000 || $t('order.rules.too_much')]"
           hide-bottom-space
         >
           <template v-slot:prepend>
@@ -74,7 +74,7 @@
           label="Cantidad"
           type="number"
           min="1"
-          :rules="[ val => val > 0 || 'Debe haber al menos 1', val => val < 10000 || 'Es demasiado' ]"
+          :rules="[ val => val > 0 || $t('order.rules.minimum', { count: 1 }), val => val < 10000 || $t('order.rules.too_much')]"
           hide-bottom-space
         >
           <template v-slot:prepend>
@@ -196,7 +196,7 @@ export default {
           this.$q.loading.hide()
           this.$q.notify({
             color: 'positive',
-            message: 'Cambios guardados',
+            message: this.$t('notifications.positive.changes_saved'),
             icon: 'check_circle'
           })
           this.$emit('done')

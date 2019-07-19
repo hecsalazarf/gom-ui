@@ -5,7 +5,7 @@
       class="text-blue-grey-9 text-h4"
     />
     <q-toolbar-title class="text-blue-grey-9">
-      GOM
+      {{ this.$t('app.label') }}
     </q-toolbar-title>
     <q-btn
       flat
@@ -22,7 +22,7 @@
             @click="logout()"
           >
             <q-item-section class="text-body2">
-              Salir
+              {{ this.$t('app.sign_out') }}
             </q-item-section>
           </q-item>
         </q-list>
@@ -43,17 +43,17 @@ export default {
   methods: {
     logout () {
       this.$q.dialog({
-        title: 'Cerrar sesión',
-        message: '¿Continuar?',
+        title: this.$t('app.sign_out'),
+        message: this.$t('app.continue_question'),
         position: 'bottom',
         persistent: true,
         cancel: {
-          label: 'No',
+          label: this.$t('app.no'),
           color: 'primary',
           flat: true
         },
         ok: {
-          label: 'Sí',
+          label: this.$t('app.yes'),
           color: 'primary',
           flat: true
         },

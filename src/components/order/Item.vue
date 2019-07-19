@@ -15,12 +15,12 @@
           input-class="text-subtitle1 text-weight-medium text-black"
           standout="bg-secondary"
           dense
-          label="Descripción"
+          :label="$t('item.description')"
           :readonly="!editMode"
           :borderless="!editMode"
           type="text"
           maxlength="40"
-          :rules="[ val => !!val || 'Campo obligatorio', val => val.length <= 40 || 'Máximo 40 caracteres' ]"
+          :rules="[ val => !!val || $t('app.rules.required'), val => val.length <= 40 || $t('app.rules.max_length', { count: 40 }) ]"
           hide-bottom-space
         />
         <div class="col">
@@ -38,7 +38,7 @@
               round
               @click.stop="editMode = true"
             >
-              <q-tooltip>Editar</q-tooltip>
+              <q-tooltip>{{ $t('app.edit') }}</q-tooltip>
             </q-btn>
             <q-btn
               v-if="!(noRemovable || editMode)"
@@ -51,7 +51,7 @@
               round
               @click.stop="confirmDelete()"
             >
-              <q-tooltip>Eliminar</q-tooltip>
+              <q-tooltip>{{ $t('app.delete') }}</q-tooltip>
             </q-btn>
             <q-btn
               v-if="editMode"
@@ -63,7 +63,7 @@
               round
               type="reset"
             >
-              <q-tooltip>Cancelar</q-tooltip>
+              <q-tooltip>{{ $t('app.abort') }}</q-tooltip>
             </q-btn>
             <q-btn
               v-if="editMode"
@@ -76,7 +76,7 @@
               round
               type="submit"
             >
-              <q-tooltip>Guardar</q-tooltip>
+              <q-tooltip>{{ $t('app.save') }}</q-tooltip>
             </q-btn>
           </div>
         </div>
@@ -86,7 +86,7 @@
           input-class="text-caption text-black"
           standout="bg-secondary"
           dense
-          label="Código"
+          :label="$t('item.code')"
           :readonly="!editMode"
           :borderless="!editMode"
           type="text"
@@ -99,7 +99,7 @@
           standout="bg-secondary"
           input-class="text-black"
           dense
-          label="Marca"
+          :label="$t('item.provider')"
           :readonly="!editMode"
           :borderless="!editMode"
           type="text"
@@ -115,7 +115,7 @@
           standout="bg-secondary"
           input-class="text-black"
           dense
-          label="Precio"
+          :label="$tc('pricing.label', 1)"
           type="tel"
           prefix="$"
           mask="#.##"
@@ -123,7 +123,7 @@
           reverse-fill-mask
           :readonly="!editMode"
           :borderless="!editMode"
-          :rules="[ val => !!val || 'Campo obligatorio', val => val < 100000 || 'Ups, muy caro' ]"
+          :rules="[ val => !!val || $t('app.rules.required'), val => val < 100000 || $t('order.rules.too_much') ]"
           hide-bottom-space
         />
         <q-input
@@ -132,12 +132,12 @@
           standout="bg-secondary"
           input-class="text-black"
           dense
-          label="Cantidad"
+          :label="$t('item.quantity')"
           :readonly="!editMode"
           :borderless="!editMode"
           type="number"
           step="0.01"
-          :rules="[ val => val > 0 || 'Debe haber al menos 1', val => val < 10000 || 'Es demasiado' ]"
+          :rules="[ val => val > 0 || $t('order.rules.minimum', { count: 1 }), val => val < 10000 || $t('order.rules.too_much') ]"
           hide-bottom-space
         />
         <q-input
@@ -147,7 +147,7 @@
           standout="bg-secondary"
           readonly
           dense
-          label="Total"
+          :label="$t('pricing.total')"
           prefix="$"
           borderless
           type="text"
@@ -365,7 +365,7 @@ export default {
       this.editMode = false
       this.$q.notify({
         color: 'positive',
-        message: 'Cambios guardados',
+        message: this.$t('notifications.positive.changes_saved'),
         icon: 'check_circle'
       })
     },

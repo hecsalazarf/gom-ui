@@ -17,35 +17,35 @@
           v-model="fullName"
           autofocus
           input-class="text-black ellipsis"
-          label="Nombre"
+          :label="$t('customer.name')"
           standout="bg-secondary"
           dense
           hide-bottom-space
           type="text"
           maxlength="40"
-          :rules="[ val=> !!val || 'Campo requerido', val=> val.length <= 40 || 'Máximo 40 caracteres' ]"
+          :rules="[ val=> !!val || $t('app.rules.required'), val=> val.length <= 40 || $t('app.rules.max_length', { count: 40 }) ]"
         />
         <q-input
           v-model="phone"
           input-class="text-black ellipsis"
-          label="Teléfono"
+          :label="$tc('customer.phone', 1)"
           standout="bg-secondary"
           dense
           hide-bottom-space
           type="tel"
           mask="(##) #### ####"
           unmasked-value
-          :rules="[ val=> !!val || 'Campo requerido', val => val.replace(/\s/g, '').length === 10 || 'Teléfono debe tener 10 dígitos']"
+          :rules="[ val=> !!val || $t('app.rules.required'), val => val.replace(/\s/g, '').length === 10 || $t('customer.rules.phone_length', { count: 10 })]"
         />
         <q-input
           v-model="email"
           input-class="text-black ellipsis"
-          label="Correo electrónico"
+          :label="$t('customer.email')"
           standout="bg-secondary"
           dense
           hide-bottom-space
           type="email"
-          :rules="[ val=> val.length <= 256 || 'Máximo 256 caracteres' ]"
+          :rules="[ val=> val.length <= 256 || $t('app.rules.max_length', { count: 256 }) ]"
         />
       </q-card-section>
       <q-separator inset />
@@ -58,7 +58,7 @@
           round
           type="reset"
         >
-          <q-tooltip>Cancelar</q-tooltip>
+          <q-tooltip>{{ $t('app.abort') }}</q-tooltip>
         </q-btn>
         <q-btn
           icon="done"
@@ -68,7 +68,7 @@
           round
           type="submit"
         >
-          <q-tooltip>Guardar</q-tooltip>
+          <q-tooltip>{{ $t('app.save') }}</q-tooltip>
         </q-btn>
       </q-card-actions>
     </q-form>

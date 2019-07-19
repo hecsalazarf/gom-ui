@@ -16,11 +16,11 @@
         >
           <q-tab
             name="details"
-            label="Detalles"
+            :label="$tc('order.label', 2)"
           />
           <q-tab
             name="items"
-            label="Articulos"
+            :label="$tc('item.label', 2)"
           />
         </q-tabs>
         <q-separator />
@@ -53,7 +53,7 @@
             <q-btn
               v-if="!readonly"
               icon="add"
-              label="Agregar artículo"
+              :label="$t('item.add_item')"
               color="accent"
               class="full-width"
               rounded

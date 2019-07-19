@@ -10,17 +10,17 @@
     input-class="text-black"
     fill-input
     clearable
-    label="Cliente"
+    :label="$tc('customer.label', 1)"
     popup-content-style="max-height: 60vh"
     :options="options"
-    :rules="[ val => val && Object.entries(val).length > 0 || 'Selecciona a un cliente' ]"
+    :rules="[ val => val && Object.entries(val).length > 0 || $t('customer.rules.pick_customer') ]"
     @input="$emit('input', $event)"
     @filter="filter"
   >
     <template v-slot:no-option>
       <q-item>
         <q-item-section class="text-grey">
-          Sin resultados
+          {{ $t('app.no_results') }}
         </q-item-section>
       </q-item>
     </template>
@@ -114,14 +114,8 @@ export default {
             this.options = this.mapOptions(filtered)
           })
         })
-        .catch(err => {
-          console.error(err)
+        .catch(() => {
           abort()
-          this.$q.notify({
-            color: 'negative',
-            message: ':( No pudimos encontrar clientes',
-            icon: 'report_problem'
-          })
         })
     }
   }

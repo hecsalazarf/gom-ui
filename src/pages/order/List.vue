@@ -32,7 +32,7 @@
             v-show="allOrders.length > 0 && moreOrders"
             icon="expand_more"
             color="accent"
-            label="Ver más"
+            :label="$t('app.see_more')"
             :loading="loading > 0 && fetchMoreFlag"
             no-caps
             flat

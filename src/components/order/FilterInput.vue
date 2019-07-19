@@ -23,7 +23,7 @@
         <q-list dense>
           <q-item>
             <q-item-section class="text-weight-medium">
-              Filtrar por
+              {{ $t('app.filter_by') }}
             </q-item-section>
           </q-item>
           <q-item v-close-popup>
@@ -34,7 +34,7 @@
                 checked-icon="input"
                 color="cyan-5"
                 unchecked-icon="clear"
-                label="Nuevo"
+                :label="$t('order.status.options.OPEN.label')"
               />
             </q-item-section>
           </q-item>
@@ -46,7 +46,7 @@
                 checked-icon="check"
                 color="positive"
                 unchecked-icon="clear"
-                label="Entregado"
+                :label="$t('order.status.options.WON.label')"
               />
             </q-item-section>
           </q-item>
@@ -58,7 +58,7 @@
                 checked-icon="cancel_presentation"
                 color="negative"
                 unchecked-icon="clear"
-                label="Cancelado"
+                :label="$t('order.status.options.CLOSED.label')"
               />
             </q-item-section>
           </q-item>
@@ -70,7 +70,7 @@
 
 <script>
 export default {
-  // name: 'ComponentName',
+  name: 'OrderFilterInput',
   props: {
     disable: {
       type: Boolean,

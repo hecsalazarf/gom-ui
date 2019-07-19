@@ -12,7 +12,7 @@
       v-if="!activeOrder"
       class="col-5 text-subtitle1 text-primary"
     >
-      Nuevo pedido
+      {{ $t('order.new') }}
     </div>
     <q-avatar
       v-if="activeOrder"
@@ -83,13 +83,13 @@ export default {
       let stage
       switch (this.header.stage) {
         case 'WON':
-          stage = { label: 'Entregado', value: 'WON', icon: 'check' }
+          stage = { label: this.$t('order.status.options.WON.label'), value: 'WON', icon: 'check' }
           break
         case 'OPEN':
-          stage = { label: 'Nuevo', icon: 'input' }
+          stage = { label: this.$t('order.status.options.OPEN.label'), icon: 'input' }
           break
         case 'CLOSED':
-          stage = { label: 'Cancelado', icon: 'cancel_presentation' }
+          stage = { label: this.$t('order.status.options.CLOSED.label'), icon: 'cancel_presentation' }
           break
         default:
           stage = { label: '', icon: '' }

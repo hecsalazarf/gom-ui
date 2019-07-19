@@ -11,7 +11,7 @@ function notifyOnError () {
   this.$q.loading.hide() // hide any loading window
   this.$q.notify({
     color: 'negative',
-    message: 'Ups algo salió mal, inténtalo más tarde :(',
+    message: this.$t('notifications.error.generic'),
     icon: 'report_problem'
   })
 }

@@ -27,14 +27,14 @@
         <q-route-tab
           name="orders"
           :to="{ name: 'orders' }"
-          label="Pedidos"
+          :label="$tc('order.label', 2)"
           icon="shopping_cart"
           class="orders-tab"
         />
         <q-route-tab
           name="customers"
           :to="{ name: 'customers' }"
-          label="Clientes"
+          :label="$tc('customer.label', 2)"
           icon="contacts"
           class="customers-tab"
         />

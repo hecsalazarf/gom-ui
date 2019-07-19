@@ -15,8 +15,8 @@
       >
         <q-step
           :name="1"
-          title="Artículos"
-          caption="Agrega los artículos a tu pedido"
+          :title="$tc('item.label', 1)"
+          :caption="$t('order.step1_desc')"
           icon="shop"
           active-icon="shop"
           :done="step > 1"
@@ -34,7 +34,7 @@
           />
           <q-btn
             icon="add"
-            label="Agregar artículo"
+            :label="$t('item.add_item')"
             color="accent"
             class="full-width"
             rounded
@@ -47,8 +47,8 @@
 
         <q-step
           :name="2"
-          title="Cliente"
-          caption="Agrega una descripción y selecciona un cliente"
+          :title="$tc('customer.label', 1)"
+          :caption="$t('order.step2_desc')"
           icon="assignment_ind"
           active-icon="assignment_ind"
           :done="step > 2"
@@ -61,12 +61,12 @@
               <!-- Order name -->
               <q-input
                 v-model="order.name"
-                label="Descripción"
+                :label="$t('order.description')"
                 standout
                 dense
                 input-class="text-black"
                 hide-bottom-space
-                :rules="[ val => !!val || 'Campo obligatorio', val => val.length <= 40 || 'Máximo 40 caracteres' ]"
+                :rules="[ val => !!val || $t('app.rules.required'), val => val.length <= 40 || $t('app.rules.max_length', { count: 40 }) ]"
               >
                 <template v-slot:prepend>
                   <q-icon name="notes" />
@@ -80,8 +80,8 @@
 
         <q-step
           :name="3"
-          title="Confirmación"
-          caption="Confirma y envía tu pedido"
+          :title="$t('app.confirm')"
+          :caption="$t('order.step3_desc')"
           icon="shopping_basket"
           active-icon="shopping_basket"
         >
@@ -182,13 +182,13 @@ export default {
       let caption
       switch (this.step) {
         case 1:
-          caption = 'Agrega los artículos a tu pedido'
+          caption = this.$t('order.step1_desc')
           break
         case 2:
-          caption = 'Agrega una descripción y selecciona un cliente'
+          caption = this.$t('order.step2_desc')
           break
         case 3:
-          caption = 'Confirma y envía tu pedido'
+          caption = this.$t('order.step3_desc')
           break
       }
       return caption
@@ -340,17 +340,17 @@ export default {
     // Emit a dialog if an order is in process and has not been submitted (#19)
     if (this.order.items.length > 0 && !this.submitted) {
       this.$q.dialog({
-        title: 'Tienes un pedido en proceso',
-        message: 'Al continuar perderás los cambios ¿Continuar?',
+        title: this.$t('order.confirm_exit_title'),
+        message: this.$t('order.confirm_exit_message'),
         position: 'bottom',
         persistent: true,
         cancel: {
-          label: 'No',
+          label: this.$t('app.no'),
           color: 'primary',
           flat: true
         },
         ok: {
-          label: 'Sí',
+          label: this.$t('app.yes'),
           color: 'primary',
           flat: true
         },

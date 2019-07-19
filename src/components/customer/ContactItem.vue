@@ -33,7 +33,7 @@ export default {
       type: Boolean,
       default: false
     },
-    'avatarChar': {
+    avatarChar: {
       type: String,
       default: 'AC'
     },

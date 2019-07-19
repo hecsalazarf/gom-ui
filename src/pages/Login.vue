@@ -16,7 +16,7 @@
             />
           </div>
           <div class="col-1">
-            <h5>GOM</h5>
+            <h5>{{ $t('app.label') }}</h5>
           </div>
           <div class="col-4 full-width">
             <h-login-form
@@ -58,9 +58,9 @@ export default {
       } catch (e) {
         this.loading = false
         if (e.response.data.code === 'invalid_grant') {
-          this.$q.notify({ color: 'negative', message: 'Usuario o contraseña incorrectos', icon: 'report_problem' })
+          this.$q.notify({ color: 'negative', message: this.$t('notifications.error.wrong_credentials'), icon: 'report_problem' })
         } else {
-          this.$q.notify({ color: 'negative', message: 'No pudimos iniciar sesión. Inténtalo más tarde', icon: 'report_problem' })
+          this.$q.notify({ color: 'negative', message: this.$t('notifications.error.signin_failed'), icon: 'report_problem' })
           console.error(e.response.data)
         }
       }

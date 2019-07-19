@@ -4,7 +4,7 @@
     dense
     color="red"
     standout="bg-secondary"
-    label="Estado"
+    :label="$t('order.status.label')"
     :options="options | validOptions(value, rules)"
     :readonly="readonly"
     :borderless="borderless"
@@ -45,10 +45,10 @@ export default {
   data () {
     return {
       options: [
-        { label: 'Nuevo', value: 'OPEN', icon: 'check' },
-        { label: 'Entregado', value: 'WON', icon: 'check' },
-        { label: 'Cancelado', value: 'CLOSED', icon: 'cancel_presentation' },
-        { label: 'En Proceso', value: 'IN_PROCESS', icon: 'input' }
+        { label: this.$t('order.status.options.OPEN.label'), value: 'OPEN', icon: 'check' },
+        { label: this.$t('order.status.options.WON.label'), value: 'WON', icon: 'check' },
+        { label: this.$t('order.status.options.CLOSED.label'), value: 'CLOSED', icon: 'cancel_presentation' },
+        { label: this.$t('order.status.options.IN_PROCESS.label'), value: 'IN_PROCESS', icon: 'input' }
       ],
       /* Rules object works this way: When current status is
       IN_PROCESS, the user can select CLOSED and WON only */

@@ -8,7 +8,7 @@
         header-class="text-subtitle1 text-weight-medium text-primary"
       >
         <template v-slot:header>
-          <q-item-section>Resumen</q-item-section>
+          <q-item-section>{{ $t('order.review') }}</q-item-section>
           <q-item-section side>
             <div
               v-if="!readonly"
@@ -24,7 +24,7 @@
                 round
                 @click.stop="editMode = true"
               >
-                <q-tooltip>Editar</q-tooltip>
+                <q-tooltip>{{ $t('app.edit') }}</q-tooltip>
               </q-btn>
               <q-btn
                 v-if="editMode"
@@ -36,7 +36,7 @@
                 round
                 @click.stop="clear()"
               >
-                <q-tooltip>Cancelar</q-tooltip>
+                <q-tooltip>{{ $t('app.abort') }}</q-tooltip>
               </q-btn>
               <q-btn
                 v-if="editMode"
@@ -48,7 +48,7 @@
                 round
                 @click.stop="$refs.form.validate(true).then(out => { if(out) save() })"
               >
-                <q-tooltip>Guardar</q-tooltip>
+                <q-tooltip>{{ $t('app.save') }}</q-tooltip>
               </q-btn>
             </div>
           </q-item-section>
@@ -61,12 +61,12 @@
                 dense
                 standout="bg-secondary"
                 input-class="text-black"
-                label="Nombre del pedido"
+                :label="$t('order.description')"
                 :readonly="!editMode"
                 :borderless="!editMode"
                 type="text"
                 maxlength="40"
-                :rules="[ val => !!val || '* Campo obligatorio', val => val.length <= 40 || 'Máximo 40 caracteres' ]"
+                :rules="[ val => !!val || $t('app.rules.required'), val => val.length <= 40 || $t('app.rules.max_length', { count: 40 }) ]"
                 hide-bottom-space
               />
               <h-status-select
@@ -78,7 +78,7 @@
                 v-model="totalAmount"
                 dense
                 prefix="$"
-                label="Total"
+                :label="$t('pricing.total')"
                 readonly
                 borderless
               />
@@ -91,7 +91,7 @@
         class="bg-secondary h-rounded-borders-20"
         icon="perm_identity"
         switch-toggle-side
-        label="Cliente"
+        :label="$tc('customer.label', 1)"
         default-opened
         header-class="text-subtitle1 text-weight-medium text-primary"
       >
@@ -99,7 +99,7 @@
           <q-card-section>
             <q-field
               dense
-              label="Nombre"
+              :label="$t('customer.name')"
               readonly
               borderless
               stack-label
@@ -122,7 +122,7 @@
         class="bg-secondary h-rounded-borders-20"
         icon="date_range"
         switch-toggle-side
-        label="Fechas"
+        :label="$t('order.dates')"
         default-opened
         header-class="text-subtitle1 text-weight-medium text-primary"
       >
@@ -131,7 +131,7 @@
             <q-input
               v-model="createdAt"
               dense
-              label="Pedido el"
+              :label="$t('order.createdAt')"
               readonly
               borderless
             />
@@ -140,7 +140,7 @@
             <q-input
               v-model="updatedAt"
               dense
-              label="Actualizado el"
+              :label="$t('order.updatedAt')"
               readonly
               borderless
             />
@@ -267,7 +267,7 @@ export default {
       }).then(res => {
         this.editMode = false
         this.$q.loading.hide()
-        this.$q.notify({ color: 'positive', message: 'Cambios guardados', icon: 'check_circle' })
+        this.$q.notify({ color: 'positive', message: this.$t('notifications.positive.changes_saved'), icon: 'check_circle' })
       })
     },
     ...mapActions([
