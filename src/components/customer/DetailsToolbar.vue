@@ -66,7 +66,9 @@ export default {
       .watchQuery({
         query: CustomerDetails,
         variables: {
-          id: this.activeCustomer
+          where: {
+            uid: this.activeCustomer
+          }
         }
       })
       .subscribe(this.updateHeader)

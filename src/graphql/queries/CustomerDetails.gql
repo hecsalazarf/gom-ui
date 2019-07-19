@@ -1,6 +1,5 @@
-###### BP query by id #########
-query BP($id: String!) {
-  bp (id: $id) {
+query ReadBP ($where: BpWhereUniqueInput!) {
+  bp(where: $where) {
     uid
     name1
     lastName1

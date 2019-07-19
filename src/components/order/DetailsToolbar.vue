@@ -129,7 +129,9 @@ export default {
         .watchQuery({
           query: OrderDetails,
           variables: {
-            id: this.activeOrder
+            where: {
+              uid: this.activeOrder
+            }
           }
         })
         .subscribe(this.updateHeader)
@@ -140,7 +142,7 @@ export default {
       this.header = (({ name, stage, issuedTo }) => ({
         name,
         stage,
-        customer: issuedTo.edges[0].node
+        customer: issuedTo
       }))(order)
     },
     ...mapActions(['emitEvent'])

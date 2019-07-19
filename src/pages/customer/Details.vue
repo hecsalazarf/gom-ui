@@ -63,7 +63,9 @@ export default {
         },
         variables () {
           return {
-            id: this.id
+            where: {
+              uid: this.id
+            }
           }
         }
       }

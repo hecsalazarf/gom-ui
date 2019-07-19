@@ -168,15 +168,15 @@ export default {
             this.$router.back()
             return {}
           }
-          const items = data.order.items.edges.map(edge => {
+          const items = data.order.items.map(item => {
             return {
               data: {
-                id: edge.node.uid,
-                code: edge.node.code,
-                description: edge.node.description,
-                provider: edge.node.provider,
-                quantity: edge.node.quantity,
-                price: edge.node.pricing.edges[0].node
+                id: item.uid,
+                code: item.code,
+                description: item.description,
+                provider: item.provider,
+                quantity: item.quantity,
+                price: item.pricing[0]
               }
             }
           })
@@ -188,7 +188,7 @@ export default {
             name: data.order.name,
             createdAt: data.order.createdAt,
             updatedAt: data.order.updatedAt,
-            customer: data.order.issuedTo.edges[0].node
+            customer: data.order.issuedTo
           }
         },
         watchLoading (isLoading, countModifier) {
@@ -197,7 +197,9 @@ export default {
         },
         variables () {
           return {
-            id: this.id
+            where: {
+              uid: this.id
+            }
           }
         }
       }

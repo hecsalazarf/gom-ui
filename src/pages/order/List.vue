@@ -109,9 +109,15 @@ export default {
 
       this.$apollo.queries.orders.fetchMore({
         variables: {
+          where: {
+            assignedTo: {
+              extUid: Auth.userId
+            }
+          },
           id: Auth.userId,
           first: this.ordersPerBlock,
-          offset: this.allOrders.length
+          skip: this.allOrders.length,
+          orderBy: 'createdAt_DESC'
         },
         updateQuery: this.updateQuery
       })
@@ -123,24 +129,21 @@ export default {
         })
     },
     updateQuery (previousResult, { fetchMoreResult, variables }) {
-      if (!fetchMoreResult.user.orders.edges) {
-        /* If orders is null return the same cache and set more to false */
-        this.changeMoreOrders(false)
+      const { ordersConnection: orders } = fetchMoreResult
+      this.changeMoreOrders(orders.pageInfo.hasNextPage)
+      if (orders.edges.length === 0) {
+        /* If zero orders return previous result */
         return {
-          user: previousResult.user
+          ordersConnection: previousResult.ordersConnection
         }
       }
-      if (fetchMoreResult.user.orders.edges.length < this.ordersPerBlock) {
-        /* If the orders length is less than ordersPerBlock, it means it's the
-            last block, so more is set to false */
-        this.changeMoreOrders(false)
-      }
-      previousResult.user.orders.edges.push(...fetchMoreResult.user.orders.edges)
+
+      previousResult.ordersConnection.edges.push(...orders.edges)
       return {
-        user: {
-          __typename: previousResult.user.__typename,
-          orders: previousResult.user.orders,
-          uid: fetchMoreResult.user.uid
+        ordersConnection: {
+          __typename: orders.__typename,
+          edges: previousResult.ordersConnection.edges,
+          pageInfo: orders.pageInfo
         }
       }
     },
@@ -152,9 +155,15 @@ export default {
       this.changeMoreOrders(true) // reset more
       this.$apollo.queries.orders.refetch({
         variables: {
+          where: {
+            assignedTo: {
+              extUid: Auth.userId
+            }
+          },
           id: Auth.userId,
           first: this.ordersPerBlock,
-          offset: 0 // First call does not skip orders
+          skip: 0,
+          orderBy: 'createdAt_DESC'
         }
       }).then(() => {
         this.refetchFlag = false
@@ -197,16 +206,17 @@ export default {
         },
         */
         update (data) {
-          if (typeof data.user === 'undefined' || !data.user.orders.edges) {
+          if (typeof data.ordersConnection === 'undefined' || !data.ordersConnection.edges) {
             // If no orders, return an empty array
             return []
           }
-          this.allOrders = data.user.orders.edges.map(edge => {
+          this.changeMoreOrders(data.ordersConnection.pageInfo.hasNextPage) // flag to display button to load more orders
+          this.allOrders = data.ordersConnection.edges.map(edge => {
             return {
               data: {
                 id: edge.node.uid,
                 name: edge.node.name,
-                customer: edge.node.issuedTo.edges[0].node.name1,
+                customer: edge.node.issuedTo.name1,
                 createdAt: edge.node.createdAt,
                 stage: edge.node.stage
               }
@@ -222,9 +232,15 @@ export default {
         loadingKey: 'loading',
         variables () {
           return {
+            where: {
+              assignedTo: {
+                extUid: Auth.userId
+              }
+            },
             id: Auth.userId,
             first: this.ordersPerBlock,
-            offset: 0 // First call does not skip orders
+            skip: 0,
+            orderBy: 'createdAt_DESC'
           }
         }
       }

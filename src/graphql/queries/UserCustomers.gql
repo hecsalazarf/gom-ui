@@ -1,16 +1,17 @@
-###### Query user's customers #########
-query UserCustomers($id: String!) {
-	user(id: $id) {
-    uid
-    customers {
-      edges {
-        node {
-          uid
-          name1
-          lastName1
-          email
-          phone
-        }
+query BpPag ($where: BpWhereInput, $orderBy: BpOrderByInput, $first: Int, $skip: Int) {
+  bpsConnection(where: $where, orderBy: $orderBy, first: $first, skip: $skip) @connection(key: "customers", filter: ["where"]) {
+    pageInfo {
+      hasNextPage
+      startCursor
+      endCursor
+    }
+    edges {
+      node {
+        uid
+        name1
+        lastName1
+        email
+        phone
       }
     }
   }

@@ -64,11 +64,11 @@ export default {
       return {
         query: UserCustomers,
         update (data) {
-          if (typeof data.user === 'undefined' || !data.user.customers.edges) {
+          if (typeof data.bpsConnection === 'undefined' || !data.bpsConnection.edges) {
             // If no customer, return an empty array
             return []
           }
-          const customers = data.user.customers.edges
+          const customers = data.bpsConnection.edges
           customers.sort((first, second) => {
             if (first.node.name1 < second.node.name1) return -1
             if (first.node.name1 > second.node.name1) return 1
@@ -107,7 +107,14 @@ export default {
         },
         variables () {
           return {
-            id: Auth.userId
+            where: {
+              customerOf_some: {
+                extUid: Auth.userId
+              }
+            },
+            first: 20, // TODO Implement pagination
+            skip: 0,
+            orderBy: 'createdAt_DESC'
           }
         }
       }
