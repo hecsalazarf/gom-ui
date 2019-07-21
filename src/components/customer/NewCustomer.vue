@@ -127,7 +127,7 @@ export default {
           this.model.lastName1 = fullName[fullName.length - 1]
         }
 
-        // this avoid unnecessary saving by comparing current value to original one
+        // this avoids unnecessary saving by comparing current value to original one
         if (this.model.name1 !== '') {
           this.data.name1 = this.model.name1
         } else delete this.data.name1
@@ -165,7 +165,14 @@ export default {
       this.$apollo.query({
         query: UserCustomers,
         variables: {
-          id: Auth.userId
+          where: {
+            customerOf_some: {
+              extUid: Auth.userId
+            }
+          },
+          first: 20, // TODO Implement pagination
+          skip: 0,
+          orderBy: 'createdAt_DESC'
         },
         fetchPolicy: 'network-only' // Bypass cache in case query has been fetched before
       }).then(res => {
@@ -177,25 +184,33 @@ export default {
         const cached = cache.readQuery({
           query: UserCustomers,
           variables: {
-            id: Auth.userId
+            where: {
+              customerOf_some: {
+                extUid: Auth.userId
+              }
+            }
           }
         })
-        if (!cached.user.customers.edges) {
+        if (!cached.bpsConnection.edges.length === 0) {
           /* If cache is empty but query has been executed,
           fetch customers to update cache
           for the first time (#18) */
           this.queryCustomers()
           return
         }
-        cached.user.customers.edges.push({
-          __typename: 'UserToBpEdge',
-          node: data.createBP
+        cached.bpsConnection.edges.push({
+          __typename: 'BpEdge',
+          node: data.createBp
         })
         // Update customer list cache
         cache.writeQuery({
           query: UserCustomers,
           variables: {
-            id: Auth.userId
+            where: {
+              customerOf_some: {
+                extUid: Auth.userId
+              }
+            }
           },
           data: cached
         })
@@ -207,11 +222,20 @@ export default {
       this.$q.loading.show()
       this.$apollo.mutate({
         mutation: CreateCustomer,
-        variables: { data: { ...this.data, edges: { ...this.edges } } },
+        variables: {
+          data: {
+            ...this.data,
+            customerOf: {
+              connect: {
+                extUid: Auth.userId
+              }
+            }
+          }
+        },
         update: this.updateCache
       }).then(res => {
         this.$q.loading.hide()
-        this.$router.push({ name: 'customerDetails', params: { id: res.data.createBP.uid } })
+        this.$router.push({ name: 'customerDetails', params: { id: res.data.createBp.uid } })
       })
     }
   }

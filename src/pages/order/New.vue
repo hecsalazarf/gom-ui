@@ -202,9 +202,15 @@ export default {
       this.$apollo.query({
         query: UserOrders,
         variables: {
+          where: {
+            assignedTo: {
+              extUid: Auth.userId
+            }
+          },
           id: Auth.userId,
-          first: 1,
-          offset: 0 // First call does not skip orders
+          first: 1, // As it is empty, only the first order
+          skip: 0, // First call does not skip orders
+          orderBy: 'createdAt_DESC'
         },
         fetchPolicy: 'network-only' // Bypass cache in case query has been fetched before
       }).then(res => {
@@ -216,11 +222,15 @@ export default {
         const cached = cache.readQuery({
           query: UserOrders,
           variables: {
-            id: Auth.userId
+            where: {
+              assignedTo: {
+                extUid: Auth.userId
+              }
+            }
           }
         })
 
-        if (!cached.user.orders.edges) {
+        if (!cached.ordersConnection.edges.length === 0) {
           /* If cache is empty but query has been executed,
           fetch orders to update cache
           for the first time (#18) */
@@ -228,8 +238,8 @@ export default {
           return
         }
 
-        cached.user.orders.edges.unshift({
-          __typename: 'UserToOrderEdge',
+        cached.ordersConnection.edges.unshift({
+          __typename: 'OrderEdge',
           node: data.createOrder
         })
 
@@ -237,56 +247,64 @@ export default {
         cache.writeQuery({
           query: UserOrders,
           variables: {
-            id: Auth.userId
+            where: {
+              assignedTo: {
+                extUid: Auth.userId
+              }
+            }
           },
           data: cached
         })
       } catch (err) {
-        if (err.name === 'Invariant Violation') {
-          /* When UserCustomers query has not been executed, there is no
-          cache with the specified ID and this error is thrown. So the query
-          is executed to update cache for the first time (#18)
-          */
-          this.queryOrders()
-        } else {
-          console.error(err)
-        }
+        console.error(err)
       }
     },
     submit () {
       let data = {
         name: this.order.name,
-        stage: 'OPEN',
-        edges: {
-          assignedTo: {
-            target: Auth.userId
-          },
-          issuedTo: {
-            target: this.order.customer.value
+        assignedTo: {
+          connect: {
+            extUid: Auth.userId
           }
-        }
-      }
-      data.edges.items = this.order.items.map(item => {
-        return {
-          node: {
-            code: item.data.code !== '' ? item.data.code : undefined,
-            quantity: item.data.quantity,
-            provider: item.data.provider !== '' ? item.data.provider : undefined,
-            description: item.data.description,
-            edges: {
+        },
+        issuedTo: {
+          connect: {
+            uid: this.order.customer.value
+          }
+        },
+        items: {
+          create: this.order.items.map(item => {
+            return {
+              code: item.data.code !== '' ? item.data.code : undefined,
+              quantity: item.data.quantity,
+              provider: item.data.provider !== '' ? item.data.provider : undefined,
+              description: item.data.description,
               pricing: {
-                node: {
+                create: {
                   amount: item.data.price.amount,
                   currency: item.data.price.currency
-                },
-                props: {
-                  type: 'GENERAL'
                 }
               }
             }
-          }
+          })
         }
-      })
+      }
+      // data.edges.items = this.order.items.map(item => {
+      //   return {
+      //     create: {
+      //       code: item.data.code !== '' ? item.data.code : undefined,
+      //       quantity: item.data.quantity,
+      //       provider: item.data.provider !== '' ? item.data.provider : undefined,
+      //       description: item.data.description,
+      //       pricing: {
+      //         create: {
+      //           amount: item.data.price.amount,
+      //           currency: item.data.price.currency
+      //         }
+      //       }
+      //     }
+      //   }
+      // })
       this.$q.loading.show()
       this.$apollo.mutate({
         mutation: CreateOrder,

@@ -81,13 +81,20 @@ export default {
         .query({
           query: UserCustomers,
           variables: {
-            id: Auth.userId
+            where: {
+              customerOf_some: {
+                extUid: Auth.userId
+              }
+            },
+            first: 20, // TODO Implement pagination
+            skip: 0,
+            orderBy: 'createdAt_DESC'
           }
         })
         .then(({ data }) => {
           if (value === '') {
             done(() => {
-              let customers = data.user.customers.edges
+              let customers = data.bpsConnection.edges
               customers.sort((first, second) => {
                 if (first.node.name1 < second.node.name1) return -1
                 if (first.node.name1 > second.node.name1) return 1
@@ -99,7 +106,7 @@ export default {
           }
           // Filter values
           done(() => {
-            const filtered = data.user.customers.edges.filter(customer => {
+            const filtered = data.bpsConnection.edges.filter(customer => {
               if (customer.node.name1 && customer.node.name1.toLowerCase().includes(value)) {
                 return true
               }
