@@ -41,7 +41,6 @@
 
 <script>
 import UserCustomers from 'src/graphql/queries/UserCustomers.gql'
-import { Auth } from 'src/helpers'
 
 export default {
   name: 'CustomerListPage',
@@ -109,7 +108,7 @@ export default {
           return {
             where: {
               customerOf_some: {
-                extUid: Auth.userId
+                extUid: this.$user.id
               }
             },
             first: 20, // TODO Implement pagination

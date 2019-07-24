@@ -16,7 +16,7 @@ function notifyOnError () {
   })
 }
 
-export const SessionHelper = {
+export const Session = {
   logout,
   notifyOnError
 }

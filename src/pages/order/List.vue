@@ -69,7 +69,6 @@
 
 <script>
 import UserOrders from 'src/graphql/queries/UserOrders.gql'
-import { Auth } from 'src/helpers'
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapActions } = createNamespacedHelpers('GomState')
 
@@ -111,10 +110,9 @@ export default {
         variables: {
           where: {
             assignedTo: {
-              extUid: Auth.userId
+              extUid: this.$user.id
             }
           },
-          id: Auth.userId,
           first: this.ordersPerBlock,
           skip: this.allOrders.length,
           orderBy: 'createdAt_DESC'
@@ -157,10 +155,9 @@ export default {
         variables: {
           where: {
             assignedTo: {
-              extUid: Auth.userId
+              extUid: this.$user.id
             }
           },
-          id: Auth.userId,
           first: this.ordersPerBlock,
           skip: 0,
           orderBy: 'createdAt_DESC'
@@ -234,7 +231,7 @@ export default {
           return {
             where: {
               assignedTo: {
-                extUid: Auth.userId
+                extUid: this.$user.id
               }
             },
             first: this.ordersPerBlock,

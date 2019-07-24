@@ -8,7 +8,8 @@ module.exports = function (ctx) {
       'i18n',
       'axios',
       'addressbar-color',
-      'vue-apollo'
+      'vue-apollo',
+      'auth'
     ],
 
     css: [

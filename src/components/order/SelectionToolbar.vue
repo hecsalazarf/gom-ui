@@ -60,7 +60,6 @@
 <script>
 import UserOrders from 'src/graphql/queries/UserOrders.gql'
 import { createNamespacedHelpers } from 'vuex'
-import { Auth } from 'src/helpers'
 const { mapActions, mapGetters } = createNamespacedHelpers('GomState')
 
 export default {
@@ -83,7 +82,7 @@ export default {
       .watchQuery({
         query: UserOrders,
         variables: {
-          id: Auth.userId
+          id: this.$user.id
         }
       })
       .subscribe(this.updateAvailableOrders)

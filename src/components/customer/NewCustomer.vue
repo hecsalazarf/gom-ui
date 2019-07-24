@@ -78,7 +78,6 @@
 <script>
 import CreateCustomer from 'src/graphql/mutations/CreateCustomer.gql'
 import UserCustomers from 'src/graphql/queries/UserCustomers.gql'
-import { Auth } from 'src/helpers'
 
 export default {
   name: 'HNewCustomer',
@@ -90,11 +89,6 @@ export default {
         lastName1: '',
         phone: '',
         email: ''
-      },
-      edges: {
-        customerOf: {
-          target: Auth.userId
-        }
       }
     }
   },
@@ -167,7 +161,7 @@ export default {
         variables: {
           where: {
             customerOf_some: {
-              extUid: Auth.userId
+              extUid: this.$user.id
             }
           },
           first: 20, // TODO Implement pagination
@@ -186,7 +180,7 @@ export default {
           variables: {
             where: {
               customerOf_some: {
-                extUid: Auth.userId
+                extUid: this.$user.id
               }
             }
           }
@@ -208,7 +202,7 @@ export default {
           variables: {
             where: {
               customerOf_some: {
-                extUid: Auth.userId
+                extUid: this.$user.id
               }
             }
           },
@@ -227,7 +221,7 @@ export default {
             ...this.data,
             customerOf: {
               connect: {
-                extUid: Auth.userId
+                extUid: this.$user.id
               }
             }
           }

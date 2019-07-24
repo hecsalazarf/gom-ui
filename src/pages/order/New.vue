@@ -152,7 +152,6 @@
 <script>
 import CreateOrder from 'src/graphql/mutations/CreateOrder.gql'
 import UserOrders from 'src/graphql/queries/UserOrders.gql'
-import { Auth } from 'src/helpers'
 import { throttle } from 'quasar'
 import { createNamespacedHelpers } from 'vuex'
 const { mapActions } = createNamespacedHelpers('GomState')
@@ -204,10 +203,9 @@ export default {
         variables: {
           where: {
             assignedTo: {
-              extUid: Auth.userId
+              extUid: this.$user.id
             }
           },
-          id: Auth.userId,
           first: 1, // As it is empty, only the first order
           skip: 0, // First call does not skip orders
           orderBy: 'createdAt_DESC'
@@ -224,7 +222,7 @@ export default {
           variables: {
             where: {
               assignedTo: {
-                extUid: Auth.userId
+                extUid: this.$user.id
               }
             }
           }
@@ -249,7 +247,7 @@ export default {
           variables: {
             where: {
               assignedTo: {
-                extUid: Auth.userId
+                extUid: this.$user.id
               }
             }
           },
@@ -264,7 +262,7 @@ export default {
         name: this.order.name,
         assignedTo: {
           connect: {
-            extUid: Auth.userId
+            extUid: this.$user.id
           }
         },
         issuedTo: {
@@ -289,22 +287,6 @@ export default {
           })
         }
       }
-      // data.edges.items = this.order.items.map(item => {
-      //   return {
-      //     create: {
-      //       code: item.data.code !== '' ? item.data.code : undefined,
-      //       quantity: item.data.quantity,
-      //       provider: item.data.provider !== '' ? item.data.provider : undefined,
-      //       description: item.data.description,
-      //       pricing: {
-      //         create: {
-      //           amount: item.data.price.amount,
-      //           currency: item.data.price.currency
-      //         }
-      //       }
-      //     }
-      //   }
-      // })
       this.$q.loading.show()
       this.$apollo.mutate({
         mutation: CreateOrder,
