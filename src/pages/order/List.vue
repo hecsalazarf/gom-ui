@@ -237,7 +237,6 @@ export default {
                 extUid: Auth.userId
               }
             },
-            id: Auth.userId,
             first: this.ordersPerBlock,
             skip: 0,
             orderBy: 'createdAt_DESC'
