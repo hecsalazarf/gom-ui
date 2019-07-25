@@ -31,13 +31,19 @@
           icon="shopping_cart"
           class="orders-tab"
         />
-        <q-route-tab
-          name="customers"
-          :to="{ name: 'customers' }"
-          :label="$tc('customer.label', 2)"
-          icon="contacts"
-          class="customers-tab"
-        />
+        <!-- Display if user has the CASL permissions -->
+        <can
+          do="read"
+          on="bps"
+        >
+          <q-route-tab
+            name="customers"
+            :to="{ name: 'customers' }"
+            :label="$tc('customer.label', 2)"
+            icon="contacts"
+            class="customers-tab"
+          />
+        </can>
       </q-tabs>
     </q-footer>
     <q-page-container>

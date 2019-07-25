@@ -52,7 +52,7 @@ export default {
           await this.$axios.get('auth/ping')
         }
         await this.$axios.post('auth/login', credentials, { headers: { 'X-Csrf-Token': this.$q.cookies.get('csrf-token') } })
-        await this.$apollo.getClient().clearStore() // ensure a clear cache
+        this.$ability.update(this.$user.createAbility().rules) // update CASL ability
         this.loading = false
         this.$router.replace({ name: 'home' })
       } catch (e) {

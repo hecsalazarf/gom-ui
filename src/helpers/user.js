@@ -25,6 +25,10 @@ class UserHelper {
     return this[TOKEN]
   }
 
+  set token (value) {
+    this[TOKEN] = value
+  }
+
   get id () {
     if (!this.token) {
       return undefined
@@ -45,6 +49,10 @@ class UserHelper {
       }
     })
     return new Ability(rules) // create ability with rules
+  }
+
+  clear () {
+    this.token = null
   }
 }
 
