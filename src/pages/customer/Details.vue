@@ -1,6 +1,14 @@
 <template>
   <q-page padding>
-    <h-customer-card :value="customer" />
+    <div class="row justify-center">
+      <div class="col-xs-12 col-sm-8 col-md-6 col-6">
+        <h-customer-card :value="customer" />
+        <h-share-link
+          :value="customer.extUid"
+          style="transform: translate(0, -15px);"
+        />
+      </div>
+    </div>
   </q-page>
 </template>
 
@@ -12,7 +20,8 @@ import CustomerDetails from 'src/graphql/queries/CustomerDetails.gql'
 export default {
   name: 'CustomerDetailsPage',
   components: {
-    'h-customer-card': () => import('components/customer/Card.vue')
+    'h-customer-card': () => import('components/customer/Card.vue'),
+    'h-share-link': () => import('components/customer/ShareLink.vue')
   },
   props: {
     id: {
@@ -24,6 +33,7 @@ export default {
     return {
       customer: {
         uid: '',
+        extUid: '',
         name1: '',
         lastName1: '',
         phone: '',
@@ -51,6 +61,7 @@ export default {
 
           return {
             id: data.bp.uid,
+            extUid: data.bp.extUid,
             name1: data.bp.name1,
             lastName1: data.bp.lastName1,
             phone: data.bp.phone,

@@ -1,6 +1,7 @@
 mutation updateBp ($data: BpUpdateInput! $where: BpWhereUniqueInput!) {
   updateBp(data: $data, where: $where) {
     uid
+    extUid
     name1
     lastName1
     email

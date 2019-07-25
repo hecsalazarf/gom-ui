@@ -1,6 +1,7 @@
 query ReadBP ($where: BpWhereUniqueInput!) {
   bp(where: $where) {
     uid
+    extUid
     name1
     lastName1
     phone

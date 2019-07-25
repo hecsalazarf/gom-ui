@@ -1,5 +1,5 @@
 <template>
-  <div class="row justify-center">
+  <div>
     <div class="col-12 text-center">
       <q-avatar
         style="z-index: 100"
@@ -11,7 +11,7 @@
       </q-avatar>
     </div>
     <q-card
-      class="col-xs-12 col-sm-8 col-md-6 col-6 no-shadow bg-secondary q-pt-lg h-rounded-borders-20 relative-position"
+      class="no-shadow bg-secondary q-pt-lg h-rounded-borders-20"
       style="transform: translate(0, -35px);"
     >
       <q-card-section class="row justify-center">

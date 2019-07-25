@@ -87,7 +87,8 @@ module.exports = function (ctx) {
         'Dialog',
         'AddressbarColor',
         'Cookies',
-        'Loading'
+        'Loading',
+        'BottomSheet'
       ],
 
       config: {

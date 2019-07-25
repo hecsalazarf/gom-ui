@@ -35,6 +35,8 @@ export default {
     send_email: 'Enviar correo electrónico',
     email: 'Correo electrónico',
     phone: 'Teléfono | Teléfonos',
+    extuid_code: 'Código de cliente',
+    share_link_help: 'Comparte este código para que tu cliente pueda realizarte pedidos.',
     rules: {
       phone_length: 'Teléfono debe tener {count} dígitos',
       pick_customer: 'Selecciona cliente'
@@ -71,6 +73,9 @@ export default {
     user_name: 'Usuario',
     password: 'Password',
     sign_in: 'Iniciar sesión',
+    share: 'Compartir',
+    copy_link: 'Copiar enlace',
+    copied_link: 'Enlace copiado',
     rules: {
       required: 'Campo requerido',
       max_length: 'Máximo {count} caracteres'
