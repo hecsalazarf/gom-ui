@@ -21,9 +21,7 @@ query ReadOrder ($where: OrderWhereUniqueInput!) {
     issuedTo {
       uid
       name1
-      name2
       lastName1
-      lastName2
     }
   }
 }

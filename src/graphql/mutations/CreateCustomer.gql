@@ -1,7 +1,6 @@
 mutation CreateBp ($data: BpCreateInput!) {
   createBp(data: $data) {
     uid
-    uid
     name1
     lastName1
     email
