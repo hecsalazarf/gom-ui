@@ -296,7 +296,7 @@ export default {
     },
     save () {
       // if noMutations and available data, emit submit event only
-      if (this.noMutations && (Object.entries(this.data).length > 0)) {
+      if (this.noMutations || (Object.keys(this.data).length === 0)) {
         this.editMode = false
         this.$emit('change', this.item)
         return
@@ -323,7 +323,7 @@ export default {
     },
     onSuccess (response) {
       this.$q.loading.hide()
-      this.editMode = false
+      this.clear() // reset submitted data
       this.$q.notify({
         color: 'positive',
         /*

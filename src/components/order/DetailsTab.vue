@@ -271,7 +271,7 @@ export default {
         }
         /* { id: this.order.id, data: this.data } */
       }).then(res => {
-        this.editMode = false
+        this.clear() // reset submitted data
         this.$q.loading.hide()
         this.$q.notify({ color: 'positive', message: this.$t('notifications.positive.changes_saved'), icon: 'check_circle' })
       })

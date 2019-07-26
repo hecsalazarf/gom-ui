@@ -230,7 +230,7 @@ export default {
       this.editMode = false
     },
     save () {
-      if (Object.entries(this.data).length < 1) {
+      if (Object.keys(this.data).length < 1) {
         this.editMode = false
         return
       }
@@ -245,7 +245,7 @@ export default {
         }
       })
         .then(res => {
-          this.editMode = false
+          this.clear() // reset submitted data
           this.$q.loading.hide()
           this.$q.notify({
             color: 'positive',
