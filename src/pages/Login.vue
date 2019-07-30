@@ -6,8 +6,8 @@
     <!-- content -->
     <div class="row justify-center items-center h-login">
       <div class="col-xs-10 col-sm-6 col-md-5 col-lg-5 col-lx-5">
-        <div class="column items-center">
-          <div class="col-3">
+        <div class="column items-center q-gutter-y-md">
+          <div class="col-3 q-mb-md">
             <q-avatar
               size="100px"
               color="primary"
@@ -15,13 +15,13 @@
               icon="graphic_eq"
             />
           </div>
-          <div class="col-1">
+          <!-- <div class="col-1">
             <h5>{{ $t('app.label') }}</h5>
-          </div>
+          </div> -->
           <div class="col-4 full-width">
-            <h-login-form
-              :loading="loading"
-              @submit="onSubmit($event)"
+            <component
+              :is="form"
+              v-bind="props"
             />
           </div>
           <!-- <router-link tag="a" to="/login" style="text-decoration: none">
@@ -37,34 +37,30 @@
 export default {
   name: 'GomLoginPage',
   components: {
-    'h-login-form': () => import('components/login/Form.vue')
+    'h-simple-login': () => import('components/login/SimpleLogin.vue'),
+    'h-customer-login': () => import('components/login/CustomerLogin.vue')
   },
   data () {
     return {
-      loading: false
+      loading: false,
+      props: {},
+      form: ''
+    }
+  },
+  created () {
+    console.log()
+    if (this.$route.query.ref) { // if there is a reference, special login as customer
+      // customer login
+      this.props = {
+        reference: this.$route.query.ref
+      }
+      this.form = 'h-customer-login'
+    } else {
+      this.props = {}
+      this.form = 'h-simple-login' // otherwise, just login
     }
   },
   methods: {
-    async onSubmit (credentials) {
-      this.loading = true
-      try {
-        if (!this.$q.cookies.has('csrf-token')) {
-          await this.$axios.get('auth/ping')
-        }
-        await this.$axios.post('auth/login', credentials, { headers: { 'X-Csrf-Token': this.$q.cookies.get('csrf-token') } })
-        this.$ability.update(this.$user.createAbility().rules) // update CASL ability
-        this.loading = false
-        this.$router.replace({ name: 'home' })
-      } catch (e) {
-        this.loading = false
-        if (e.response.data.code === 'invalid_grant') {
-          this.$q.notify({ color: 'negative', message: this.$t('notifications.error.wrong_credentials'), icon: 'report_problem' })
-        } else {
-          this.$q.notify({ color: 'negative', message: this.$t('notifications.error.signin_failed'), icon: 'report_problem' })
-          console.error(e.response.data)
-        }
-      }
-    }
   }
 }
 </script>
@@ -95,10 +91,10 @@ export default {
   /* Center form  */
 @media (min-width: $sizes.xs) and (max-width: $breakpoint-xs)
   .h-login
-    min-height: 70vh
+    min-height: 80vh
 
 @media (min-width: $sizes.sm)
   .h-login
-    min-height: 90vh
+    min-height: 100vh
 
 </style>

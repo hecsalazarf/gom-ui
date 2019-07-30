@@ -1,7 +1,7 @@
 <template>
   <q-form
-    class="q-gutter-y-md"
-    @submit="$emit('submit', {username, password})"
+    class="q-gutter-y-md q-mt-md"
+    @submit="submit()"
   >
     <q-input
       v-model="username"
@@ -69,19 +69,26 @@
 </template>
 
 <script>
+import { LoginMixin } from './LoginMixin'
+
 export default {
-  name: 'HLoginForm',
-  props: {
-    loading: {
-      type: Boolean,
-      default: false
-    }
-  },
+  name: 'HSimpleLogin',
+  mixins: [ LoginMixin ],
   data () {
     return {
+      loading: false,
       password: '',
       username: '',
       isPwd: true
+    }
+  },
+  methods: {
+    submit () {
+      this.login({
+        grantType: 'password',
+        username: this.username,
+        password: this.password
+      })
     }
   }
 }
