@@ -70,6 +70,7 @@
 <script>
 import UserOrders from 'src/graphql/queries/UserOrders.gql'
 import { createNamespacedHelpers } from 'vuex'
+import { OrderMixin } from './common'
 const { mapGetters, mapActions } = createNamespacedHelpers('GomState')
 
 export default {
@@ -78,6 +79,7 @@ export default {
     'h-list-item': () => import('components/order/ListItem.vue'),
     'h-filter-input': () => import('components/order/FilterInput.vue')
   },
+  mixins: [ OrderMixin ],
   props: {
   },
   data () {
@@ -87,7 +89,7 @@ export default {
       refetchFlag: false, // refetch flag. See refresh() method
       fetchMoreFlag: false, // fetchMore flag. See fetchMore() method
       ordersPerBlock: 15,
-      loading: 0 // Loading state that will be incremented when the query is loading and decremented when it no longer is,
+      loading: 0 // Loading state that will be incremented when the query is loading and decremented when it no longer is
     }
   },
   computed: {
@@ -109,9 +111,7 @@ export default {
       this.$apollo.queries.orders.fetchMore({
         variables: {
           where: {
-            assignedTo: {
-              extUid: this.$user.id
-            }
+            ...this.buildQueryVars()
           },
           first: this.ordersPerBlock,
           skip: this.allOrders.length,
@@ -154,9 +154,7 @@ export default {
       this.$apollo.queries.orders.refetch({
         variables: {
           where: {
-            assignedTo: {
-              extUid: this.$user.id
-            }
+            ...this.buildQueryVars()
           },
           first: this.ordersPerBlock,
           skip: 0,
@@ -230,9 +228,7 @@ export default {
         variables () {
           return {
             where: {
-              assignedTo: {
-                extUid: this.$user.id
-              }
+              ...this.buildQueryVars()
             },
             first: this.ordersPerBlock,
             skip: 0,

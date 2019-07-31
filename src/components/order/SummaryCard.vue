@@ -4,7 +4,11 @@
       <div class="col text-subtitle1 text-weight-medium">
         {{ value.name }}
       </div>
-      <div class="col">
+      <!-- CASL permission -->
+      <div
+        v-if="$can('read', 'bp')"
+        class="col"
+      >
         {{ $t('app.to') }}
         <span class="text-italic">{{ value.customer.label }}</span>
       </div>
@@ -32,7 +36,7 @@
 
 <script>
 export default {
-  name: 'HCustomerSummaryCard',
+  name: 'HOrderSummaryCard',
   props: {
     value: {
       type: Object,

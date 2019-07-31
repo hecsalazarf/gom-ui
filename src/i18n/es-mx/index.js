@@ -20,7 +20,7 @@ export default {
       }
     },
     step1_desc: 'Agrega los artículos a tu pedido',
-    step2_desc: 'Agrega una descripción y selecciona un cliente',
+    step2_desc: 'Agrega una descripción',
     step3_desc: 'Confirma y envía tu pedido',
     rules: {
       too_much: 'Ups, demasiado',

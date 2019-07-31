@@ -87,36 +87,42 @@
         </q-card>
       </q-expansion-item>
 
-      <q-expansion-item
-        class="bg-secondary h-rounded-borders-20"
-        icon="perm_identity"
-        switch-toggle-side
-        :label="$tc('customer.label', 1)"
-        default-opened
-        header-class="text-subtitle1 text-weight-medium text-primary"
+      <!-- Display if user has the CASL permissions -->
+      <can
+        do="read"
+        on="bp"
       >
-        <q-card class="bg-secondary">
-          <q-card-section>
-            <q-field
-              dense
-              :label="$t('customer.name')"
-              readonly
-              borderless
-              stack-label
-            >
-              <template v-slot:default>
-                <router-link :to="{ name: 'customerDetails', params: { id: typeof order.customer === 'undefined' ? '1' : order.customer.uid }}">
-                  <div
-                    class="self-center full-width all-pointer-events"
-                  >
-                    {{ customer }}
-                  </div>
-                </router-link>
-              </template>
-            </q-field>
-          </q-card-section>
-        </q-card>
-      </q-expansion-item>
+        <q-expansion-item
+          class="bg-secondary h-rounded-borders-20"
+          icon="perm_identity"
+          switch-toggle-side
+          :label="$tc('customer.label', 1)"
+          default-opened
+          header-class="text-subtitle1 text-weight-medium text-primary"
+        >
+          <q-card class="bg-secondary">
+            <q-card-section>
+              <q-field
+                dense
+                :label="$t('customer.name')"
+                readonly
+                borderless
+                stack-label
+              >
+                <template v-slot:default>
+                  <router-link :to="{ name: 'customerDetails', params: { id: typeof order.customer === 'undefined' ? '1' : order.customer.uid }}">
+                    <div
+                      class="self-center full-width all-pointer-events"
+                    >
+                      {{ customer }}
+                    </div>
+                  </router-link>
+                </template>
+              </q-field>
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
+      </can>
 
       <q-expansion-item
         class="bg-secondary h-rounded-borders-20"

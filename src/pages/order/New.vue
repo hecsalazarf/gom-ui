@@ -47,7 +47,7 @@
 
         <q-step
           :name="2"
-          :title="$tc('customer.label', 1)"
+          :title="$tc('order.description', 1)"
           :caption="$t('order.step2_desc')"
           icon="assignment_ind"
           active-icon="assignment_ind"
@@ -72,8 +72,14 @@
                   <q-icon name="notes" />
                 </template>
               </q-input>
-              <!-- Customer search -->
-              <h-customer-search @input="order.customer = $event" />
+              <!-- Display if user has the CASL permissions -->
+              <can
+                do="read"
+                on="bp"
+              >
+                <!-- Customer search -->
+                <h-customer-search @input="order.customer = $event" />
+              </can>
             </q-form>
           </div>
         </q-step>
@@ -154,6 +160,7 @@ import CreateOrder from 'src/graphql/mutations/CreateOrder.gql'
 import UserOrders from 'src/graphql/queries/UserOrders.gql'
 import { throttle } from 'quasar'
 import { createNamespacedHelpers } from 'vuex'
+import { OrderMixin } from './common'
 const { mapActions } = createNamespacedHelpers('GomState')
 
 export default {
@@ -164,6 +171,7 @@ export default {
     'h-order-summary': () => import('components/order/SummaryCard.vue'),
     'h-new-item': () => import('components/order/NewItem.vue')
   },
+  mixins: [ OrderMixin ],
   data () {
     return {
       step: 1,
@@ -202,9 +210,7 @@ export default {
         query: UserOrders,
         variables: {
           where: {
-            assignedTo: {
-              extUid: this.$user.id
-            }
+            ...this.buildQueryVars()
           },
           first: 1, // As it is empty, only the first order
           skip: 0, // First call does not skip orders
@@ -221,9 +227,7 @@ export default {
           query: UserOrders,
           variables: {
             where: {
-              assignedTo: {
-                extUid: this.$user.id
-              }
+              ...this.buildQueryVars()
             }
           }
         })
@@ -246,9 +250,7 @@ export default {
           query: UserOrders,
           variables: {
             where: {
-              assignedTo: {
-                extUid: this.$user.id
-              }
+              ...this.buildQueryVars()
             }
           },
           data: cached
@@ -260,16 +262,7 @@ export default {
     submit () {
       let data = {
         name: this.order.name,
-        assignedTo: {
-          connect: {
-            extUid: this.$user.id
-          }
-        },
-        issuedTo: {
-          connect: {
-            uid: this.order.customer.value
-          }
-        },
+        ...this.buildMutationVars(),
         items: {
           create: this.order.items.map(item => {
             return {

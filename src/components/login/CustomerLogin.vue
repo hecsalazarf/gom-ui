@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { LoginMixin } from './LoginMixin'
+import { LoginMixin } from './common'
 
 export default {
   name: 'HCustomerLogin',

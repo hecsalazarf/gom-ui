@@ -2,6 +2,7 @@ import { Cookies } from 'quasar'
 import { Ability } from '@casl/ability'
 
 const TOKEN = Symbol('token')
+const INFO = Symbol('info')
 
 class UserHelper {
   constructor (ssrContext) {
@@ -29,6 +30,25 @@ class UserHelper {
     this[TOKEN] = value
   }
 
+  get info () {
+    if (!this[INFO] && this.cookies.has('id-token')) {
+      const info = this.cookies.get('id-token') // get token from cookie
+      const payload = info.slice(info.indexOf('.') + 1, info.lastIndexOf('.')) // get the payload only
+      if (process.env.SERVER) {
+        /* On SSR decode token using Node buffer */
+        this[INFO] = JSON.parse(Buffer.from(payload, 'base64').toString('ascii'))
+      } else {
+        /* On CSR decode token using atob */
+        this[INFO] = JSON.parse(atob(payload))
+      }
+    }
+    return this[INFO]
+  }
+
+  set info (value) {
+    this[INFO] = value
+  }
+
   get id () {
     if (!this.token) {
       return undefined
@@ -53,6 +73,7 @@ class UserHelper {
 
   clear () {
     this.token = null
+    this.info = null
   }
 }
 

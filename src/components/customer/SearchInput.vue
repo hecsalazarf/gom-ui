@@ -56,11 +56,6 @@ export default {
       options: []
     }
   },
-  watch: {
-    selected (value) {
-      this.$emit('change', value)
-    }
-  },
   methods: {
     mapOptions (options) {
       return options.map(el => {
