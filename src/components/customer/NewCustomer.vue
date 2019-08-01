@@ -9,7 +9,7 @@
     >
       <q-card-section>
         <div class="text-subtitle1 text-weight-medium">
-          Nuevo cliente
+          {{ $t('customer.new') }}
         </div>
       </q-card-section>
       <q-card-section class="q-gutter-y-xs">

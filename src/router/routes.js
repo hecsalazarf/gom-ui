@@ -57,8 +57,8 @@ const routes = [
   },
   {
     path: '/login',
-    name: ROOT_LOGIN,
     meta: {
+      name: ROOT_LOGIN, // name is placed in meta to avoid warning "the default child route will not be rendered"
       refQuery: 'ref'
     },
     component: () => import('layouts/Simple.vue'),

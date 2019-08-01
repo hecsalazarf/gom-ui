@@ -35,7 +35,11 @@
             flat
             color="accent"
             @click="show()"
-          />
+          >
+            <q-tooltip>
+              {{ $t('app.share') }}
+            </q-tooltip>
+          </q-btn>
         </template>
       </q-field>
     </q-card-section>
@@ -67,12 +71,12 @@ export default {
         actions: [
           {
             label: 'Whatsapp',
-            icon: 'img:assets/whatsapp-brands.svg',
+            img: require('assets/whatsapp-brands.svg'),
             id: 'wa'
           },
           {
             label: this.$t('app.copy_link'),
-            icon: 'img:assets/paperclip-solid.svg',
+            img: require('assets/paperclip-solid.svg'),
             id: 'copy'
           }
         ]
@@ -111,7 +115,7 @@ export default {
         origin = undefined
       }
       /* Extract login path and reference query from router */
-      const { path, meta: { refQuery } } = this.$router.options.routes.find(el => el.name === ROOT_LOGIN)
+      const { path, meta: { refQuery } } = this.$router.options.routes.find(el => el.meta ? el.meta.name === ROOT_LOGIN : false)
       if (!path || !refQuery || !origin) {
         /* if some of the variables is undefined, throw an error */
         throw new Error('Cannot generate shareable link')

@@ -121,7 +121,7 @@ export default {
   },
   methods: {
     handleHold ({ evt, ...info }) {
-      this.$refs.selectionEl.toggle()
+      // this.$refs.selectionEl.toggle() // SELECTION DISABLED (#28)
     },
     handleClick (evt) {
       if (this.selectedOrders.length > 0) {

@@ -62,8 +62,8 @@ export default {
   name: 'GomLayout',
   components: {
     'h-main-toolbar': () => import('components/MainToolbar.vue'),
-    'h-selection-toolbar': () =>
-      import('components/order/SelectionToolbar.vue'),
+    // 'h-selection-toolbar': () =>
+    //   import('components/order/SelectionToolbar.vue'), // selection DISABLED (#28)
     'h-order-toolbar': () => import('components/order/DetailsToolbar.vue'),
     'h-customer-toolbar': () => import('components/customer/DetailsToolbar.vue')
   },

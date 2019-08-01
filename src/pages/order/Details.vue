@@ -110,7 +110,7 @@ export default {
   },
   data () {
     return {
-      rulesEngine: new Engine(), // JSON rules engine
+      rulesEngine: new Engine([EditableOrder]), // JSON rules engine
       readonly: true,
       tab: 'details',
       order: {
@@ -153,9 +153,6 @@ export default {
     this.changeActiveOrder(this.id)
     this.changeActiveToolbar('h-order-toolbar')
     this.changeActiveOrderTab(this.tab)
-
-    /* Business rules */
-    this.rulesEngine.addRule(EditableOrder) // Add readonly-order rule
   },
   methods: {
     ...mapActions([

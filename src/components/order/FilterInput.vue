@@ -23,42 +23,62 @@
         <q-list dense>
           <q-item>
             <q-item-section class="text-weight-medium">
-              {{ $t('app.filter_by') }}
+              {{ $t('app.filter_by_status') }}
             </q-item-section>
           </q-item>
           <q-item v-close-popup>
-            <q-item-section top>
+            <q-item-section>
+              {{ $t('order.status.options.OPEN.label') }}
+            </q-item-section>
+            <q-item-section avatar>
               <q-toggle
                 v-model="statusFilters"
                 val="OPEN"
                 checked-icon="input"
                 color="cyan-5"
                 unchecked-icon="clear"
-                :label="$t('order.status.options.OPEN.label')"
               />
             </q-item-section>
           </q-item>
           <q-item v-close-popup>
-            <q-item-section top>
+            <q-item-section>
+              {{ $t('order.status.options.IN_PROCESS.label') }}
+            </q-item-section>
+            <q-item-section avatar>
+              <q-toggle
+                v-model="statusFilters"
+                val="IN_PROCESS"
+                checked-icon="input"
+                color="amber-5"
+                unchecked-icon="clear"
+              />
+            </q-item-section>
+          </q-item>
+          <q-item v-close-popup>
+            <q-item-section>
+              {{ $t('order.status.options.WON.label') }}
+            </q-item-section>
+            <q-item-section avatar>
               <q-toggle
                 v-model="statusFilters"
                 val="WON"
                 checked-icon="check"
                 color="positive"
                 unchecked-icon="clear"
-                :label="$t('order.status.options.WON.label')"
               />
             </q-item-section>
           </q-item>
           <q-item v-close-popup>
-            <q-item-section top>
+            <q-item-section>
+              {{ $t('order.status.options.CLOSED.label') }}
+            </q-item-section>
+            <q-item-section avatar>
               <q-toggle
                 v-model="statusFilters"
                 val="CLOSED"
                 checked-icon="cancel_presentation"
                 color="negative"
                 unchecked-icon="clear"
-                :label="$t('order.status.options.CLOSED.label')"
               />
             </q-item-section>
           </q-item>

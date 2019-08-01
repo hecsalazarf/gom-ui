@@ -9,8 +9,9 @@
     >
       <div class="column q-gutter-y-md">
         <q-bar class="bg-white">
+          <!-- Fix (#26) -->
           <h-filter-input
-            :disable="selectedOrders.length > 0 || orders.length === 0"
+            :disable="selectedOrders.length > 0"
             @filter="filter($event)"
           />
         </q-bar>
@@ -179,7 +180,8 @@ export default {
         }
         if (
           params.has('term') &&
-          !order.data.name.toLowerCase().includes(params.get('term'))
+          !order.data.name.toLowerCase().includes(params.get('term')) && // search in order name
+          !order.data.customer.toLowerCase().includes(params.get('term')) // search in custome name
         ) {
           return false
         }
@@ -211,7 +213,7 @@ export default {
               data: {
                 id: edge.node.uid,
                 name: edge.node.name,
-                customer: edge.node.issuedTo.name1,
+                customer: `${edge.node.issuedTo.name1} ${edge.node.issuedTo.lastName1 || ''}`, // full name
                 createdAt: edge.node.createdAt,
                 stage: edge.node.stage
               }
