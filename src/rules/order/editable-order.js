@@ -1,4 +1,4 @@
-const rule = {
+export const EditableOrder = {
   conditions: {
     all: [
       {
@@ -15,5 +15,3 @@ const rule = {
     }
   }
 }
-
-export default rule
