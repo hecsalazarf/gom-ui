@@ -50,18 +50,24 @@
               :readonly="readonly"
               :no-removable="order.items.length === 1"
             />
-            <q-btn
-              v-if="!readonly"
-              icon="add"
-              :label="$t('item.add_item')"
-              color="accent"
-              class="full-width"
-              rounded
-              dense
-              outline
-              no-caps
-              @click="$refs.newItem.show()"
-            />
+            <!-- CASL permission. ONLY SELLER ROLE -->
+            <can
+              do="role"
+              on="seller"
+            >
+              <q-btn
+                v-if="!readonly"
+                icon="add"
+                :label="$t('item.add_item')"
+                color="accent"
+                class="full-width"
+                rounded
+                dense
+                outline
+                no-caps
+                @click="$refs.newItem.show()"
+              />
+            </can>
           </q-tab-panel>
         </q-tab-panels>
       </div>
