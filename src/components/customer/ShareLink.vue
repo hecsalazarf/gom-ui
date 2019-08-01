@@ -44,6 +44,8 @@
 
 <script>
 import { openURL } from 'quasar'
+import { ROOT_LOGIN } from 'src/router/routes'
+
 export default {
   name: 'HShareLink',
   props: {
@@ -80,13 +82,13 @@ export default {
             this.copyLink()
             break
           case 'wa':
-            this.shareWA()
+            openURL('whatsapp://send?text=' + this.generateUri()) // send only prefilled message
             break
         }
       })
     },
     copyLink () {
-      navigator.clipboard.writeText(this.value)
+      navigator.clipboard.writeText(this.generateUri())
         .then(() => {
           this.$q.notify({ // notify that link has been copied to clipboard
             message: this.$t('app.copied_link'),
@@ -100,10 +102,22 @@ export default {
           console.error(err)
         })
     },
-    shareWA () {
-      const uri = encodeURI('https://sony.com')
-      // openURL('https://wa.me/?text=' + uri) // send to specific number
-      openURL('whatsapp://send?text=' + uri) // send only prefilled message
+    generateUri () {
+      let origin
+      if (window) { // if on browser
+        origin = window.location.origin
+      } else { // SSR mode
+        // TODO
+        origin = undefined
+      }
+      /* Extract login path and reference query from router */
+      const { path, meta: { refQuery } } = this.$router.options.routes.find(el => el.name === ROOT_LOGIN)
+      if (!path || !refQuery || !origin) {
+        /* if some of the variables is undefined, throw an error */
+        throw new Error('Cannot generate shareable link')
+      }
+
+      return encodeURI(`${origin}${path}/?${refQuery}=${this.value}`)
     }
   }
 }

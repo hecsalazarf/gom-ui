@@ -1,4 +1,6 @@
 
+export const ROOT_LOGIN = 'rootLogin'
+
 const routes = [
   {
     path: '/',
@@ -55,6 +57,10 @@ const routes = [
   },
   {
     path: '/login',
+    name: ROOT_LOGIN,
+    meta: {
+      refQuery: 'ref'
+    },
     component: () => import('layouts/Simple.vue'),
     children: [
       {
