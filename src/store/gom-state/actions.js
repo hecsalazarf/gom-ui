@@ -25,3 +25,11 @@ export function changeActiveCustomer (context, customer) {
 export function changeMoreOrders (context, moreOrders) {
   context.commit('setMoreOrders', moreOrders)
 }
+
+/**
+ * Clear all store
+ * @param {any} context Context
+ */
+export function clearAll (context) {
+  context.commit('resetState')
+}

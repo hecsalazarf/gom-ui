@@ -1,3 +1,5 @@
+import { getInitialState } from './state'
+
 export function setActiveOrder (state, orderId) {
   state.activeOrder = orderId
 }
@@ -28,4 +30,14 @@ export function setActiveCustomer (state, customer) {
 
 export function setMoreOrders (state, moreOrders) {
   state.moreOrders = moreOrders
+}
+
+/**
+ * Reset state to its initial values
+ * @param {any} state State
+ */
+export function resetState (state) {
+  // Merge rather than replace so we don't lose observers
+  // https://github.com/vuejs/vuex/issues/1118
+  Object.assign(state, getInitialState())
 }

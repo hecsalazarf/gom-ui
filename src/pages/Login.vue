@@ -34,6 +34,8 @@
 </template>
 
 <script>
+import { Session } from 'src/helpers'
+
 export default {
   name: 'GomLoginPage',
   components: {
@@ -48,19 +50,21 @@ export default {
     }
   },
   created () {
-    console.log()
-    if (this.$route.query.ref) { // if there is a reference, special login as customer
-      // customer login
-      this.props = {
-        reference: this.$route.query.ref
-      }
-      this.form = 'h-customer-login'
-    } else {
-      this.props = {}
-      this.form = 'h-simple-login' // otherwise, just login
-    }
+    Session.clearState.call(this) // clear store at log in (Fix #29)
+    this.renderComponent() // render the commponent depending on the route query
   },
   methods: {
+    renderComponent () {
+      if (this.$route.query.ref) { // if there is a reference, special login as customer
+        this.props = {
+          reference: this.$route.query.ref
+        }
+        this.form = 'h-customer-login'
+      } else {
+        this.props = {}
+        this.form = 'h-simple-login' // otherwise, just simple login
+      }
+    }
   }
 }
 </script>
