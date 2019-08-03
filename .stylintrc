@@ -1,4 +1,5 @@
 {
+  // https://github.com/SimenB/stylint
   "blocks": "never",
   "brackets": "never",
   "colons": "never",
