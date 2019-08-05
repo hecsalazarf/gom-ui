@@ -1,4 +1,5 @@
 // Configuration for your app
+const fs = require('fs')
 
 module.exports = function (ctx) {
   return {
@@ -134,13 +135,17 @@ module.exports = function (ctx) {
     },
 
     devServer: {
-      // https: true,
+      https: {
+        key: fs.readFileSync('./certs/localhost+10-key.pem'),
+        cert: fs.readFileSync('./certs/localhost+10.pem'),
+        ca: fs.readFileSync('./certs/rootCA.pem')
+      },
       // port: 8080,
       open: false, // opens browser window automatically
       proxy: {
         // proxy all requests starting with /api to jsonplaceholder
         '/api': {
-          target: 'http://192.168.0.2:7001',
+          target: 'http://192.168.0.2:3000',
           changeOrigin: true,
           pathRewrite: {
             '^/api': ''
