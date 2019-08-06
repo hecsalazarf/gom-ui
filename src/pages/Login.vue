@@ -50,6 +50,7 @@ export default {
     }
   },
   created () {
+    Session.unsubscribeToPush.call(this) // unsubscribe if there is any subscription
     Session.clearState.call(this) // clear store at log in (Fix #29)
     this.renderComponent() // render the commponent depending on the route query
   },

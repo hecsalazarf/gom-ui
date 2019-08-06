@@ -119,6 +119,13 @@ module.exports = function (ctx) {
       // analyze: true,
       // extractCSS: false,
       devtool: 'source-map',
+      env: ctx.dev
+        ? { // so on dev we'll have
+          VAPID_KEY: JSON.stringify('BJo1ZeE62MZqVkZN8g9TOSFXOCtxmpmejfId8JpLT5C52ASUqhabfpVpHqQrySWhD0PCgEWohR1vKpbRJ48boWA')
+        }
+        : { // and on build (production):
+          VAPID_KEY: JSON.stringify('BJo1ZeE62MZqVkZN8g9TOSFXOCtxmpmejfId8JpLT5C52ASUqhabfpVpHqQrySWhD0PCgEWohR1vKpbRJ48boWA')
+        },
       extendWebpack (cfg) {
         cfg.module.rules.push({
           enforce: 'pre',

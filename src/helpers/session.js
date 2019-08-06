@@ -1,12 +1,13 @@
-
 /* IMPORTANT: Bind "this" to the Vue instance from the caller function */
 
 /**
  * Clear app state
  */
 async function clearState () {
-  await this.$apollo.getClient().clearStore() // clear Apollo store
-  await this.$store.dispatch('GomState/clearAll') // clear Vuex store
+  await Promise.all([
+    this.$apollo.getClient().clearStore(), // clear Apollo store
+    this.$store.dispatch('GomState/clearAll') // clear Vuex store
+  ])
   this.$user.clear() // clear user info
   this.$ability.update([]) // clear CASL ability
 }
@@ -17,7 +18,10 @@ async function clearState () {
 async function logout () {
   this.$q.loading.show()
   try {
-    await clearState.call(this)
+    await Promise.all([
+      clearState.call(this),
+      unsubscribeToPush.call(this) // Unsubscribe from notifications
+    ])
     await this.$axios.get('auth/logout') // Clear all cookies and finish session
     this.$router.replace({ name: 'login' }) // Go to login page
   } catch (err) {
@@ -39,8 +43,72 @@ function notifyOnError () {
   })
 }
 
+/**
+ * Function that will encode the base64 public key to Array buffer
+ * which is needed by the subscription option
+ * @param {string} base64String
+ */
+function urlB64ToUint8Array (base64String) {
+  const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/')
+  const rawData = atob(base64)
+  const outputArray = new Uint8Array(rawData.length)
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i)
+  }
+  return outputArray
+}
+
+/**
+ * Subscribe to push notifications
+ */
+async function subscribeToPush () {
+  const applicationServerKey = urlB64ToUint8Array(
+    process.env.VAPID_KEY
+  )
+  const registration = await navigator.serviceWorker.getRegistration()
+  if (!registration) {
+    console.error('Cannot subscribe to Push Notifications: No service worker has been registered')
+    return
+  }
+  const options = { applicationServerKey, userVisibleOnly: true }
+  const subscription = await registration.pushManager.subscribe(options)
+  try {
+    await this.$axios.post('webpush/subscribe', JSON.stringify(subscription), { headers: { 'X-Csrf-Token': this.$q.cookies.get('csrf-token') } })
+  } catch (error) {
+    console.error('Cannot subscribe to Push Notifications')
+    console.log(error)
+  }
+}
+
+/**
+ * Unsubscribe from push notifications
+ */
+async function unsubscribeToPush () {
+  const registration = await navigator.serviceWorker.getRegistration()
+  if (!registration) {
+    console.error('Cannot unsubscribe from Push Notifications: No service worker has been registered')
+    return
+  }
+  const subscription = await registration.pushManager.getSubscription()
+  if (!subscription) {
+    return // if no subscription, do nothing
+  }
+  try {
+    await Promise.all([
+      subscription.unsubscribe(), // unsubscribe locally
+      this.$axios.post('webpush/unsubscribe', JSON.stringify(subscription), { headers: { 'X-Csrf-Token': this.$q.cookies.get('csrf-token') } }) // unsubscribe remotely
+    ])
+  } catch (error) {
+    console.error('Cannot unsubscribe from Push Notifications')
+    console.log(error)
+  }
+}
+
 export const Session = {
   logout,
   notifyOnError,
-  clearState
+  clearState,
+  subscribeToPush,
+  unsubscribeToPush
 }
