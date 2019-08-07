@@ -1,5 +1,5 @@
 import { Session } from 'src/helpers'
-const { subscribeToPush } = Session
+const { requestNotificationPermission } = Session
 
 export const LoginMixin = {
   methods: {
@@ -7,18 +7,25 @@ export const LoginMixin = {
       this.loading = true
       try {
         if (!this.$q.cookies.has('csrf-token')) {
+          // if there is no csrf-token, request it; otherwise any post
+          // method will return a Forbidden error
           await this.$axios.get('auth/ping')
         }
+        // log in givern user credentials
         await this.$axios.post('auth/login', credentials, { headers: { 'X-Csrf-Token': this.$q.cookies.get('csrf-token') } })
         this.$ability.update(this.$user.createAbility().rules) // update CASL ability
-        await subscribeToPush.call(this) // subscribe to push notifications
+        // request notification permission after 4 seconds of being logged id
+        // This is not the best UX
+        setTimeout(() => requestNotificationPermission.call(this), 4000) // TODO implement a better approach
         this.loading = false
-        this.$router.replace({ name: 'home' })
+        this.$router.replace({ name: 'home' }) // once logged in, go to home
       } catch (error) {
         this.loading = false
         if (error.response && error.response.data.error === 'invalid_grant') {
+          // notify wrong crendentials
           this.$q.notify({ color: 'negative', message: this.$t('notifications.error.wrong_credentials'), icon: 'report_problem' })
         } else {
+          // any other erriror, display a generic error
           this.$q.notify({ color: 'negative', message: this.$t('notifications.error.signin_failed'), icon: 'report_problem' })
           console.error(error)
         }

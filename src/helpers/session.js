@@ -64,16 +64,16 @@ function urlB64ToUint8Array (base64String) {
  */
 async function subscribeToPush () {
   const applicationServerKey = urlB64ToUint8Array(
-    process.env.VAPID_KEY
+    process.env.VAPID_KEY // transform public key into a array buffer
   )
-  const registration = await navigator.serviceWorker.getRegistration()
+  const registration = await navigator.serviceWorker.getRegistration() // get service worker registration
   if (!registration) {
     console.error('Cannot subscribe to Push Notifications: No service worker has been registered')
     return
   }
   const options = { applicationServerKey, userVisibleOnly: true }
-  const subscription = await registration.pushManager.subscribe(options)
   try {
+    const subscription = await registration.pushManager.subscribe(options)
     await this.$axios.post('webpush/subscribe', JSON.stringify(subscription), { headers: { 'X-Csrf-Token': this.$q.cookies.get('csrf-token') } })
   } catch (error) {
     console.error('Cannot subscribe to Push Notifications')
@@ -85,8 +85,9 @@ async function subscribeToPush () {
  * Unsubscribe from push notifications
  */
 async function unsubscribeToPush () {
-  const registration = await navigator.serviceWorker.getRegistration()
+  const registration = await navigator.serviceWorker.getRegistration() // get service worker registration
   if (!registration) {
+    // if no service worker, do nothing
     console.error('Cannot unsubscribe from Push Notifications: No service worker has been registered')
     return
   }
@@ -105,10 +106,26 @@ async function unsubscribeToPush () {
   }
 }
 
+function requestNotificationPermission () {
+  window.Notification.requestPermission()
+    .then(permission => {
+      // value of permission can be 'granted', 'default', 'denied'
+      // granted: user has accepted the request
+      // default: user has dismissed the notification permission popup
+      if (permission === 'granted') {
+        // if permission is granted, subscribe to push notification
+        subscribeToPush.call(this)
+      } else {
+        console.error('Permission not granted for Notifications')
+      }
+    })
+}
+
 export const Session = {
   logout,
   notifyOnError,
   clearState,
   subscribeToPush,
-  unsubscribeToPush
+  unsubscribeToPush,
+  requestNotificationPermission
 }

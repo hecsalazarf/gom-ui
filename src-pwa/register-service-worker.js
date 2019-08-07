@@ -17,15 +17,6 @@ register(process.env.SERVICE_WORKER_FILE, {
 
   registered (registration) {
     console.log('Service worker has been registered.')
-    window.Notification.requestPermission()
-      .then(permission => {
-        // value of permission can be 'granted', 'default', 'denied'
-        // granted: user has accepted the request
-        // default: user has dismissed the notification permission popup
-        if (permission !== 'granted') {
-          throw new Error('Permission not granted for Notifications')
-        }
-      })
   },
 
   cached (registration) {
