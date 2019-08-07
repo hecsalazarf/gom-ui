@@ -1,35 +1,7 @@
-###### Add items to order #########
-# mutation AddItemToOrder($id: String!, $data: OrderUpdateInp!) {
-# 	updateOrder(id: $id, data: $data) {
-#     items {
-#       edges {
-#         node {
-#           uid
-#           code
-#           quantity
-#           description
-#           provider
-#           pricing {
-#             edges {
-#               node {
-#                 uid
-#                 amount
-#                 currency
-#               }
-#               props {
-#                 type
-#               }
-#             }
-#           }
-#         }
-#       }
-#     }
-#     updatedAt
-#   }
-# }
 mutation AddOrderItem ($data: OrderUpdateInput!, $where: OrderWhereUniqueInput!) {
   updateOrder(data: $data, where: $where) {
     uid
+    name
     updatedAt
     items {
       uid
@@ -45,6 +17,14 @@ mutation AddOrderItem ($data: OrderUpdateInput!, $where: OrderWhereUniqueInput!)
         updatedAt
         type
       }
+    },
+    # issuedTo and assignedTo allow us to track the user and BP related to
+    # the order so that we can trigger push messages
+    issuedTo {
+      uid
+    }
+    assignedTo {
+      extUid
     }
   }
 }

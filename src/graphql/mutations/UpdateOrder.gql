@@ -5,5 +5,13 @@ mutation UpdateOrder ($data: OrderUpdateInput!, $where: OrderWhereUniqueInput!) 
     stage
     createdAt
     updatedAt
+    # issuedTo and assignedTo allow us to track the user and BP related to
+    # the order so that we can trigger push messages
+    issuedTo {
+      uid
+    }
+    assignedTo {
+      extUid
+    }
   }
 }

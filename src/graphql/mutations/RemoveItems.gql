@@ -1,6 +1,7 @@
 mutation DeleteOrderItem ($data: OrderUpdateInput!, $where: OrderWhereUniqueInput!) {
   updateOrder(data: $data, where: $where) {
     uid
+    name
     updatedAt
     items {
       uid
@@ -16,6 +17,14 @@ mutation DeleteOrderItem ($data: OrderUpdateInput!, $where: OrderWhereUniqueInpu
         updatedAt
         type
       }
+    }
+    # issuedTo and assignedTo allow us to track the user and BP related to
+    # the order so that we can trigger push messages
+    issuedTo {
+      uid
+    }
+    assignedTo {
+      extUid
     }
   }
 }

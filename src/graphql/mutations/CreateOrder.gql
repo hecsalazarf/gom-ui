@@ -5,10 +5,15 @@ mutation CreateOrder ($data: OrderCreateInput!) {
     name
     stage
     createdAt
+    # issuedTo and assignedTo allow us to track the user and BP related to
+    # the order so that we can trigger push messages
     issuedTo {
       uid
       name1
       lastName1
+    }
+    assignedTo {
+      extUid
     }
   }
 }
