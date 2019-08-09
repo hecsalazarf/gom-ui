@@ -70,6 +70,7 @@
 
 <script>
 import UserOrders from 'src/graphql/queries/UserOrders.gql'
+import OnOrderCreated from 'src/graphql/subscriptions/OnOrderCreated.gql'
 import { createNamespacedHelpers } from 'vuex'
 import { OrderMixin } from './common'
 const { mapGetters, mapActions } = createNamespacedHelpers('GomState')
@@ -127,7 +128,7 @@ export default {
           this.fetchMoreFlag = false
         })
     },
-    updateQuery (previousResult, { fetchMoreResult, variables }) {
+    updateQuery (previousResult, { fetchMoreResult, subscriptionData }) {
       const { ordersConnection: orders } = fetchMoreResult
       this.changeMoreOrders(orders.pageInfo.hasNextPage)
       if (orders.edges.length === 0) {
@@ -236,6 +237,23 @@ export default {
             skip: 0,
             orderBy: 'createdAt_DESC'
           }
+        },
+        subscribeToMore: {
+          document: OnOrderCreated,
+          // Variables passed to the subscription. Since we're using a function,
+          // they are reactive
+          variables () {
+            return {
+              where: {
+                mutation_in: 'CREATED',
+                node: {
+                  ...this.buildQueryVars()
+                }
+              }
+            }
+          },
+          // Mutate the previous result
+          updateQuery: this.updateQuery
         }
       }
     }
