@@ -61,7 +61,8 @@ class ApolloClientProvider {
     const wsLink = new WebSocketLink({
       uri: process.env.WS_ENDPOINT,
       options: {
-        reconnect: true
+        reconnect: true, // automatic reconnect in case of connection error
+        lazy: true // connects only when first subscription created, and delay the socket initialization
       }
     })
 
@@ -119,6 +120,8 @@ class ApolloClientProvider {
         ssrForceFetchDelay: 100
       })
     })
+    // create prop in Apollo client to close socket connection on log out
+    this.client.subscriptionClient = wsLink.subscriptionClient
     return this.client
   }
 }

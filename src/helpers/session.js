@@ -8,6 +8,8 @@ async function clearState () {
     this.$apollo.getClient().clearStore(), // clear Apollo store
     this.$store.dispatch('GomState/clearAll') // clear Vuex store
   ])
+  this.$apollo.getClient().subscriptionClient.unsubscribeAll() // unsubscribes from all active subscriptions
+  this.$apollo.getClient().subscriptionClient.close() // close the WebSocket connection
   this.$user.clear() // clear user info
   this.$ability.update([]) // clear CASL ability
 }

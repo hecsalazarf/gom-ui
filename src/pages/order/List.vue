@@ -105,9 +105,9 @@ export default {
   },
   methods: {
     fetchMore () {
-      /* fetchMore flag that indicates a pagination operation. It prevents
-      loading window during fetchMore. This is a very naive approach, however,
-      as a first attempt is tolerable */
+      // fetchMore flag that indicates a pagination operation. It prevents
+      // loading window during fetchMore. This is a very naive approach, however,
+      // as a first attempt is tolerable
       this.fetchMoreFlag = true
 
       this.$apollo.queries.orders.fetchMore({
@@ -129,28 +129,31 @@ export default {
         })
     },
     updateQuery (previousResult, { fetchMoreResult, subscriptionData }) {
-      const { ordersConnection: orders } = fetchMoreResult
-      this.changeMoreOrders(orders.pageInfo.hasNextPage)
-      if (orders.edges.length === 0) {
-        /* If zero orders return previous result */
-        return {
-          ordersConnection: previousResult.ordersConnection
+      if (fetchMoreResult) { // a fetch more operation
+        const { ordersConnection: orders } = fetchMoreResult
+        this.changeMoreOrders(orders.pageInfo.hasNextPage)
+        if (orders.edges.length === 0) {
+          // If zero orders return previous result
+          return {
+            ordersConnection: previousResult.ordersConnection
+          }
         }
+        previousResult.ordersConnection.edges.push(...orders.edges) // push new orders
+        previousResult.ordersConnection.pageInfo = orders.pageInfo
+      }
+      if (subscriptionData) { // a subscription operation
+        previousResult.ordersConnection.edges.unshift({
+          __typename: 'OrderEdge',
+          node: subscriptionData.data.order.node
+        })
       }
 
-      previousResult.ordersConnection.edges.push(...orders.edges)
-      return {
-        ordersConnection: {
-          __typename: orders.__typename,
-          edges: previousResult.ordersConnection.edges,
-          pageInfo: orders.pageInfo
-        }
-      }
+      return previousResult
     },
     refresh (done) {
-      /* refetch flag that indicates a refetch operation. It prevents
-      loading window during refetch. This is a very naive approach, however,
-      as a first attempt is tolerable */
+      // refetch flag that indicates a refetch operation. It prevents
+      // loading window during refetch. This is a very naive approach, however,
+      // as a first attempt is tolerable
       this.refetchFlag = true
       this.changeMoreOrders(true) // reset more
       this.$apollo.queries.orders.refetch({
@@ -223,7 +226,7 @@ export default {
           return this.allOrders
         },
         watchLoading (isLoading, countModifier) {
-          /* Loading window is not shown when refetch is executed */
+          // Loading window is not shown when refetch is executed
           if (isLoading && !this.refetchFlag && !this.fetchMoreFlag) this.$q.loading.show()
           else this.$q.loading.hide()
         },
