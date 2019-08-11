@@ -6,7 +6,7 @@
       color="primary"
       flat
       dense
-      @click="$router.back()"
+      @click="$router.replace({ name: 'home' })"
     />
     <div class="column items-start justify-center content-start ellipsis">
       <div class="col-5 text-subtitle1 text-weight-medium text-primary">

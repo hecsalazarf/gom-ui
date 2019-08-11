@@ -1,12 +1,13 @@
 <template>
   <q-toolbar class="bg-white">
+    <!-- $router.replace({ name: 'home' }) Fix #35  -->
     <q-btn
       class="q-mr-sm"
       icon="arrow_back_ios"
       color="primary"
       flat
       dense
-      @click="$router.back()"
+      @click="$router.replace({ name: 'home' })"
     />
     <div
       v-if="!activeOrder"
