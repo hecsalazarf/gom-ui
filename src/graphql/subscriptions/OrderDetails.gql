@@ -1,0 +1,30 @@
+subscription onOrderDetailsUpdate($where: OrderSubscriptionWhereInput) {
+  order(where: $where) {
+    mutation
+    node {
+      uid
+      name
+      stage
+      createdAt
+      updatedAt
+      items {
+        uid
+        code
+        quantity
+        description
+        provider
+        pricing {
+          uid
+          amount
+          currency
+          type
+        }
+      }
+      issuedTo {
+        uid
+        name1
+        lastName1
+      }
+    }
+  }
+}

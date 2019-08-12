@@ -45,27 +45,33 @@
       </q-card-section>
       <q-separator inset />
       <q-card-section class="q-gutter-y-xs">
-        <q-input
-          v-model.number="model.price.amount"
-          standout="bg-secondary"
-          input-class="text-black"
-          dense
-          prefix="$"
-          :label="$tc('pricing.label', 1)"
-          type="tel"
-          mask="#.##"
-          fill-mask="0"
-          reverse-fill-mask
-          :rules="[ val => !!val || $t('app.rules.required'), val => val < 100000 || $t('order.rules.too_much')]"
-          hide-bottom-space
+        <!-- Check role so that customer cannot edit pricing (#43) -->
+        <can
+          do="role"
+          on="seller"
         >
-          <template v-slot:prepend>
-            <q-icon
-              name="monetization_on"
-              color="primary"
-            />
-          </template>
-        </q-input>
+          <q-input
+            v-model.number="model.price.amount"
+            standout="bg-secondary"
+            input-class="text-black"
+            dense
+            prefix="$"
+            :label="$tc('pricing.label', 1)"
+            type="tel"
+            mask="#.##"
+            fill-mask="0"
+            reverse-fill-mask
+            :rules="[ val => !!val || $t('app.rules.required'), val => val < 100000 || $t('order.rules.too_much')]"
+            hide-bottom-space
+          >
+            <template v-slot:prepend>
+              <q-icon
+                name="monetization_on"
+                color="primary"
+              />
+            </template>
+          </q-input>
+        </can>
         <q-input
           v-model.number="model.quantity"
           dense

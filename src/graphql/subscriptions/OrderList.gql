@@ -1,4 +1,4 @@
-subscription onOrderUpdate($where: OrderSubscriptionWhereInput) {
+subscription onOrderListUpdate($where: OrderSubscriptionWhereInput) {
   order(where: $where) {
     mutation
     node {

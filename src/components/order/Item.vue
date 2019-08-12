@@ -116,6 +116,20 @@
       <q-separator />
       <q-card-section class="q-gutter-xs q-pa-xs row">
         <q-input
+          v-model.number="quantity"
+          class="col-3"
+          standout="bg-secondary"
+          input-class="text-black"
+          dense
+          :label="$t('item.quantity')"
+          :readonly="!editMode"
+          :borderless="!editMode"
+          type="number"
+          step="0.01"
+          :rules="[ val => val > 0 || $t('order.rules.minimum', { count: 1 }), val => val < 10000 || $t('order.rules.too_much') ]"
+          hide-bottom-space
+        />
+        <q-input
           v-model.number="price"
           class="col-4"
           standout="bg-secondary"
@@ -130,20 +144,6 @@
           :readonly="!editMode"
           :borderless="!editMode"
           :rules="[ val => !!val || $t('app.rules.required'), val => val < 100000 || $t('order.rules.too_much') ]"
-          hide-bottom-space
-        />
-        <q-input
-          v-model.number="quantity"
-          class="col-3"
-          standout="bg-secondary"
-          input-class="text-black"
-          dense
-          :label="$t('item.quantity')"
-          :readonly="!editMode"
-          :borderless="!editMode"
-          type="number"
-          step="0.01"
-          :rules="[ val => val > 0 || $t('order.rules.minimum', { count: 1 }), val => val < 10000 || $t('order.rules.too_much') ]"
           hide-bottom-space
         />
         <q-input

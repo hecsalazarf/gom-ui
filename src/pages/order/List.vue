@@ -25,12 +25,9 @@
           />
         </q-list>
         <!-- Transition prevents displaying button abruptly -->
-        <transition
-          mode="out-in"
-          enter-active-class="animated fadeIn"
-        >
+        <transition name="fade">
           <q-btn
-            v-show="allOrders.length > 0 && moreOrders"
+            v-show="moreOrders"
             icon="expand_more"
             color="accent"
             :label="$t('app.see_more')"
@@ -39,7 +36,7 @@
             flat
             dense
             rounded
-            style="animation-duration: 3000ms;"
+            style="transition-delay: 300ms; transition-duration: 0;"
             @click="fetchMore()"
           >
             <template v-slot:loading>
@@ -65,12 +62,9 @@
   </q-page>
 </template>
 
-<style>
-</style>
-
 <script>
 import UserOrders from 'src/graphql/queries/UserOrders.gql'
-import OnOrderCreated from 'src/graphql/subscriptions/OnOrderCreated.gql'
+import OrderListSub from 'src/graphql/subscriptions/OrderList.gql'
 import { createNamespacedHelpers } from 'vuex'
 import { OrderMixin } from './common'
 const { mapGetters, mapActions } = createNamespacedHelpers('GomState')
@@ -87,6 +81,7 @@ export default {
   data () {
     return {
       allOrders: [],
+      mor: false,
       orders: [],
       refetchFlag: false, // refetch flag. See refresh() method
       fetchMoreFlag: false, // fetchMore flag. See fetchMore() method
@@ -132,20 +127,15 @@ export default {
       if (fetchMoreResult) { // a fetch more operation
         const { ordersConnection: orders } = fetchMoreResult
         this.changeMoreOrders(orders.pageInfo.hasNextPage)
-        if (orders.edges.length === 0) {
-          // If zero orders return previous result
-          return {
-            ordersConnection: previousResult.ordersConnection
-          }
-        }
         previousResult.ordersConnection.edges.push(...orders.edges) // push new orders
         previousResult.ordersConnection.pageInfo = orders.pageInfo
       }
-      if (subscriptionData) { // a subscription operation
+      if (subscriptionData && subscriptionData.data.order.mutation === 'CREATED') { // a subscription operation
         previousResult.ordersConnection.edges.unshift({
           __typename: 'OrderEdge',
           node: subscriptionData.data.order.node
         })
+        // Updates are not handled as they automatically update the cache by UID
       }
 
       return previousResult
@@ -211,7 +201,6 @@ export default {
             // If no orders, return an empty array
             return []
           }
-          this.changeMoreOrders(data.ordersConnection.pageInfo.hasNextPage) // flag to display button to load more orders
           this.allOrders = data.ordersConnection.edges.map(edge => {
             return {
               data: {
@@ -223,6 +212,7 @@ export default {
               }
             }
           })
+          this.changeMoreOrders(data.ordersConnection.pageInfo.hasNextPage) // flag to display button to load more orders
           return this.allOrders
         },
         watchLoading (isLoading, countModifier) {
@@ -242,13 +232,13 @@ export default {
           }
         },
         subscribeToMore: {
-          document: OnOrderCreated,
+          document: OrderListSub,
           // Variables passed to the subscription. Since we're using a function,
           // they are reactive
           variables () {
             return {
               where: {
-                mutation_in: 'CREATED',
+                mutation_in: [ 'CREATED', 'UPDATED' ], // subscribe for new and updated orders (Fix #42)
                 node: {
                   ...this.buildQueryVars()
                 }
@@ -263,3 +253,12 @@ export default {
   }
 }
 </script>
+
+<style lang="stylus" scoped>
+// Transition fixes issue with button 'More orders' (#41)
+.fade-enter-active/* , .fade-leave-active */
+  transition: opacity .2s
+
+.fade-enter/* , .fade-leave-to */ /* .fade-leave-active below version 2.1.8 */
+  opacity: 0
+</style>

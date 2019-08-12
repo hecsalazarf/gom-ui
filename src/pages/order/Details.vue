@@ -89,6 +89,7 @@
 
 <script>
 import OrderDetails from 'src/graphql/queries/OrderDetails.gql'
+import OrderDetailsSub from 'src/graphql/subscriptions/OrderDetails.gql'
 import { Engine } from 'json-rules-engine'
 import { EditableOrder } from 'src/rules/order'
 import { createNamespacedHelpers } from 'vuex'
@@ -110,7 +111,7 @@ export default {
   },
   data () {
     return {
-      rulesEngine: new Engine([EditableOrder]), // JSON rules engine
+      rulesEngine: new Engine([EditableOrder], { allowUndefinedFacts: true }), // JSON rules engine
       readonly: true,
       tab: 'details',
       order: {
@@ -132,7 +133,10 @@ export default {
     }, */
     'order.stage' (val) {
       /* Check if order is readonly */
-      this.rulesEngine.run({ status: val }).then(events => {
+      this.rulesEngine.run({
+        status: val,
+        isCustomer: this.$can('role', 'customer')
+      }).then(events => {
         if (events.findIndex(event => event.type === 'readonly-order') > -1) {
           this.readonly = true // Mark order as readonly
         } else {
@@ -202,6 +206,20 @@ export default {
           return {
             where: {
               uid: this.id
+            }
+          }
+        },
+        subscribeToMore: {
+          document: OrderDetailsSub,
+          // Variables passed to the subscription. Since we're using a function,
+          // they are reactive
+          variables () {
+            return {
+              where: {
+                node: {
+                  uid: this.id // subscribe for new and updated orders (Fix #42)
+                }
+              }
             }
           }
         }

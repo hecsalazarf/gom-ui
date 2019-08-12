@@ -1,10 +1,29 @@
 export const EditableOrder = {
   conditions: {
-    all: [
+    any: [
       {
-        fact: 'status',
-        operator: 'in',
-        value: ['CLOSED', 'WON']
+        all: [
+          {
+            fact: 'status',
+            operator: 'in',
+            value: ['CLOSED', 'WON']
+          }
+        ]
+      },
+      {
+        // Check if user is customer and status is IN_PROCESS (Fix #40)
+        all: [
+          {
+            fact: 'status',
+            operator: 'in',
+            value: ['IN_PROCESS']
+          },
+          {
+            fact: 'isCustomer',
+            operator: 'equal',
+            value: true
+          }
+        ]
       }
     ]
   },

@@ -4,7 +4,7 @@ export function getInitialState () {
     activeOrder: null,
     activeOrderTab: null,
     selectedOrders: [],
-    moreOrders: true,
+    moreOrders: false, // initial state set to false (Fix #41)
 
     /* Customer */
     activeCustomer: null,
