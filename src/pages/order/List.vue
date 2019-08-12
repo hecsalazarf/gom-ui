@@ -70,6 +70,7 @@
 
 <script>
 import UserOrders from 'src/graphql/queries/UserOrders.gql'
+import OnOrderCreated from 'src/graphql/subscriptions/OnOrderCreated.gql'
 import { createNamespacedHelpers } from 'vuex'
 import { OrderMixin } from './common'
 const { mapGetters, mapActions } = createNamespacedHelpers('GomState')
@@ -104,9 +105,9 @@ export default {
   },
   methods: {
     fetchMore () {
-      /* fetchMore flag that indicates a pagination operation. It prevents
-      loading window during fetchMore. This is a very naive approach, however,
-      as a first attempt is tolerable */
+      // fetchMore flag that indicates a pagination operation. It prevents
+      // loading window during fetchMore. This is a very naive approach, however,
+      // as a first attempt is tolerable
       this.fetchMoreFlag = true
 
       this.$apollo.queries.orders.fetchMore({
@@ -127,29 +128,32 @@ export default {
           this.fetchMoreFlag = false
         })
     },
-    updateQuery (previousResult, { fetchMoreResult, variables }) {
-      const { ordersConnection: orders } = fetchMoreResult
-      this.changeMoreOrders(orders.pageInfo.hasNextPage)
-      if (orders.edges.length === 0) {
-        /* If zero orders return previous result */
-        return {
-          ordersConnection: previousResult.ordersConnection
+    updateQuery (previousResult, { fetchMoreResult, subscriptionData }) {
+      if (fetchMoreResult) { // a fetch more operation
+        const { ordersConnection: orders } = fetchMoreResult
+        this.changeMoreOrders(orders.pageInfo.hasNextPage)
+        if (orders.edges.length === 0) {
+          // If zero orders return previous result
+          return {
+            ordersConnection: previousResult.ordersConnection
+          }
         }
+        previousResult.ordersConnection.edges.push(...orders.edges) // push new orders
+        previousResult.ordersConnection.pageInfo = orders.pageInfo
+      }
+      if (subscriptionData) { // a subscription operation
+        previousResult.ordersConnection.edges.unshift({
+          __typename: 'OrderEdge',
+          node: subscriptionData.data.order.node
+        })
       }
 
-      previousResult.ordersConnection.edges.push(...orders.edges)
-      return {
-        ordersConnection: {
-          __typename: orders.__typename,
-          edges: previousResult.ordersConnection.edges,
-          pageInfo: orders.pageInfo
-        }
-      }
+      return previousResult
     },
     refresh (done) {
-      /* refetch flag that indicates a refetch operation. It prevents
-      loading window during refetch. This is a very naive approach, however,
-      as a first attempt is tolerable */
+      // refetch flag that indicates a refetch operation. It prevents
+      // loading window during refetch. This is a very naive approach, however,
+      // as a first attempt is tolerable
       this.refetchFlag = true
       this.changeMoreOrders(true) // reset more
       this.$apollo.queries.orders.refetch({
@@ -222,7 +226,7 @@ export default {
           return this.allOrders
         },
         watchLoading (isLoading, countModifier) {
-          /* Loading window is not shown when refetch is executed */
+          // Loading window is not shown when refetch is executed
           if (isLoading && !this.refetchFlag && !this.fetchMoreFlag) this.$q.loading.show()
           else this.$q.loading.hide()
         },
@@ -236,6 +240,23 @@ export default {
             skip: 0,
             orderBy: 'createdAt_DESC'
           }
+        },
+        subscribeToMore: {
+          document: OnOrderCreated,
+          // Variables passed to the subscription. Since we're using a function,
+          // they are reactive
+          variables () {
+            return {
+              where: {
+                mutation_in: 'CREATED',
+                node: {
+                  ...this.buildQueryVars()
+                }
+              }
+            }
+          },
+          // Mutate the previous result
+          updateQuery: this.updateQuery
         }
       }
     }

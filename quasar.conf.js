@@ -121,7 +121,8 @@ module.exports = function (ctx) {
       devtool: 'source-map',
       env: ctx.dev
         ? { // so on dev we'll have
-          VAPID_KEY: JSON.stringify('BJo1ZeE62MZqVkZN8g9TOSFXOCtxmpmejfId8JpLT5C52ASUqhabfpVpHqQrySWhD0PCgEWohR1vKpbRJ48boWA')
+          VAPID_KEY: JSON.stringify('BJo1ZeE62MZqVkZN8g9TOSFXOCtxmpmejfId8JpLT5C52ASUqhabfpVpHqQrySWhD0PCgEWohR1vKpbRJ48boWA'),
+          WS_ENDPOINT: JSON.stringify('wss://192.168.0.2:8080/api/graphql')
         }
         : { // and on build (production):
           VAPID_KEY: JSON.stringify('BJo1ZeE62MZqVkZN8g9TOSFXOCtxmpmejfId8JpLT5C52ASUqhabfpVpHqQrySWhD0PCgEWohR1vKpbRJ48boWA')
@@ -154,6 +155,7 @@ module.exports = function (ctx) {
         '/api': {
           target: 'http://192.168.0.2:3000',
           changeOrigin: true,
+          ws: true, // proxy websockets
           pathRewrite: {
             '^/api': ''
           }
