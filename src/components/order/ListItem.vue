@@ -36,9 +36,11 @@
         top
       >
         <q-item-label>{{ createdAt }}</q-item-label>
-        <q-icon
-          :name="icon.name"
-          :color="icon.color"
+        <h-icon
+          class="q-mt-xs"
+          size="h5"
+          :name="status.icon"
+          :color="status.color"
         />
       </q-item-section>
     </q-item>
@@ -53,10 +55,16 @@
 <script>
 import { date } from 'quasar'
 import { createNamespacedHelpers } from 'vuex'
+import { OrderComponentMixin } from './common'
+
 const { mapActions, mapGetters } = createNamespacedHelpers('GomState')
 
 export default {
   name: 'HListItem',
+  components: {
+    'h-icon': () => import('components/misc/Icon.vue')
+  },
+  mixins: [OrderComponentMixin],
   props: {
     value: {
       type: Object,
@@ -83,22 +91,8 @@ export default {
         return date.formatDate(orderDate, 'DD/MM/YYYY')
       }
     },
-    icon () {
-      let icon
-      switch (this.value.stage) {
-        case 'WON':
-          icon = { name: 'check_circle', color: 'positive' }
-          break
-        case 'OPEN':
-          icon = { name: 'input', color: 'cyan-5' }
-          break
-        case 'CLOSED':
-          icon = { name: 'cancel_presentation', color: 'negative' }
-          break
-        default:
-          icon = { name: 'edit', color: 'negative' } // default, not implemented
-      }
-      return icon
+    status () {
+      return this.getStatusProps(this.value.stage)
     },
     selected: {
       get () {

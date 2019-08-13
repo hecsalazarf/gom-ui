@@ -19,16 +19,19 @@
       v-if="activeOrder"
       rounded
       size="2.5em"
-      :icon="stage.icon"
       color="accent"
       text-color="white"
     >
-      <q-badge
+      <h-icon
+        size="h5"
+        :name="stage.icon"
+      />
+      <!-- <q-badge
         floating
         color="teal"
       >
         {{ stage.label }}
-      </q-badge>
+      </q-badge> -->
     </q-avatar>
     <div
       v-if="activeOrder"
@@ -69,11 +72,16 @@
 
 <script>
 import OrderDetails from 'src/graphql/queries/OrderDetails.gql'
+import { OrderComponentMixin } from './common'
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapActions } = createNamespacedHelpers('GomState')
 
 export default {
   name: 'OrderToolbar',
+  components: {
+    'h-icon': () => import('components/misc/Icon.vue')
+  },
+  mixins: [OrderComponentMixin],
   data () {
     return {
       header: {}
@@ -81,21 +89,7 @@ export default {
   },
   computed: {
     stage () {
-      let stage
-      switch (this.header.stage) {
-        case 'WON':
-          stage = { label: this.$t('order.status.options.WON.label'), value: 'WON', icon: 'check' }
-          break
-        case 'OPEN':
-          stage = { label: this.$t('order.status.options.OPEN.label'), icon: 'input' }
-          break
-        case 'CLOSED':
-          stage = { label: this.$t('order.status.options.CLOSED.label'), icon: 'cancel_presentation' }
-          break
-        default:
-          stage = { label: '', icon: '' }
-      }
-      return stage
+      return this.getStatusProps(this.header.stage)
     },
     customer () {
       let name
