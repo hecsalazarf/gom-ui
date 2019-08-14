@@ -1,0 +1,5 @@
+mutation DeleteBp ($where: BpWhereUniqueInput!) {
+  deleteBp(where: $where) {
+    uid
+  }
+}

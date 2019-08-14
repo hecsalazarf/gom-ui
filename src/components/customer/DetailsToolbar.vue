@@ -6,7 +6,7 @@
       color="primary"
       flat
       dense
-      @click="$router.replace({ name: 'home' })"
+      @click="$router.replace({ name: 'customers' })"
     />
     <div class="column items-start justify-center content-start ellipsis">
       <div class="col-5 text-subtitle1 text-weight-medium text-primary">
@@ -14,33 +14,36 @@
       </div>
     </div>
     <q-space />
-    <!-- <q-btn
+    <q-btn
       flat
       dense
-      icon="more_horiz"
+      round
+      color="primary"
+      icon="more_vert"
     >
       <q-menu>
         <q-list>
           <q-item
             v-close-popup
             clickable
+            @click="confirmDelete()"
           >
             <q-item-section>
               <q-item-label class="text-body2">
-                Opcion 1
+                {{ $t('app.delete') }}
               </q-item-label>
             </q-item-section>
           </q-item>
         </q-list>
       </q-menu>
-    </q-btn> -->
+    </q-btn>
   </q-toolbar>
 </template>
 
 <script>
 import CustomerDetails from 'src/graphql/queries/CustomerDetails.gql'
 import { createNamespacedHelpers } from 'vuex'
-const { mapGetters } = createNamespacedHelpers('GomState')
+const { mapGetters, mapActions } = createNamespacedHelpers('GomState')
 
 export default {
   name: 'OrderToolbar',
@@ -79,7 +82,33 @@ export default {
         name1: bp.name1,
         lastName1: bp.lastName1
       }
-    }
+    },
+    confirmDelete () {
+      this.$q.dialog({
+        title: this.$t('app.delete_confirm', { object: this.fullName }),
+        message: this.$t('app.continue_question'),
+        position: 'bottom',
+        persistent: true,
+        cancel: {
+          label: this.$t('app.no'),
+          color: 'primary',
+          flat: true
+        },
+        ok: {
+          label: this.$t('app.yes'),
+          color: 'primary',
+          flat: true
+        },
+        stackButtons: false,
+        color: 'primary'
+      }).onOk(() => {
+        this.emitEvent({
+          target: 'CustomerDetailsPage',
+          method: 'delete'
+        })
+      })
+    },
+    ...mapActions(['emitEvent'])
   }
 }
 </script>

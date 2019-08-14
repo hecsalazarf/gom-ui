@@ -39,7 +39,8 @@ export default {
     share_link_help: 'Comparte este código para que tu cliente pueda realizarte pedidos.',
     rules: {
       phone_length: 'Teléfono debe tener {count} dígitos',
-      pick_customer: 'Selecciona cliente'
+      pick_customer: 'Selecciona cliente',
+      with_active_orders: 'No puedes eliminar a un cliente con pedidos activos'
     }
   },
   pricing: {
@@ -66,6 +67,7 @@ export default {
     no: 'No',
     sign_out: 'Cerrar sesión',
     continue_question: '¿Continuar?',
+    delete_confirm: 'Quieres eliminar a {object}',
     see_more: 'Ver más',
     filter_by_status: 'Filtrar por status',
     no_results: 'Sin resultados',
