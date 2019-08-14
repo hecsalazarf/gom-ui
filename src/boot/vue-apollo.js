@@ -21,7 +21,8 @@ class ApolloClientProvider {
     const errorLink = onError(({ graphQLErrors, networkError, operation, response }) => {
       console.error(`[Operation error]: ${operation.operationName}`)
       if (graphQLErrors) {
-        notifyOnError.call(this.router.app)
+        console.error(graphQLErrors)
+        // notifyOnError.call(this.router.app)
       }
       if (networkError) {
         if (networkError.result && networkError.result.code && networkError.result.code === 'jwt_error') {
