@@ -73,7 +73,8 @@ module.exports = function (ctx) {
         'QStepper',
         'QStep',
         'QStepperNavigation',
-        'QField'
+        'QField',
+        'QBanner'
       ],
 
       directives: [
