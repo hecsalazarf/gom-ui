@@ -1,3 +1,5 @@
+import { OrderStatus } from 'src/constants/order'
+
 /*
 * Status map works this way: e.g. when current status is IN_PROCESS,
 * the user can select CLOSED and WON only
@@ -8,13 +10,13 @@ const option1 = {
     all: [{
       fact: 'currentStatus',
       operator: 'in',
-      value: ['OPEN']
+      value: [OrderStatus.OPEN]
     }]
   },
   event: {
     type: 'nextStatus',
     params: {
-      next: [ 'WON', 'CLOSED', 'IN_PROCESS' ]
+      next: [ OrderStatus.WON, OrderStatus.CLOSED, OrderStatus.IN_PROCESS ]
     }
   }
 }
@@ -24,7 +26,7 @@ const option2 = {
     all: [{
       fact: 'currentStatus',
       operator: 'in',
-      value: [ 'CLOSED', 'WON' ]
+      value: [ OrderStatus.CLOSED, OrderStatus.WON ]
     }]
   },
   event: {
@@ -40,13 +42,13 @@ const option3 = {
     all: [{
       fact: 'currentStatus',
       operator: 'in',
-      value: [ 'IN_PROCESS' ]
+      value: [ OrderStatus.IN_PROCESS ]
     }]
   },
   event: {
     type: 'nextStatus',
     params: {
-      next: [ 'CLOSED', 'WON' ]
+      next: [ OrderStatus.CLOSED, OrderStatus.WON ]
     }
   }
 }

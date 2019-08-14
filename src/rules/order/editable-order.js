@@ -1,3 +1,5 @@
+import { OrderStatus } from 'src/constants/order'
+
 export const EditableOrder = {
   conditions: {
     any: [
@@ -6,7 +8,7 @@ export const EditableOrder = {
           {
             fact: 'status',
             operator: 'in',
-            value: ['CLOSED', 'WON']
+            value: [ OrderStatus.CLOSED, OrderStatus.WON ]
           }
         ]
       },
@@ -16,7 +18,7 @@ export const EditableOrder = {
           {
             fact: 'status',
             operator: 'in',
-            value: ['IN_PROCESS']
+            value: [ OrderStatus.IN_PROCESS ]
           },
           {
             fact: 'isCustomer',

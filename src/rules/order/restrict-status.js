@@ -1,3 +1,5 @@
+import { OrderStatus } from 'src/constants/order'
+
 export const RestrictStatus = {
   conditions: {
     any: [{
@@ -5,7 +7,7 @@ export const RestrictStatus = {
         {
           fact: 'statusToRestrict',
           operator: 'in',
-          value: [ 'WON', 'IN_PROCESS' ]
+          value: [ OrderStatus.WON, OrderStatus.IN_PROCESS ]
         },
         {
           fact: 'isCustomer',
