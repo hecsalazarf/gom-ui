@@ -45,7 +45,8 @@ export default {
   },
   pricing: {
     label: 'Precio | Precios',
-    total: 'Total'
+    total: 'Total',
+    to_be_confirmed: 'Espera la confirmación del precio total de tu pedido'
   },
   item: {
     label: 'Artículo | Artículos',
@@ -78,6 +79,7 @@ export default {
     share: 'Compartir con',
     copy_link: 'Copiar enlace',
     copied_link: 'Enlace copiado',
+    to_be_confirmed: 'Por confirmar',
     rules: {
       required: 'Campo requerido',
       max_length: 'Máximo {count} caracteres'
