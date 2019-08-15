@@ -129,7 +129,7 @@
           :rules="[ val => val > 0 || $t('order.rules.minimum', { count: 1 }), val => val < 10000 || $t('order.rules.too_much') ]"
           hide-bottom-space
         />
-        <template v-if="parseFloat(price) > 0">
+        <template v-if="parseFloat(price) > 0 || editMode">
           <q-input
             v-model.number="price"
             class="col-4"
