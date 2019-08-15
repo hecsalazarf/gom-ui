@@ -76,13 +76,17 @@ export default {
     user_name: 'Usuario',
     password: 'Password',
     sign_in: 'Iniciar sesión',
+    invalid_reference: 'Referencia inválida',
+    customer_welcome: 'Estás intentando acceder al centro de pedidos de',
+    complete_phone: 'Completa tu número telefónico con el que fuiste registrado',
     share: 'Compartir con',
     copy_link: 'Copiar enlace',
     copied_link: 'Enlace copiado',
     to_be_confirmed: 'Por confirmar',
     rules: {
       required: 'Campo requerido',
-      max_length: 'Máximo {count} caracteres'
+      max_length: 'Máximo {count} caracteres',
+      fixed_length: 'Se requieren {count} caracteres'
     }
   },
   notifications: {
