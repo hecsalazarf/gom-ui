@@ -19,10 +19,17 @@
             <h5>{{ $t('app.label') }}</h5>
           </div> -->
           <div class="col-4 full-width">
-            <component
-              :is="form"
-              v-bind="props"
-            />
+            <transition
+              mode="out-in"
+              enter-active-class="animated fadeIn"
+            >
+              <component
+                :is="form"
+                v-bind="props"
+                style="animation-duration: 500ms;"
+                @error="form = 'h-simple-login'"
+              />
+            </transition>
           </div>
           <!-- <router-link tag="a" to="/login" style="text-decoration: none">
             <p class="text-center text-white q-mt-lg">&#191;Olvidaste tu contrase&#241;a&#63;</p>

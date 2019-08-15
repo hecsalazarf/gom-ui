@@ -1,32 +1,38 @@
 <template>
   <div class="column items-center q-gutter-y-md">
-    <!-- <div class="text-h5 text-center">
-      Hola
-    </div> -->
     <div class="text-body2 text-center">
-      Estás intentando acceder al centro de pedidos de
+      {{ $t('app.customer_welcome') }}
     </div>
     <div class="text-h6 text-center">
       {{ customerOf }}
     </div>
+    <div class="text-body2 text-center">
+      {{ $t('app.complete_phone') }}
+    </div>
     <q-form
-      class="q-gutter-y-md q-gutter-x-xs full-width row justify-center"
+      class="q-gutter-y-md q-gutter-x-xs full-width row justify-center items-center"
       @submit="submit()"
     >
+      <div class="text-body1 col-1 text-left">
+        {{ phoneFirst }}
+      </div>
       <q-input
-        v-for="(digit, index) in digits"
-        :ref="`digit${index}`"
-        :key="index"
-        :value="digits[index]"
+        v-model="digits"
         class="col"
-        type="password"
-        input-class="text-center text-h6"
+        input-class="text-h6 text-center h-phone-password"
+        color="primary"
         bg-color="white"
-        maxlength="1"
-        dense
-        @input="setDigit(index, $event)"
+        maxlength="5"
+        type="tel"
+        rounded
+        outlined
+        stack-label
+        items-aligned
+        hide-bottom-space
+        lazy-rules
+        :rules="[val => !!val || $t('app.rules.required'), val => val.length === 5 || $t('app.rules.fixed_length', { count: 5 })]"
       />
-      <div class="text-body1 col-1 self-center text-right">
+      <div class="text-body1 col-1 text-right">
         {{ phoneLast }}
       </div>
       <div class="col-12">
@@ -36,8 +42,6 @@
           :label="$t('app.sign_in')"
           type="submit"
           color="primary"
-          :loading="loading"
-          :disable="loading"
         >
           <template v-slot:loading>
             <q-spinner-bars />
@@ -50,6 +54,8 @@
 
 <script>
 import { LoginMixin } from './common'
+import { Session } from 'src/helpers'
+const { notifyOnError } = Session
 
 export default {
   name: 'HCustomerLogin',
@@ -63,10 +69,10 @@ export default {
   },
   data () {
     return {
-      digits: new Array(6), // digits to complete
+      digits: '',
       customerOf: '',
-      phoneLast: '',
-      loading: false
+      phoneFirst: '',
+      phoneLast: ''
     }
   },
   created () {
@@ -82,11 +88,20 @@ export default {
       }).then(res => {
         this.customerOf = res.data.customerOf
         this.phoneLast = res.data.phoneLast
-        this.$q.loading.hide()
-      }).catch(err => {
-        this.$q.loading.hide()
-        console.log(err)
-      })
+        this.phoneFirst = res.data.phoneFirst
+      }).catch(error => {
+        if (error.response && error.response.status === 400) {
+          this.$q.notify({ // notify invalid reference
+            color: 'negative',
+            message: this.$t('app.invalid_reference'),
+            icon: 'report_problem'
+          })
+        } else {
+          notifyOnError.call(this) // any other error notify with generic error
+        }
+        this.$emit('error') // emit error an render user-password login
+        console.log(error)
+      }).finally(() => this.$q.loading.hide())
     },
     setDigit (index, value) {
       this.digits.splice(index, 1, value)
@@ -98,12 +113,16 @@ export default {
       this.login({
         grantType: 'phone',
         username: this.reference,
-        phone: this.digits.join('') + this.phoneLast
+        phone: this.phoneFirst.concat(this.digits, this.phoneLast) // concat phone number
       })
     }
   }
 }
 </script>
 
-<style>
+<style lang="stylus" scoped>
+/deep/ .h-phone-password
+  letter-spacing: 1em
+  text-indent: 1em // No additional space added to last letter by letter-spacing
+  -webkit-text-security: disc // Make non-password inputs use bullets
 </style>
