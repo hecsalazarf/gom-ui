@@ -129,36 +129,82 @@
           :rules="[ val => val > 0 || $t('order.rules.minimum', { count: 1 }), val => val < 10000 || $t('order.rules.too_much') ]"
           hide-bottom-space
         />
-        <q-input
-          v-model.number="price"
-          class="col-4"
-          standout="bg-secondary"
-          input-class="text-black"
-          dense
-          :label="$tc('pricing.label', 1)"
-          type="tel"
-          prefix="$"
-          mask="#.##"
-          fill-mask="0"
-          reverse-fill-mask
-          :readonly="!editMode"
-          :borderless="!editMode"
-          :rules="[ val => !!val || $t('app.rules.required'), val => val < 100000 || $t('order.rules.too_much') ]"
-          hide-bottom-space
-        />
-        <q-input
-          v-model="total"
-          class="col"
-          input-class="text-black text-weight-medium"
-          standout="bg-secondary"
-          readonly
-          dense
-          :label="$t('pricing.total')"
-          prefix="$"
-          borderless
-          type="text"
-          hide-bottom-space
-        />
+        <template v-if="parseFloat(price) > 0">
+          <q-input
+            v-model.number="price"
+            class="col-4"
+            standout="bg-secondary"
+            input-class="text-black"
+            dense
+            :label="$tc('pricing.label', 1)"
+            type="tel"
+            prefix="$"
+            mask="#.##"
+            fill-mask="0"
+            reverse-fill-mask
+            :readonly="!editMode"
+            :borderless="!editMode"
+            :rules="[ val => !!val || $t('app.rules.required'), val => val < 100000 || $t('order.rules.too_much') ]"
+            hide-bottom-space
+          />
+          <q-input
+            v-model="total"
+            class="col"
+            input-class="text-black text-weight-medium"
+            standout="bg-secondary"
+            readonly
+            dense
+            :label="$t('pricing.total')"
+            prefix="$"
+            borderless
+            type="text"
+            hide-bottom-space
+            bottom-slots
+          />
+        </template>
+        <template v-else>
+          <q-field
+            class="col-4"
+            input-class="text-black text-weight-medium"
+            standout="bg-secondary"
+            readonly
+            dense
+            :label="$tc('pricing.label', 1)"
+            stack-label
+            borderless
+            hide-bottom-space
+            bottom-slots
+          >
+            <template v-slot:control>
+              <q-badge
+                align="middle"
+              >
+                {{ $t('app.to_be_confirmed') }}
+              </q-badge>
+            </template>
+          </q-field>
+
+          <q-field
+            class="col"
+            input-class="text-black text-weight-medium"
+            standout="bg-secondary"
+            readonly
+            dense
+            :label="$t('pricing.total')"
+            stack-label
+            borderless
+            hide-bottom-space
+            bottom-slots
+          >
+            <template v-slot:control>
+              <q-badge
+                align="middle"
+              >
+                {{ $t('app.to_be_confirmed') }}
+              </q-badge>
+            </template>
+          </q-field>
+        </template>
       </q-card-section>
     </q-form>
   </q-card>

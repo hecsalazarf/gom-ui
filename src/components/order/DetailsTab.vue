@@ -75,6 +75,7 @@
                 :borderless="!editMode"
               />
               <q-input
+                v-if="parseFloat(totalAmount) > 0"
                 v-model="totalAmount"
                 dense
                 prefix="$"
@@ -82,6 +83,22 @@
                 readonly
                 borderless
               />
+              <q-field
+                v-else
+                dense
+                stack-label
+                :label="$t('pricing.total')"
+                readonly
+                borderless
+              >
+                <template v-slot:control>
+                  <q-badge
+                    align="middle"
+                  >
+                    {{ $t('app.to_be_confirmed') }}
+                  </q-badge>
+                </template>
+              </q-field>
             </q-card-section>
           </q-form>
         </q-card>

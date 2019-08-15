@@ -26,9 +26,27 @@
           </li>
         </ul>
       </div>
-      <div class="col-6 text-h6 text-center">
+      <div
+        v-if="parseFloat(totalAmount) > 0"
+        class="col-6 text-h6 text-center"
+      >
         $
         <span>{{ totalAmount }}</span>
+      </div>
+      <div
+        v-else
+        class="col-6"
+      >
+        <q-banner
+          rounded
+          dense
+          class="bg-primary text-white"
+        >
+          <template v-slot:avatar>
+            <q-icon name="timelapse" />
+          </template>
+          {{ $t('pricing.to_be_confirmed') }}
+        </q-banner>
       </div>
     </q-card-section>
   </q-card>
