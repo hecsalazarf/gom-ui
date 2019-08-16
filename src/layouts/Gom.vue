@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { QSpinnerBars, scroll } from 'quasar'
+import { scroll } from 'quasar'
 const { setScrollPosition, getScrollTarget } = scroll
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapActions } = createNamespacedHelpers('GomState')
@@ -77,9 +77,6 @@ export default {
   },
   created () {
     this.changeActiveToolbar('h-main-toolbar')
-    this.$q.loading.setDefaults({
-      spinner: QSpinnerBars // default spinner
-    })
   },
   methods: {
     getScrollTarget,
