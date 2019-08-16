@@ -36,7 +36,7 @@
             flat
             dense
             rounded
-            style="transition-delay: 300ms; transition-duration: 0;"
+            style="transition-delay: 400ms; transition-duration: 0;"
             @click="fetchMore()"
           >
             <template v-slot:loading>

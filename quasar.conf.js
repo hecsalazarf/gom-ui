@@ -10,7 +10,8 @@ module.exports = function (ctx) {
       'axios',
       'addressbar-color',
       'vue-apollo',
-      'auth'
+      'auth',
+      'defaults'
     ],
 
     css: [
@@ -96,15 +97,8 @@ module.exports = function (ctx) {
 
       config: {
         notify: {
-          position: 'bottom-left',
-          timeout: 2500,
-          textColor: 'white',
-          actions: [{ icon: 'close', color: 'white' }]
         },
         loading: {
-          delay: 400,
-          sanitize: true,
-          backgroundColor: 'primary'
         }
       }
       // iconSet: 'ionicons-v4'
