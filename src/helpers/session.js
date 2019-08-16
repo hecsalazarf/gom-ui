@@ -65,14 +65,14 @@ function urlB64ToUint8Array (base64String) {
  * Subscribe to push notifications
  */
 async function subscribeToPush () {
-  const applicationServerKey = urlB64ToUint8Array(
-    process.env.VAPID_KEY // transform public key into a array buffer
-  )
   const registration = await navigator.serviceWorker.getRegistration() // get service worker registration
   if (!registration) {
     console.error('Cannot subscribe to Push Notifications: No service worker has been registered')
     return
   }
+  const applicationServerKey = urlB64ToUint8Array(
+    process.env.VAPID_KEY // transform public key into a array buffer
+  )
   const options = { applicationServerKey, userVisibleOnly: true }
   try {
     const subscription = await registration.pushManager.subscribe(options)
