@@ -154,7 +154,8 @@ module.exports = function (ctx) {
           ws: true, // proxy websockets
           pathRewrite: {
             '^/api': ''
-          }
+          },
+          xfwd: true // add x-forward headers
         }
       }
     },
