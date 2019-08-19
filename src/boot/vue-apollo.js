@@ -6,8 +6,8 @@ import { WebSocketLink } from 'apollo-link-ws'
 import { getMainDefinition } from 'apollo-utilities'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import VueApollo from 'vue-apollo'
-import { Session } from 'src/helpers'
-const { logout, notifyOnError } = Session
+import { ErrorHandlers } from 'src/helpers'
+const { handleGraphQlErrors, handleNetworkErrors } = ErrorHandlers
 
 class ApolloClientProvider {
   constructor (router, ssr = false) {
@@ -21,15 +21,10 @@ class ApolloClientProvider {
     const errorLink = onError(({ graphQLErrors, networkError, operation, response }) => {
       console.error(`[Operation error]: ${operation.operationName}`)
       if (graphQLErrors) {
-        console.error(graphQLErrors)
-        // notifyOnError.call(this.router.app)
+        handleGraphQlErrors.call(this.router.app, graphQLErrors)
       }
       if (networkError) {
-        if (networkError.result && networkError.result.code && networkError.result.code === 'jwt_error') {
-          logout.call(this.router.app)
-        } else {
-          notifyOnError.call(this.router.app)
-        }
+        handleNetworkErrors.call(this.router.app, networkError)
       }
     })
 

@@ -1,3 +1,6 @@
+import { Notifications } from './notifications'
+const { notifyError } = Notifications
+
 /* IMPORTANT: Bind "this" to the Vue instance from the caller function */
 
 /**
@@ -27,24 +30,11 @@ async function logout () {
     await this.$axios.get('auth/logout') // Clear all cookies and finish session
     this.$router.replace({ name: 'login' }) // Go to login page
   } catch (err) {
-    notifyOnError.call(this)
+    notifyError.call(this)
   } finally {
     this.$q.loading.hide()
   }
 }
-
-/**
- * Generic function to notify an error
- */
-function notifyOnError () {
-  this.$q.loading.hide() // hide any loading window
-  this.$q.notify({
-    color: 'negative',
-    message: this.$t('notifications.error.generic'),
-    icon: 'report_problem'
-  })
-}
-
 /**
  * Function that will encode the base64 public key to Array buffer
  * which is needed by the subscription option
@@ -125,7 +115,6 @@ function requestNotificationPermission () {
 
 export const Session = {
   logout,
-  notifyOnError,
   clearState,
   subscribeToPush,
   unsubscribeToPush,

@@ -54,8 +54,8 @@
 
 <script>
 import { LoginMixin } from './common'
-import { Session } from 'src/helpers'
-const { notifyOnError } = Session
+import { Notifications } from 'src/helpers'
+const { notifyError } = Notifications
 
 export default {
   name: 'HCustomerLogin',
@@ -97,7 +97,7 @@ export default {
             icon: 'report_problem'
           })
         } else {
-          notifyOnError.call(this) // any other error notify with generic error
+          notifyError.call(this) // any other error notify with generic error
         }
         this.$emit('error') // emit error an render user-password login
         console.log(error)
