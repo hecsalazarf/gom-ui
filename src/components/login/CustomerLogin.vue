@@ -42,6 +42,8 @@
           :label="$t('app.sign_in')"
           type="submit"
           color="primary"
+          :loading="loading"
+          :disable="loading"
         >
           <template v-slot:loading>
             <q-spinner-bars />
@@ -53,6 +55,7 @@
 </template>
 
 <script>
+import { throttle } from 'quasar'
 import { LoginMixin } from './common'
 import { Notifications } from 'src/helpers'
 const { notifyError } = Notifications
@@ -69,6 +72,7 @@ export default {
   },
   data () {
     return {
+      loading: false,
       digits: '',
       customerOf: '',
       phoneFirst: '',
@@ -109,13 +113,13 @@ export default {
         this.$refs[`digit${index + 1}`][0].focus() // automatically focus next field
       }
     },
-    submit () {
+    submit: throttle(function () { // Throttle login #50
       this.login({
         grantType: 'phone',
         username: this.reference,
         phone: this.phoneFirst.concat(this.digits, this.phoneLast) // concat phone number
       })
-    }
+    }, 2000)
   }
 }
 </script>

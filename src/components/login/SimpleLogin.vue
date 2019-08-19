@@ -69,6 +69,7 @@
 </template>
 
 <script>
+import { throttle } from 'quasar'
 import { LoginMixin } from './common'
 
 export default {
@@ -83,13 +84,13 @@ export default {
     }
   },
   methods: {
-    submit () {
+    submit: throttle(function () { // // Throttle login #50
       this.login({
         grantType: 'password',
         username: this.username,
         password: this.password
       })
-    }
+    }, 2000)
   }
 }
 </script>
