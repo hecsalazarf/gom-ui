@@ -19,7 +19,7 @@
       v-if="activeOrder"
       rounded
       size="2.5em"
-      color="accent"
+      :color="stage.color"
       text-color="white"
     >
       <h-icon
