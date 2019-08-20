@@ -66,26 +66,30 @@ export default {
     ...mapGetters(['activeCustomer'])
   },
   beforeMount () {
-    this.subscription = this.$apollo
-      .watchQuery({
-        query: CustomerDetails,
-        variables: {
-          where: {
-            uid: this.activeCustomer
+    if (this.activeCustomer) {
+      this.subscription = this.$apollo
+        .watchQuery({
+          query: CustomerDetails,
+          variables: {
+            where: {
+              uid: this.activeCustomer
+            }
           },
           fetchPolicy: 'cache-only'
-        }
-      })
-      .subscribe(this.updateHeader)
+        })
+        .subscribe(this.updateHeader)
+    }
   },
   beforeDestroy () {
     this.subscription.unsubscribe()
   },
   methods: {
     updateHeader ({ data: { bp } }) {
-      this.header = {
-        name1: bp.name1,
-        lastName1: bp.lastName1
+      if (bp) {
+        this.header = {
+          name1: bp.name1,
+          lastName1: bp.lastName1
+        }
       }
     },
     confirmDelete () {

@@ -139,11 +139,13 @@ export default {
   },
   methods: {
     updateHeader ({ data: { order } }) {
-      this.header = (({ name, stage, issuedTo }) => ({
-        name,
-        stage,
-        customer: issuedTo
-      }))(order)
+      if (order) {
+        this.header = (({ name, stage, issuedTo }) => ({
+          name,
+          stage,
+          customer: issuedTo
+        }))(order)
+      }
     },
     ...mapActions(['emitEvent'])
   }
