@@ -64,7 +64,7 @@
 
 <script>
 import UserOrders from 'src/graphql/queries/UserOrders.gql'
-import OrderListSub from 'src/graphql/subscriptions/OrderList.gql'
+import OrderListSub from 'src/graphql/subscriptions/OrderDetails.gql'
 import { createNamespacedHelpers } from 'vuex'
 import { OrderMixin } from './common'
 const { mapGetters, mapActions } = createNamespacedHelpers('GomState')
@@ -221,15 +221,13 @@ export default {
           else this.$q.loading.hide()
         },
         loadingKey: 'loading',
-        variables () {
-          return {
-            where: {
-              ...this.buildQueryVars()
-            },
-            first: this.ordersPerBlock,
-            skip: 0,
-            orderBy: 'createdAt_DESC'
-          }
+        variables: {
+          where: {
+            ...this.buildQueryVars()
+          },
+          first: this.ordersPerBlock,
+          skip: 0,
+          orderBy: 'createdAt_DESC'
         },
         subscribeToMore: {
           document: OrderListSub,

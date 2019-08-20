@@ -104,17 +104,15 @@ export default {
           if (isLoading) this.$q.loading.show()
           else this.$q.loading.hide()
         },
-        variables () {
-          return {
-            where: {
-              customerOf_some: {
-                extUid: this.$user.id
-              }
-            },
-            first: 20, // TODO Implement pagination
-            skip: 0,
-            orderBy: 'createdAt_DESC'
-          }
+        variables: {
+          where: {
+            customerOf_some: {
+              extUid: this.$user.id
+            }
+          },
+          first: 20, // TODO Implement pagination
+          skip: 0,
+          orderBy: 'createdAt_DESC'
         }
       }
     }
