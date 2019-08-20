@@ -127,7 +127,8 @@ export default {
             where: {
               uid: this.activeOrder
             }
-          }
+          },
+          fetchPolicy: 'cache-only'
         })
         .subscribe(this.updateHeader)
     }

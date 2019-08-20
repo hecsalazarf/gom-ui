@@ -71,7 +71,8 @@ export default {
         variables: {
           where: {
             uid: this.activeCustomer
-          }
+          },
+          fetchPolicy: 'cache-only'
         }
       })
       .subscribe(this.updateHeader)
