@@ -52,7 +52,8 @@ export default {
       header: {
         name1: '',
         lastName1: ''
-      }
+      },
+      subscription: null
     }
   },
   computed: {
@@ -64,8 +65,8 @@ export default {
     },
     ...mapGetters(['activeCustomer'])
   },
-  created () {
-    this.$apollo
+  beforeMount () {
+    this.subscription = this.$apollo
       .watchQuery({
         query: CustomerDetails,
         variables: {
@@ -76,6 +77,9 @@ export default {
         }
       })
       .subscribe(this.updateHeader)
+  },
+  beforeDestroy () {
+    this.subscription.unsubscribe()
   },
   methods: {
     updateHeader ({ data: { bp } }) {

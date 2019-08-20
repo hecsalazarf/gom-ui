@@ -84,7 +84,8 @@ export default {
   mixins: [OrderComponentMixin],
   data () {
     return {
-      header: {}
+      header: {},
+      subscription: null
     }
   },
   computed: {
@@ -118,9 +119,9 @@ export default {
     },
     ...mapGetters(['activeOrder', 'activeOrderTab'])
   },
-  created () {
+  beforeMount () {
     if (this.activeOrder) {
-      this.$apollo
+      this.subscription = this.$apollo
         .watchQuery({
           query: OrderDetails,
           variables: {
@@ -132,6 +133,9 @@ export default {
         })
         .subscribe(this.updateHeader)
     }
+  },
+  beforeDestroy () {
+    this.subscription.unsubscribe()
   },
   methods: {
     updateHeader ({ data: { order } }) {
