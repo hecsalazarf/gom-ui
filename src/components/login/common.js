@@ -24,6 +24,15 @@ export const LoginMixin = {
         if (error.response && error.response.data.error === 'invalid_grant') {
           // notify wrong crendentials
           this.$q.notify({ color: 'negative', message: this.$t('notifications.error.wrong_credentials'), icon: 'report_problem' })
+        } else if (error.response && error.response.status === 429) {
+          // Too many requests handler
+          let retryAfter = error.response.headers['retry-after'] // get retry-after header
+          retryAfter = retryAfter ? Math.ceil(parseFloat(retryAfter) / 60) : 0 // transform to seconds
+          // display notification
+          this.$q.notify({
+            color: 'negative',
+            message: `${this.$t('notifications.error.too_many_requests')} ${this.$tc('app.minute', retryAfter, { n: retryAfter })}`,
+            icon: 'report_problem' })
         } else {
           // any other erriror, display a generic error
           this.$q.notify({ color: 'negative', message: this.$t('notifications.error.signin_failed'), icon: 'report_problem' })

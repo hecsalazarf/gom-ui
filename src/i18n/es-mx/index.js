@@ -83,6 +83,7 @@ export default {
     copy_link: 'Copiar enlace',
     copied_link: 'Enlace copiado',
     to_be_confirmed: 'Por confirmar',
+    minute: ' | {n} minuto | {n} minutos',
     rules: {
       required: 'Campo requerido',
       max_length: 'Máximo {count} caracteres',
@@ -96,7 +97,8 @@ export default {
     error: {
       generic: 'Ups algo salió mal, inténtalo más tarde :(',
       wrong_credentials: 'Usuario o contraseña incorrectos',
-      signin_failed: 'No pudimos iniciar sesión. Inténtalo más tarde'
+      signin_failed: 'No pudimos iniciar sesión. Inténtalo más tarde',
+      too_many_requests: 'Demasiados intentos. Vuelve en'
     }
   }
 }
