@@ -27,7 +27,7 @@ export const OrderMixin = {
     buildMutationVars () {
       let assignedTo, issuedTo
       if (this.$can('role', 'customer')) {
-        assignedTo = this.$user.info.seller // it is assigned to customer's provider
+        assignedTo = this.$user.seller // it is assigned to customer's provider
         issuedTo = this.$user.id // the customer cannot choose customer, it is issued to itself
       } else if (this.$can('role', 'seller')) {
         assignedTo = this.$user.id // it is assigned to itself
