@@ -1,5 +1,5 @@
 import { ApolloClient } from 'apollo-client'
-import { ApolloLink, split } from 'apollo-link'
+import { ApolloLink, split, Observable } from 'apollo-link'
 import { onError } from 'apollo-link-error'
 import { createHttpLink } from 'apollo-link-http'
 import { WebSocketLink } from 'apollo-link-ws'
@@ -31,14 +31,40 @@ class ApolloClientProvider {
     // Create middleware to set CSRF header.
     // See https://www.apollographql.com/docs/react/advanced/network-layer/
     const csrfMiddleware = new ApolloLink((operation, forward) => {
-      const { $q } = this.router.app // Extract quasar instance
-      operation.setContext(({ headers = {} }) => ({
-        headers: {
-          ...headers,
-          'X-Csrf-Token': $q.cookies.get('csrf-token')
+      const { $q, $axios } = this.router.app // Extract quasar instance
+
+      // Instead of returning the observable through forward(operation),
+      // we create a new one that executes async functionality. This part of the
+      // code is inspired from apollo-link-context https://github.com/apollographql/apollo-link/tree/master/packages/apollo-link-context
+      return new Observable(observer => {
+        let handle
+        Promise.resolve($q.cookies.has('csrf-token'))
+          .then(has => {
+            if (!has) {
+              // we first check that the cookie exists, otherwise request it
+              return $axios.get('auth/ping')
+            }
+          })
+          .then(() => operation.setContext(({ headers = {} }) => ({
+            // next we set the context
+            headers: {
+              ...headers,
+              'X-Csrf-Token': $q.cookies.get('csrf-token')
+            }
+          })))
+          .then(() => {
+            // wrap the observer with the new one
+            handle = forward(operation).subscribe({
+              next: observer.next.bind(observer),
+              error: observer.error.bind(observer),
+              complete: observer.complete.bind(observer)
+            })
+          })
+          .catch(observer.error.bind(observer))
+        return () => {
+          if (handle) handle.unsubscribe()
         }
-      }))
-      return forward(operation)
+      })
     })
 
     // Create HTTP link to get GraphQL results over a network using HTTP fetch
