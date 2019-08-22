@@ -329,6 +329,13 @@ export default {
     }, 500),
     ...mapActions(['changeActiveToolbar'])
   },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (!vm.$can('create', 'order')) { // check permission
+        vm.$router.back() // no permission, go back
+      }
+    })
+  },
   beforeRouteLeave (to, from, next) {
     // Emit a dialog if an order is in process and has not been submitted (#19)
     if (this.order.items.length > 0 && !this.submitted) {

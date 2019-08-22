@@ -171,11 +171,12 @@ export default {
         query: OrderDetails,
         update (data) {
           if (typeof data.order === 'undefined') {
-            return // this might happen when an error ocurred
+            // this might happen when an error ocurred
+            return this.order // return previous state (or initial state)
           }
           if (!data.order) {
             this.$router.back() // record does not exist, we receive null
-            return
+            return this.order
           }
 
           const items = data.order.items.map(item => {
@@ -222,6 +223,13 @@ export default {
         }
       }
     }
+  },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (!vm.$can('read', 'order')) { // check permission
+        vm.$router.back() // no permission, go back
+      }
+    })
   },
   beforeRouteLeave (to, from, next) {
     this.changeActiveToolbar(null)

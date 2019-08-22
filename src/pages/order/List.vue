@@ -244,6 +244,13 @@ export default {
         }
       }
     }
+  },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (!vm.$can('read', 'orders')) { // check permission
+        vm.$router.back() // no permission, go back
+      }
+    })
   }
 }
 </script>

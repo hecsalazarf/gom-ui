@@ -142,11 +142,12 @@ export default {
         query: CustomerDetails,
         update (data) {
           if (typeof data.bp === 'undefined') {
-            return // this might happen when an error ocurred
+            // this might happen when an error ocurred
+            return this.customer // return previous state (or initial state)
           }
           if (!data.bp) {
             this.$router.back() // record does not exist, we receive null
-            return
+            return this.customer
           }
 
           return {
@@ -169,6 +170,13 @@ export default {
         }
       }
     }
+  },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (!vm.$can('read', 'bp')) { // check permission
+        vm.$router.back() // no permission, go back
+      }
+    })
   },
   beforeRouteLeave (to, from, next) {
     this.changeActiveToolbar(null)

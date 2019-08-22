@@ -23,19 +23,24 @@
         @reset="$refs.newCustomer.hide()"
       />
     </q-dialog>
-    <q-page-sticky
-      position="bottom-right"
-      :offset="[18, 18]"
+    <can
+      do="create"
+      on="bp"
     >
-      <q-btn
-        fab
-        round
-        color="accent"
-        icon="person_add"
-        class="shadow-7"
-        @click="$refs.newCustomer.show()"
-      />
-    </q-page-sticky>
+      <q-page-sticky
+        position="bottom-right"
+        :offset="[18, 18]"
+      >
+        <q-btn
+          fab
+          round
+          color="accent"
+          icon="person_add"
+          class="shadow-7"
+          @click="$refs.newCustomer.show()"
+        />
+      </q-page-sticky>
+    </can>
   </q-page>
 </template>
 
@@ -116,6 +121,13 @@ export default {
         }
       }
     }
+  },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (!vm.$can('read', 'bps')) { // check permission
+        vm.$router.back() // no permission, go back
+      }
+    })
   }
 }
 </script>
