@@ -153,6 +153,9 @@ export default {
   computed: {
     fullName: {
       get () {
+        if (!this.model.name1) {
+          return ''
+        }
         // Turn first letter to uppercase
         if (this.model.lastName1 === '' ||
             !this.model.lastName1) { // check it's not null. Fix (#15)
@@ -213,6 +216,9 @@ export default {
       }
     },
     avatarText () {
+      if (!this.model.name1) {
+        return ''
+      }
       return `${this.model.name1.charAt(0)}${
         this.model.lastName1 ? this.model.lastName1.charAt(0) : ''
       }`.toUpperCase() // Always in uppercase

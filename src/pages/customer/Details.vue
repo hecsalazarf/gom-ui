@@ -160,11 +160,9 @@ export default {
           if (isLoading) this.$q.loading.show()
           else this.$q.loading.hide()
         },
-        variables () {
-          return {
-            where: {
-              uid: this.id
-            }
+        variables: {
+          where: {
+            uid: this.id
           }
         }
       }

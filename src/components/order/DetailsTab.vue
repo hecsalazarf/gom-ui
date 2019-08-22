@@ -223,22 +223,23 @@ export default {
             name1.slice(1)} ${lastName1.charAt(0).toUpperCase() +
             lastName1.slice(1)}`
       }
-
-      /*  const lastName1 = this.order.customer.lastName1
-        ? this.order.customer.lastName1
-        : ''
-      const lastName2 = this.order.customer.lastName2
-        ? this.order.customer.lastName2
-        : ''
-      return `${name1} ${name2} ${lastName1} ${lastName2}`.replace(/\s+/g, ' ') */
     },
     createdAt () {
+      if (typeof this.order.createdAt === 'undefined') {
+        return ''
+      }
       return date.formatDate(this.order.createdAt, 'DD/MM/YYYY HH:mm:ss')
     },
     updatedAt () {
+      if (typeof this.order.updatedAt === 'undefined') {
+        return ''
+      }
       return date.formatDate(this.order.updatedAt, 'DD/MM/YYYY HH:mm:ss')
     },
     totalAmount () {
+      if (typeof this.order.items === 'undefined') {
+        return '0'
+      }
       return this.order.items.reduce(
         (acc, item) => acc + (item.data.price.amount * item.data.quantity),
         0).toFixed(2) // toFixed() prevents floating point inaccuracy
@@ -258,6 +259,9 @@ export default {
     },
     name: {
       get () {
+        if (typeof this.order.name === 'undefined') {
+          return ''
+        }
         return this.order.name
       },
       set (name) {

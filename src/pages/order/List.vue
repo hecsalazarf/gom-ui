@@ -231,15 +231,11 @@ export default {
         },
         subscribeToMore: {
           document: OrderListSub,
-          // Variables passed to the subscription. Since we're using a function,
-          // they are reactive
-          variables () {
-            return {
-              where: {
-                mutation_in: [ 'CREATED', 'UPDATED' ], // subscribe for new and updated orders (Fix #42)
-                node: {
-                  ...this.buildQueryVars()
-                }
+          variables: {
+            where: {
+              mutation_in: [ 'CREATED', 'UPDATED' ], // subscribe for new and updated orders (Fix #42)
+              node: {
+                ...this.buildQueryVars()
               }
             }
           },

@@ -202,23 +202,17 @@ export default {
           if (isLoading) this.$q.loading.show()
           else this.$q.loading.hide()
         },
-        variables () {
-          return {
-            where: {
-              uid: this.id
-            }
+        variables: {
+          where: {
+            uid: this.id
           }
         },
         subscribeToMore: {
           document: OrderDetailsSub,
-          // Variables passed to the subscription. Since we're using a function,
-          // they are reactive
-          variables () {
-            return {
-              where: {
-                node: {
-                  uid: this.id // subscribe for new and updated orders (Fix #42)
-                }
+          variables: {
+            where: {
+              node: {
+                uid: this.id // subscribe for new and updated orders (Fix #42)
               }
             }
           }
