@@ -24,6 +24,7 @@
         bg-color="white"
         maxlength="5"
         type="tel"
+        :disable="loading"
         rounded
         outlined
         stack-label

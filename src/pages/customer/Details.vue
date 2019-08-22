@@ -141,10 +141,12 @@ export default {
       return {
         query: CustomerDetails,
         update (data) {
-          if (typeof data.bp === 'undefined' || !data.bp) {
-            // if no data is availabe, back to previous page
-            this.$router.back()
-            return {}
+          if (typeof data.bp === 'undefined') {
+            return // this might happen when an error ocurred
+          }
+          if (!data.bp) {
+            this.$router.back() // record does not exist, we receive null
+            return
           }
 
           return {

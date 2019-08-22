@@ -170,11 +170,14 @@ export default {
       return {
         query: OrderDetails,
         update (data) {
-          if (typeof data.order === 'undefined' || !data.order) {
-            // if no data is availabe, back to previous page
-            this.$router.back()
-            return {}
+          if (typeof data.order === 'undefined') {
+            return // this might happen when an error ocurred
           }
+          if (!data.order) {
+            this.$router.back() // record does not exist, we receive null
+            return
+          }
+
           const items = data.order.items.map(item => {
             return {
               data: {
