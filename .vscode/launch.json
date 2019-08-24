@@ -31,6 +31,20 @@
       "sourceMapPathOverrides": {
         "webpack:///*": "${webRoot}/*"
       }
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "port": 9222,
+      "name": "Launch Chrome against IP (Secure)",
+      "url": "https://192.168.0.2:8080/",
+      "webRoot": "${workspaceFolder}",
+      "userDataDir": "/tmp/chrome-debug",
+      "breakOnLoad": true,
+      "sourceMaps": true,
+      "sourceMapPathOverrides": {
+        "webpack:///*": "${webRoot}/*"
+      }
     }
   ]
 }
