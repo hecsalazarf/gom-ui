@@ -259,7 +259,7 @@ export default {
         console.error(err)
       }
     },
-    submit () {
+    submit: throttle(function () {
       let data = {
         name: this.order.name,
         ...this.buildMutationVars(),
@@ -290,7 +290,7 @@ export default {
         this.$q.loading.hide()
         this.$router.replace({ name: 'orderDetails', params: { id: res.data.createOrder.uid } })
       }).catch(error => error) // Error is handled globally, supress Uncaught (in promise)
-    },
+    }, 3000),
     addItem (item) {
       this.order.items.push({
         data: item
