@@ -23,7 +23,7 @@
         color="primary"
         bg-color="white"
         maxlength="5"
-        type="tel"
+        type="password"
         :disable="loading"
         rounded
         outlined
@@ -129,5 +129,4 @@ export default {
 /deep/ .h-phone-password
   letter-spacing: 1em
   text-indent: 1em // No additional space added to last letter by letter-spacing
-  -webkit-text-security: disc // Make non-password inputs use bullets
 </style>
