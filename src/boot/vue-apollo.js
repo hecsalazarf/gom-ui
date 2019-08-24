@@ -35,7 +35,7 @@ class ApolloClientProvider {
 
       // Instead of returning the observable through forward(operation),
       // we create a new one that executes async functionality. This part of the
-      // code is inspired from apollo-link-context https://github.com/apollographql/apollo-link/tree/master/packages/apollo-link-context
+      // code is inspired by apollo-link-context https://github.com/apollographql/apollo-link/tree/master/packages/apollo-link-context
       return new Observable(observer => {
         let handle
         Promise.resolve($q.cookies.has('csrf-token'))
