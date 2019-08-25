@@ -26,7 +26,9 @@ module.exports = {
     'ga': true, // Google Analytics
     'cordova': true,
     '__statics': true,
-    'process': true
+    'process': true,
+    'importScripts': 'readonly', // method of the WorkerGlobalScope
+    'workbox': 'readonly' // Google Workbox
   },
 
   // add your custom rules here
