@@ -105,7 +105,7 @@ module.exports = function (ctx) {
       // lang: 'de' // Quasar language
     },
 
-    supportIE: false,
+    supportIE: true,
 
     build: {
       scopeHoisting: true,
@@ -149,7 +149,7 @@ module.exports = function (ctx) {
       proxy: {
         // proxy all requests starting with /api to jsonplaceholder
         '/api': {
-          target: 'http://192.168.0.2:3000',
+          target: 'http://172.18.0.1:3000',
           changeOrigin: true,
           ws: true, // proxy websockets
           pathRewrite: {
