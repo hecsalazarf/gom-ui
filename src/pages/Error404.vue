@@ -7,14 +7,15 @@
       >
     </p>
     <p class="text-faded">
-      Sorry, nothing here...<strong>(404)</strong>
+      {{ $t('notifications.error.page_not_found') }}
     </p>
+    <p><strong> (404)</strong></p>
     <q-btn
-      color="secondary"
+      color="primary"
       style="width:200px;"
-      @click="$router.push('/')"
+      @click="$router.replace('/')"
     >
-      Go back
+      {{ $t('app.go_back') }}
     </q-btn>
   </div>
 </template>

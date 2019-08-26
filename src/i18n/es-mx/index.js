@@ -69,6 +69,7 @@ export default {
     sign_out: 'Cerrar sesión',
     continue_question: '¿Continuar?',
     delete_confirm: 'Quieres eliminar a {object}',
+    go_back: 'Volver',
     see_more: 'Ver más',
     filter_by_status: 'Filtrar por status',
     no_results: 'Sin resultados',
@@ -98,7 +99,8 @@ export default {
       generic: 'Ups algo salió mal, inténtalo más tarde :(',
       wrong_credentials: 'Usuario o contraseña incorrectos',
       signin_failed: 'No pudimos iniciar sesión. Inténtalo más tarde',
-      too_many_requests: 'Demasiados intentos. Vuelve en'
+      too_many_requests: 'Demasiados intentos. Vuelve en',
+      page_not_found: 'No pudimos encontrar la página'
     }
   }
 }
