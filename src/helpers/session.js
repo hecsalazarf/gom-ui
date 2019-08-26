@@ -55,9 +55,20 @@ function urlB64ToUint8Array (base64String) {
  * Subscribe to push notifications
  */
 async function subscribeToPush () {
+  if (!window.navigator || !window.navigator.serviceWorker) {
+    console.error('Cannot subscribe to Push Notifications: Browser does not support service workers')
+    return
+  }
+
   const registration = await navigator.serviceWorker.getRegistration() // get service worker registration
   if (!registration) {
     console.error('Cannot subscribe to Push Notifications: No service worker has been registered')
+    return
+  }
+
+  if (!registration.pushManager) {
+    // no push manager compatible
+    console.error('Cannot subscribe to Push Notifications: Browser does not support PushManager')
     return
   }
   const applicationServerKey = urlB64ToUint8Array(
@@ -77,10 +88,20 @@ async function subscribeToPush () {
  * Unsubscribe from push notifications
  */
 async function unsubscribeToPush () {
+  if (!window.navigator || !window.navigator.serviceWorker) {
+    // no service worker compatible
+    return
+  }
+
   const registration = await navigator.serviceWorker.getRegistration() // get service worker registration
   if (!registration) {
     // if no service worker, do nothing
     console.error('Cannot unsubscribe from Push Notifications: No service worker has been registered')
+    return
+  }
+
+  if (!registration.pushManager) {
+    // no push manager compatible
     return
   }
   const subscription = await registration.pushManager.getSubscription()
