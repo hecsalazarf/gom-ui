@@ -81,7 +81,10 @@ export default {
     }
   },
   beforeDestroy () {
-    this.subscription.unsubscribe()
+    if (this.subscription) {
+      // Fix #61, ckeck subscription exists before unsubscribing
+      this.subscription.unsubscribe()
+    }
   },
   methods: {
     updateHeader ({ data: { bp } }) {
