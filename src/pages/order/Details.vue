@@ -3,75 +3,80 @@
     padding
     class="flex"
   >
-    <div class="row full-width justify-center content-start">
-      <div class="col-xs-12 col-sm-12 col-md-8">
-        <q-tabs
-          v-model="tab"
-          dense
-          class="text-grey"
-          active-color="primary"
-          indicator-color="primary"
-          align="justify"
-          narrow-indicator
-        >
-          <q-tab
-            name="details"
-            :label="$tc('order.label', 2)"
-          />
-          <q-tab
-            name="items"
-            :label="$tc('item.label', 2)"
-          />
-        </q-tabs>
-        <q-separator />
-        <q-tab-panels
-          v-model="tab"
-          animated
-          swipeable
-          keep-alive
-        >
-          <q-tab-panel name="details">
-            <h-order-details-tab
-              :value="order"
-              :readonly="readonly"
-            />
-          </q-tab-panel>
-
-          <q-tab-panel
-            name="items"
-            class="q-gutter-y-sm"
+    <q-pull-to-refresh
+      class="full-width"
+      @refresh="refresh"
+    >
+      <div class="row full-width justify-center content-start">
+        <div class="col-xs-12 col-sm-12 col-md-8">
+          <q-tabs
+            v-model="tab"
+            dense
+            class="text-grey"
+            active-color="primary"
+            indicator-color="primary"
+            align="justify"
+            narrow-indicator
           >
-            <!-- Item is readonly if satifies rule readonly-order -->
-            <!-- Item cannot be removed (no-removable) if it's the last one -->
-            <h-order-item
-              v-for="(item) in order.items"
-              :key="item.data.id"
-              v-model="item.data"
-              :readonly="readonly"
-              :no-removable="order.items.length === 1"
+            <q-tab
+              name="details"
+              :label="$tc('order.label', 2)"
             />
-            <!-- CASL permission. ONLY SELLER ROLE -->
-            <can
-              do="role"
-              on="seller"
-            >
-              <q-btn
-                v-if="!readonly"
-                icon="add"
-                :label="$t('item.add_item')"
-                color="accent"
-                class="full-width"
-                rounded
-                dense
-                outline
-                no-caps
-                @click="$refs.newItem.show()"
+            <q-tab
+              name="items"
+              :label="$tc('item.label', 2)"
+            />
+          </q-tabs>
+          <q-separator />
+          <q-tab-panels
+            v-model="tab"
+            animated
+            swipeable
+            keep-alive
+          >
+            <q-tab-panel name="details">
+              <h-order-details-tab
+                :value="order"
+                :readonly="readonly"
               />
-            </can>
-          </q-tab-panel>
-        </q-tab-panels>
+            </q-tab-panel>
+
+            <q-tab-panel
+              name="items"
+              class="q-gutter-y-sm"
+            >
+              <!-- Item is readonly if satifies rule readonly-order -->
+              <!-- Item cannot be removed (no-removable) if it's the last one -->
+              <h-order-item
+                v-for="(item) in order.items"
+                :key="item.data.id"
+                v-model="item.data"
+                :readonly="readonly"
+                :no-removable="order.items.length === 1"
+              />
+              <!-- CASL permission. ONLY SELLER ROLE -->
+              <can
+                do="role"
+                on="seller"
+              >
+                <q-btn
+                  v-if="!readonly"
+                  icon="add"
+                  :label="$t('item.add_item')"
+                  color="accent"
+                  class="full-width"
+                  rounded
+                  dense
+                  outline
+                  no-caps
+                  @click="$refs.newItem.show()"
+                />
+              </can>
+            </q-tab-panel>
+          </q-tab-panels>
+        </div>
       </div>
-    </div>
+    </q-pull-to-refresh>
     <q-dialog
       ref="newItem"
       persistent
@@ -123,14 +128,6 @@ export default {
     ...mapGetters(['event'])
   },
   watch: {
-    /* tab (newVal, oldVal) {
-      this.changeActiveOrderTab(newVal)
-    },
-    event (evt) {
-      if (evt.target === this.$options.name && this[evt.method]) {
-        this[evt.method](evt.args)
-      }
-    }, */
     'order.stage' (val) {
       /* Check if order is readonly */
       this.rulesEngine.run({
@@ -146,19 +143,21 @@ export default {
     }
   },
   created () {
-    /* this.$store.subscribeAction((action, state) => {
-      if (action.type === 'GomState/emitEvent' &&
-      action.payload.target === this.$options.name &&
-      this[action.payload.method]
-      ) {
-        this[action.payload.method](action.payload.args)
-      }
-    }) */
     this.changeActiveOrder(this.id)
     this.changeActiveToolbar('h-order-toolbar')
     this.changeActiveOrderTab(this.tab)
   },
   methods: {
+    refresh (done) {
+      this.$apollo.queries.order.refetch({
+        variables: {
+          where: {
+            uid: this.id
+          }
+        }
+      })
+        .finally(() => done())
+    },
     ...mapActions([
       'changeActiveOrder',
       'changeActiveToolbar',

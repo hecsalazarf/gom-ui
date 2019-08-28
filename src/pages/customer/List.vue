@@ -27,7 +27,13 @@
       do="create"
       on="bp"
     >
+      <!--
+        User is restricted to create 30 customers at maximum. This is a
+        hard-coded temporary rule as we release the first beta.
+        IT IS NOT THE FINAL SOLUTION AT ALL
+      -->
       <q-page-sticky
+        v-if="customers.length < 30"
         position="bottom-right"
         :offset="[18, 18]"
       >
@@ -56,6 +62,7 @@ export default {
   props: {},
   data () {
     return {
+      customers: []
     }
   },
   methods: {
@@ -72,13 +79,13 @@ export default {
             // If no customer, return an empty array
             return []
           }
-          const customers = data.bpsConnection.edges
-          customers.sort((first, second) => {
+          this.customers = data.bpsConnection.edges
+          this.customers.sort((first, second) => {
             if (first.node.name1 < second.node.name1) return -1
             if (first.node.name1 > second.node.name1) return 1
             return 0
           })
-          return customers.reduce((acc, { node }) => {
+          return this.customers.reduce((acc, { node }) => {
             const groupName = node.name1.charAt(0)
             const charName = `${groupName}${node.lastName1 ? node.lastName1.charAt(0) : ''}`
             const index = acc.findIndex(el => el.name === groupName)
@@ -115,7 +122,7 @@ export default {
               extUid: this.$user.id
             }
           },
-          first: 20, // TODO Implement pagination
+          first: 30, // TODO Implement pagination
           skip: 0,
           orderBy: 'createdAt_DESC'
         }
