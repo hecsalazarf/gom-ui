@@ -98,6 +98,7 @@ import OrderDetailsSub from 'src/graphql/subscriptions/OrderDetails.gql'
 import { Engine } from 'json-rules-engine'
 import { EditableOrder } from 'src/rules/order'
 import { createNamespacedHelpers } from 'vuex'
+import { OrderMixin } from './common'
 const { mapActions, mapGetters } = createNamespacedHelpers('GomState')
 
 export default {
@@ -107,6 +108,7 @@ export default {
     'h-order-details-tab': () => import('components/order/DetailsTab.vue'),
     'h-new-item': () => import('components/order/NewItem.vue')
   },
+  mixins: [ OrderMixin ],
   props: {
     id: {
       type: String,
@@ -215,7 +217,8 @@ export default {
           variables: {
             where: {
               node: {
-                uid: this.id // subscribe for new and updated orders (Fix #42)
+                uid: this.id, // subscribe for new and updated orders (Fix #42)
+                ...this.buildQueryVars()
               }
             }
           }
