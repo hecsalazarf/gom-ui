@@ -1,5 +1,6 @@
 // Configuration for your app
 const fs = require('fs')
+const env = require('./env')
 
 module.exports = function (ctx) {
   return {
@@ -115,14 +116,7 @@ module.exports = function (ctx) {
       // analyze: true,
       // extractCSS: false,
       devtool: 'source-map',
-      env: ctx.dev
-        ? { // so on dev we'll have
-          VAPID_KEY: JSON.stringify('BJo1ZeE62MZqVkZN8g9TOSFXOCtxmpmejfId8JpLT5C52ASUqhabfpVpHqQrySWhD0PCgEWohR1vKpbRJ48boWA'),
-          WS_ENDPOINT: JSON.stringify('wss://192.168.0.2:8080/api/graphql')
-        }
-        : { // and on build (production):
-          VAPID_KEY: JSON.stringify('BJo1ZeE62MZqVkZN8g9TOSFXOCtxmpmejfId8JpLT5C52ASUqhabfpVpHqQrySWhD0PCgEWohR1vKpbRJ48boWA')
-        },
+      env: env(ctx),
       extendWebpack (cfg) {
         cfg.module.rules.push({
           enforce: 'pre',
