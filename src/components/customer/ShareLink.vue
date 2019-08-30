@@ -80,13 +80,15 @@ export default {
         grid: true,
         actions: [
           {
-            label: 'Whatsapp',
-            img: require('assets/whatsapp-brands.svg'),
+            label: 'WhatsApp',
+            icon: 'fab fa-whatsapp-square',
+            classes: 'text-green-13',
             id: 'wa'
           },
           {
             label: this.$t('app.copy_link'),
-            img: require('assets/paperclip-solid.svg'),
+            icon: 'file_copy',
+            classes: 'text-light-blue-13',
             id: 'copy'
           }
         ]
