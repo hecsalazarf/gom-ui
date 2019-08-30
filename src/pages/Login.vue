@@ -6,7 +6,10 @@
     <!-- content -->
     <div class="row justify-center items-center h-login">
       <div class="col-xs-10 col-sm-6 col-md-5 col-lg-5 col-lx-5">
-        <div class="column items-center q-gutter-y-md">
+        <div
+          v-if="isBrowserCompatible()"
+          class="column items-center q-gutter-y-md"
+        >
           <div class="col-3 q-mb-md">
             <q-avatar
               size="100px"
@@ -35,19 +38,28 @@
             <p class="text-center text-white q-mt-lg">&#191;Olvidaste tu contrase&#241;a&#63;</p>
           </router-link> -->
         </div>
+        <div
+          v-else
+          class="col-xs-10 col-sm-6 col-md-5 col-lg-5 col-lx-5"
+        >
+          <h-incompatible-browser />
+        </div>
       </div>
     </div>
   </q-page>
 </template>
 
 <script>
-import { Session } from 'src/helpers'
+import { Session, Agent } from 'src/helpers'
+const { unsubscribeToPush, clearState } = Session
+const { isBrowserCompatible } = Agent
 
 export default {
   name: 'GomLoginPage',
   components: {
     'h-simple-login': () => import('components/login/SimpleLogin.vue'),
-    'h-customer-login': () => import('components/login/CustomerLogin.vue')
+    'h-customer-login': () => import('components/login/CustomerLogin.vue'),
+    'h-incompatible-browser': () => import('components/misc/IncompatibleBrowser.vue')
   },
   data () {
     return {
@@ -57,12 +69,13 @@ export default {
     }
   },
   created () {
-    Session.unsubscribeToPush.call(this) // unsubscribe if there is any subscription
-    Session.clearState.call(this) // clear store at log in (Fix #29)
+    unsubscribeToPush.call(this) // unsubscribe if there is any subscription
+    clearState.call(this) // clear store at log in (Fix #29)
     this.$q.cookies.remove('csrf-token', { path: '/' }) // clear csrf token to login with a new one (#63)
     this.renderComponent() // render the commponent depending on the route query
   },
   methods: {
+    isBrowserCompatible,
     renderComponent () {
       if (this.$route.query.ref) { // if there is a reference, special login as customer
         this.props = {

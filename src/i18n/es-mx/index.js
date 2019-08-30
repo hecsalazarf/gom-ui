@@ -85,6 +85,7 @@ export default {
     copied_link: 'Enlace copiado',
     to_be_confirmed: 'Por confirmar',
     minute: ' | {n} minuto | {n} minutos',
+    for_better_ux: 'Para una mejor experiencia utiliza',
     rules: {
       required: 'Campo requerido',
       max_length: 'Máximo {count} caracteres',
@@ -100,7 +101,8 @@ export default {
       wrong_credentials: 'Usuario o contraseña incorrectos',
       signin_failed: 'No pudimos iniciar sesión. Inténtalo más tarde',
       too_many_requests: 'Demasiados intentos. Vuelve en',
-      page_not_found: 'No pudimos encontrar la página'
+      page_not_found: 'No pudimos encontrar la página',
+      incompatible_browser: 'Tu navegador no es compatible'
     }
   }
 }
