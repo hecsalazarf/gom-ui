@@ -11,8 +11,18 @@
         outlined
         readonly
       >
+        <!-- Hidden element that contains the full shareable url -->
+        <!-- ONLY FOR COMPATIBILITY PURPOSES -->
+        <div
+          id="customer-shareable-code"
+          style="position: absolute; opacity: 0"
+        >
+          {{ generateUri() }}
+        </div>
         <template v-slot:control>
-          <div class="text-body1">
+          <div
+            class="text-body1"
+          >
             {{ value }}
             <q-tooltip v-model="showHelp">
               {{ $t('customer.share_link_help') }}
@@ -92,6 +102,11 @@ export default {
       })
     },
     copyLink () {
+      // The Clipboard API is a recent addition to the specification, and may not be fully implemented
+      // to the specification in all browsers. It is commented out for reference
+      /* if (!navigator || !navigator.clipboard) {
+        return
+      }
       navigator.clipboard.writeText(this.generateUri())
         .then(() => {
           this.$q.notify({ // notify that link has been copied to clipboard
@@ -104,7 +119,24 @@ export default {
         .catch(err => {
           // This can happen if the user denies clipboard permissions:
           console.error(err)
+        }) */
+      if (window && window.getSelection) {
+        const range = document.createRange()
+        range.selectNode(document.getElementById('customer-shareable-code'))
+        window.getSelection().removeAllRanges() // clear current selection
+        window.getSelection().addRange(range) // to select text
+        document.execCommand('copy')
+        window.getSelection().removeAllRanges()// to deselect
+
+        this.$q.notify({ // notify that link has been copied to clipboard
+          message: this.$t('app.copied_link'),
+          position: 'bottom',
+          color: 'primary',
+          classes: 'text-body2'
         })
+      } else {
+        console.error('Cannot copy code; browser does not support getSelection API')
+      }
     },
     generateUri () {
       let origin
@@ -118,7 +150,8 @@ export default {
       const { path, meta: { refQuery } } = this.$router.options.routes.find(el => el.meta ? el.meta.name === ROOT_LOGIN : false)
       if (!path || !refQuery || !origin) {
         /* if some of the variables is undefined, throw an error */
-        throw new Error('Cannot generate shareable link')
+        console.error('Cannot generate shareable link')
+        return
       }
 
       return encodeURI(`${origin}${path}/?${refQuery}=${this.value}`)
