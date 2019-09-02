@@ -15,8 +15,9 @@
               size="100px"
               color="primary"
               text-color="white"
-              icon="graphic_eq"
-            />
+            >
+              <img src="statics/app-logo-128x128.png">
+            </q-avatar>
           </div>
           <!-- <div class="col-1">
             <h5>{{ $t('app.label') }}</h5>

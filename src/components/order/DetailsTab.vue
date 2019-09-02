@@ -79,6 +79,7 @@
                 v-model="totalAmount"
                 dense
                 prefix="$"
+                input-class="text-weight-bold text-accent"
                 :label="$t('pricing.total')"
                 readonly
                 borderless

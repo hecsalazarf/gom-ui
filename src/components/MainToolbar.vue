@@ -1,8 +1,8 @@
 <template>
   <q-toolbar class="bg-white">
     <q-icon
-      name="graphic_eq"
-      class="text-blue-grey-9 text-h4"
+      name="img:statics/app-logo-128x128.png"
+      class="text-h4"
     />
     <q-toolbar-title class="text-blue-grey-9">
       {{ this.$t('app.label') }}

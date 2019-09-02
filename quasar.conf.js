@@ -170,13 +170,14 @@ module.exports = function (ctx) {
       workboxPluginMode: 'InjectManifest',
       // workboxOptions: {}, // only for NON InjectManifest
       manifest: {
-        // name: 'Quasar App',
-        // short_name: 'Quasar-PWA',
-        // description: 'Best PWA App in town!',
+        name: 'Gom',
+        short_name: 'Gom',
+        description: 'Make your orders with the best app',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
-        theme_color: '#027be3',
+        theme_color: '#37474f',
+        start_url: '/',
         icons: [
           {
             'src': 'statics/icons/icon-128x128.png',
