@@ -101,9 +101,9 @@ module.exports = function (ctx) {
         },
         loading: {
         }
-      }
+      },
       // iconSet: 'ionicons-v4'
-      // lang: 'de' // Quasar language
+      lang: 'es' // Quasar language
     },
 
     supportIE: true,
@@ -164,6 +164,12 @@ module.exports = function (ctx) {
 
     ssr: {
       pwa: false
+    },
+
+    htmlVariables: {
+      title: 'Gom',
+      description: 'Conecta con tus clientes. Tus pedidos de manera fácil y rápida.',
+      keywords: 'pedidos, clientes, catálogo, comprar, ordenar'
     },
 
     pwa: {
