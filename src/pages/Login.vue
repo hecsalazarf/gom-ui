@@ -100,7 +100,7 @@ export default {
   width: 100%;
   height: 100%;
   color: #fff;
-  background: linear-gradient(-45deg, #EE7752, #E73C7E, #23A6D5, #23D5AB);
+  background: linear-gradient(135deg, rgba(55,71,79,1) 20%, rgba(29,233,182,1) 40%, rgba(0,229,255,1) 60%, rgba(228,116,22,0.9522226201663228) 80%);
   background-size: 400% 400%;
   -webkit-animation: Gradient 7s ease infinite;
   -moz-animation: Gradient 7s ease infinite;

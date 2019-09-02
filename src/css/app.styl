@@ -25,6 +25,17 @@ a
   color: $accent
   text-decoration: none
 
+// Override the action-text color so that it does not inherit from property
+// 'classes' of Quasar bottom sheet
+.q-bottom-sheet__item > div:not(.q-focus-helper)
+  opacity: 0.6
+  color: initial
+
+
+// Change default opacity of quasar loading
+.q-loading:before
+  opacity: 0.8 !important
+
 /*****************************
 ******** Colors **************
 *****************************/

@@ -11,7 +11,8 @@ export default async () => {
   Loading.setDefaults({
     delay: 400,
     sanitize: true,
-    backgroundColor: 'primary',
-    spinner: QSpinnerBars // default spinner
+    backgroundColor: 'white',
+    spinner: QSpinnerBars, // default spinner
+    spinnerColor: 'primary'
   })
 }

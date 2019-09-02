@@ -13,7 +13,7 @@ export const OrderComponentMixin = {
         [OrderStatus.OPEN, {
           label: this.$t('order.status.options.OPEN.label'),
           icon: 'order-open',
-          color: 'cyan-5',
+          color: 'light-blue-7',
           value: OrderStatus.OPEN
         }],
         [OrderStatus.CLOSED, {
@@ -25,7 +25,7 @@ export const OrderComponentMixin = {
         [OrderStatus.IN_PROCESS, {
           label: this.$t('order.status.options.IN_PROCESS.label'),
           icon: 'order-inprocess',
-          color: 'amber-5',
+          color: 'orange-5',
           value: OrderStatus.IN_PROCESS
         }]
       ])

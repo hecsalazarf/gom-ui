@@ -88,7 +88,7 @@ export default {
 
 <style lang="stylus" scoped>
 /deep/ .orders-tab .q-tab__icon, /deep/ .orders-tab .q-tab__label
-  color: $green-12
+  color: $green-13
 /deep/ .customers-tab .q-tab__icon, /deep/ .customers-tab .q-tab__label
-  color: $customers
+  color: $cyan-13
 </style>
