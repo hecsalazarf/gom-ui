@@ -13,16 +13,13 @@
       class="q-gutter-y-md q-gutter-x-xs full-width row justify-center items-center"
       @submit="submit()"
     >
-      <div class="text-body1 col-1 text-left">
-        {{ phoneFirst }}
-      </div>
       <q-input
         v-model="digits"
         class="col"
         input-class="text-h6 text-center h-phone-password"
         color="primary"
         bg-color="white"
-        maxlength="5"
+        maxlength="7"
         type="password"
         :disable="loading"
         rounded
@@ -31,7 +28,7 @@
         items-aligned
         hide-bottom-space
         lazy-rules
-        :rules="[val => !!val || $t('app.rules.required'), val => val.length === 5 || $t('app.rules.fixed_length', { count: 5 })]"
+        :rules="[val => !!val || $t('app.rules.required'), val => val.length === 7 || $t('app.rules.fixed_length', { count: 7 })]"
       />
       <div class="text-body1 col-1 text-right">
         {{ phoneLast }}
@@ -76,7 +73,6 @@ export default {
       loading: false,
       digits: '',
       customerOf: '',
-      phoneFirst: '',
       phoneLast: ''
     }
   },
@@ -93,7 +89,6 @@ export default {
       }).then(res => {
         this.customerOf = res.data.customerOf
         this.phoneLast = res.data.phoneLast
-        this.phoneFirst = res.data.phoneFirst
       }).catch(error => {
         if (error.response && error.response.status === 400) {
           this.$q.notify({ // notify invalid reference
@@ -118,7 +113,7 @@ export default {
       this.login({
         grantType: 'phone',
         username: this.reference,
-        phone: this.phoneFirst.concat(this.digits, this.phoneLast) // concat phone number
+        phone: this.digits.concat(this.phoneLast) // concat phone number
       })
     }, 2000)
   }
