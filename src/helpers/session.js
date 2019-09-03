@@ -72,7 +72,7 @@ async function subscribeToPush () {
     return
   }
   const applicationServerKey = urlB64ToUint8Array(
-    process.env.VAPID_KEY // transform public key into a array buffer
+    process.env.VAPID_PUBLIC_KEY // transform public key into a array buffer
   )
   const options = { applicationServerKey, userVisibleOnly: true }
   try {
