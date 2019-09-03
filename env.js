@@ -17,8 +17,7 @@ const production = {
 }
 
 module.exports = function (ctx) {
-  const conf = ctx.dev ? development : production
-  Object.assign(conf, def) // merge with default configuration
+  const conf = Object.assign({}, def, ctx.dev ? development : production) // merge with default configuration
   for (let [key, value] of Object.entries(conf)) {
     conf[key] = JSON.stringify(value)
   }
