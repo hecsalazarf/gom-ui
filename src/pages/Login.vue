@@ -11,13 +11,10 @@
           class="column items-center q-gutter-y-md"
         >
           <div class="col-3 q-mb-md">
-            <q-avatar
-              size="100px"
-              color="primary"
-              text-color="white"
-            >
-              <img src="statics/app-logo-128x128.png">
-            </q-avatar>
+            <q-icon
+              name="img:statics/icons/icon-192x192.png"
+              size="9em"
+            />
           </div>
           <!-- <div class="col-1">
             <h5>{{ $t('app.label') }}</h5>
