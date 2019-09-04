@@ -136,7 +136,7 @@ export default {
       this.rulesEngine.run({
         status: val,
         isCustomer: this.$can('role', 'customer')
-      }).then(events => {
+      }).then(({ events }) => {
         if (events.findIndex(event => event.type === 'readonly-order') > -1) {
           this.readonly = true // Mark order as readonly
         } else {
