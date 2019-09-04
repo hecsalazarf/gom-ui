@@ -1,6 +1,9 @@
 <template>
   <q-card flat>
+    <!-- Computed style is due to rendering issues on iOS -->
     <q-form
+      :style="$q.platform.is.ios ? { 'max-height': '50vh' } : { }"
+      class="scroll"
       @submit="save()"
       @reset="clear()"
     >
@@ -144,35 +147,6 @@ export default {
     }
   },
   computed: {
-    // itemData () {
-    //   return {
-    //     edges: {
-    //       items: [
-    //         {
-    //           node: {
-    //             code: this.model.code === '' ? undefined : this.model.code,
-    //             quantity: this.model.quantity,
-    //             description: this.model.description,
-    //             provider: this.model.provider === '' ? undefined : this.model.provider,
-    //             edges: {
-    //               pricing: [
-    //                 {
-    //                   node: {
-    //                     amount: this.model.price.amount,
-    //                     currency: this.model.price.currency // default
-    //                   },
-    //                   props: {
-    //                     type: 'GENERAL'
-    //                   }
-    //                 }
-    //               ]
-    //             }
-    //           }
-    //         }
-    //       ]
-    //     }
-    //   }
-    // },
     ...mapGetters(['activeOrder'])
   },
   methods: {

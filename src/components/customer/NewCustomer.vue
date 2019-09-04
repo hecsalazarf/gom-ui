@@ -3,7 +3,10 @@
     class="h-rounded-borders-20"
     flat
   >
+    <!-- Computed style is due to rendering issues on iOS -->
     <q-form
+      :style="$q.platform.is.ios ? { 'max-height': '50vh' } : { }"
+      class="scroll"
       @submit="submit()"
       @reset="$emit('reset')"
     >

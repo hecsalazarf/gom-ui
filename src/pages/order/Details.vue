@@ -20,7 +20,7 @@
           >
             <q-tab
               name="details"
-              :label="$tc('order.label', 2)"
+              :label="$t('order.details')"
             />
             <q-tab
               name="items"
@@ -80,7 +80,8 @@
     <q-dialog
       ref="newItem"
       persistent
-      :position="$q.platform.is.mobile ? 'bottom' : 'standard'"
+      full-width
+      position="top"
       transition-show="slide-up"
       transition-hide="slide-down"
     >

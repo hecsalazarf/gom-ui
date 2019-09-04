@@ -14,7 +14,8 @@
     <q-dialog
       ref="newCustomer"
       persistent
-      :position="$q.platform.is.mobile ? 'bottom' : 'standard'"
+      full-width
+      position="top"
       transition-show="slide-up"
       transition-hide="slide-down"
     >
