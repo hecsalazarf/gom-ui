@@ -58,7 +58,7 @@ export default {
     new: 'Nuevo artículo'
   },
   app: {
-    label: 'GOM',
+    label: 'Gom',
     edit: 'Editar',
     delete: 'Eliminar',
     save: 'Guardar',
@@ -75,7 +75,7 @@ export default {
     no_results: 'Sin resultados',
     to: 'para',
     user_name: 'Usuario',
-    password: 'Password',
+    password: 'Contraseña',
     sign_in: 'Iniciar sesión',
     invalid_reference: 'Referencia inválida',
     customer_welcome: 'Estás intentando acceder al centro de pedidos de',
