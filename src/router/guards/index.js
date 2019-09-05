@@ -3,7 +3,7 @@ const GlobalGuards = {
   beforeEach (to, from, next) {
     const { $q } = this.app
 
-    const accessToken = $q.cookies.get('access-token')
+    const accessToken = $q.cookies.get(process.env.SESSION_TOKEN_COOKIE)
     if (!accessToken && to.name === 'login') {
       next()
     } else if (!accessToken) {

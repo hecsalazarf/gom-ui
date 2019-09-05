@@ -11,8 +11,8 @@ class UserHelper {
   }
 
   get token () {
-    if (!this[TOKEN] && this.cookies.has('access-token')) {
-      const token = this.cookies.get('access-token') // get token from cookie
+    if (!this[TOKEN] && this.cookies.has(process.env.SESSION_TOKEN_COOKIE)) {
+      const token = this.cookies.get(process.env.SESSION_TOKEN_COOKIE) // get token from cookie
       const payload = token.slice(token.indexOf('.') + 1) // get the payload only
       if (process.env.SERVER) {
         /* On SSR decode token using Node buffer */

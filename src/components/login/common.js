@@ -6,13 +6,13 @@ export const LoginMixin = {
     async login (credentials) {
       this.loading = true
       try {
-        if (!this.$q.cookies.has('csrf-token')) {
+        if (!this.$q.cookies.has(process.env.CSRF_TOKEN_COOKIE)) {
           // if there is no csrf-token, request it; otherwise any post
           // method will return a Forbidden error
           await this.$axios.get('auth/ping')
         }
         // log in givern user credentials
-        await this.$axios.post('auth/login', credentials, { headers: { 'X-Csrf-Token': this.$q.cookies.get('csrf-token') } })
+        await this.$axios.post('auth/login', credentials, { headers: { 'X-Csrf-Token': this.$q.cookies.get(process.env.CSRF_TOKEN_COOKIE) } })
         this.$ability.update(this.$user.createAbility().rules) // update CASL ability
         // request notification permission after 4 seconds of being logged id
         // This is not the best UX

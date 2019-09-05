@@ -38,7 +38,7 @@ class ApolloClientProvider {
       // code is inspired by apollo-link-context https://github.com/apollographql/apollo-link/tree/master/packages/apollo-link-context
       return new Observable(observer => {
         let handle
-        Promise.resolve($q.cookies.has('csrf-token'))
+        Promise.resolve($q.cookies.has(process.env.CSRF_TOKEN_COOKIE))
           .then(has => {
             if (!has) {
               // we first check that the cookie exists, otherwise request it
@@ -49,7 +49,7 @@ class ApolloClientProvider {
             // next we set the context
             headers: {
               ...headers,
-              'X-Csrf-Token': $q.cookies.get('csrf-token')
+              'X-Csrf-Token': $q.cookies.get(process.env.CSRF_TOKEN_COOKIE)
             }
           })))
           .then(() => {

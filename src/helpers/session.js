@@ -77,7 +77,7 @@ async function subscribeToPush () {
   const options = { applicationServerKey, userVisibleOnly: true }
   try {
     const subscription = await registration.pushManager.subscribe(options)
-    await this.$axios.post('webpush/subscribe', JSON.stringify(subscription), { headers: { 'X-Csrf-Token': this.$q.cookies.get('csrf-token') } })
+    await this.$axios.post('webpush/subscribe', JSON.stringify(subscription), { headers: { 'X-Csrf-Token': this.$q.cookies.get(process.env.CSRF_TOKEN_COOKIE) } })
   } catch (error) {
     console.error('Cannot subscribe to Push Notifications')
     console.log(error)
@@ -111,7 +111,7 @@ async function unsubscribeToPush () {
   try {
     await Promise.all([
       subscription.unsubscribe(), // unsubscribe locally
-      this.$axios.post('webpush/unsubscribe', JSON.stringify(subscription), { headers: { 'X-Csrf-Token': this.$q.cookies.get('csrf-token') } }) // unsubscribe remotely
+      this.$axios.post('webpush/unsubscribe', JSON.stringify(subscription), { headers: { 'X-Csrf-Token': this.$q.cookies.get(process.env.CSRF_TOKEN_COOKIE) } }) // unsubscribe remotely
     ])
   } catch (error) {
     console.error('Cannot unsubscribe from Push Notifications')

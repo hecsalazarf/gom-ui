@@ -69,7 +69,7 @@ export default {
   created () {
     unsubscribeToPush.call(this) // unsubscribe if there is any subscription
     clearState.call(this) // clear store at log in (Fix #29)
-    this.$q.cookies.remove('csrf-token', { path: '/' }) // clear csrf token to login with a new one (#63)
+    this.$q.cookies.remove(process.env.CSRF_TOKEN_COOKIE, { path: '/' }) // clear csrf token to login with a new one (#63)
     this.renderComponent() // render the commponent depending on the route query
   },
   methods: {
