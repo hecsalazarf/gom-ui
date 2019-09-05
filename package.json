@@ -4,11 +4,13 @@
   "description": "Gom UI prototype",
   "productName": "Gom App",
   "cordovaId": "org.cordova.quasar.app",
-  "author": "Hector Salazar <hecsalazarf@outlook.com>",
+  "author": "Héctor Salazar <hecsalazarf@outlook.com>",
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.vue src",
-    "test": "echo \"No test specified\" && exit 0"
+    "test": "echo \"No test specified\" && exit 0",
+    "build": "npx rimraf dist && npx quasar build -m pwa",
+    "serve:build": "npx quasar serve --history --proxy proxy.conf.js --https --cert certs/localhost+10.pem --key certs/localhost+10-key.pem dist/pwa/"
   },
   "dependencies": {
     "@casl/ability": "^3.2.0",
@@ -33,7 +35,8 @@
     "babel-eslint": "^10.0.3",
     "eslint": "^5.10.0",
     "eslint-loader": "^2.2.1",
-    "eslint-plugin-vue": "^5.2.3"
+    "eslint-plugin-vue": "^5.2.3",
+    "rimraf": "^3.0.0"
   },
   "engines": {
     "node": ">= 8.9.0",
