@@ -20,3 +20,7 @@ yarn-error.log*
 
 # Ignore cert files
 *.pem
+
+# Ignore archive files
+*.tar
+*.tar.gz
