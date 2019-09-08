@@ -180,7 +180,7 @@ module.exports = function (ctx) {
         short_name: 'Gom',
         description: 'Make your orders with the best app',
         display: 'standalone',
-        orientation: 'portrait',
+        // orientation: 'portrait',
         background_color: '#ffffff',
         theme_color: '#37474f',
         start_url: '/',
