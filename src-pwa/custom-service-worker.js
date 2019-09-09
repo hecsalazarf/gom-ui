@@ -131,11 +131,11 @@
       let urlToOpen = null // We make the URL absolute so we can match it against window URL's later on.
       if (data.type && data.type === this.ORDER) {
         // create the url to open the specified order
-        if (data.counter) {
-          // a counter exists, it is a merged notification
-          urlToOpen = this.adapter.createUrl('/orders/') // new URL('/orders/', this.adapter.origin).href
+        if (data.grouping.length > 1) {
+          // a grouping exists, it is a merged notification
+          urlToOpen = this.adapter.createUrl('/orders/')
         } else {
-          urlToOpen = this.adapter.createUrl(`/orders/id/${data.uid}`) // new URL('/orders/id/' + data.uid, this.adapter.origin).href
+          urlToOpen = this.adapter.createUrl(`/orders/id/${data.uid}`)
         }
       } else {
         // fallback to open the main path
