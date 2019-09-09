@@ -23,69 +23,73 @@
           :rules="[ val => !!val || $t('app.rules.required'), val => val.length <= 40 || $t('app.rules.max_length', { count: 40 }) ]"
           hide-bottom-space
         />
-        <!-- CASL permission. ONLY SELLER ROLE -->
-        <can
-          do="role"
-          on="seller"
+        <!--
+          When no-mutations prop is enabled, editing options will be displayed.
+          No matter the role (Fix #69)
+        -->
+        <div
+          v-if="$can('role', 'seller') | noMutations"
+          class="col"
         >
-          <div class="col">
-            <div
-              v-if="!readonly"
-              class="row justify-end full-width"
+          <!--
+          Unless it is readonly
+          -->
+          <div
+            v-if="!readonly"
+            class="row justify-end full-width"
+          >
+            <q-btn
+              v-show="!editMode"
+              icon="edit"
+              color="accent"
+              size="0.75em"
+              flat
+              dense
+              round
+              @click.stop="editMode = true"
             >
-              <q-btn
-                v-show="!editMode"
-                icon="edit"
-                color="accent"
-                size="0.75em"
-                flat
-                dense
-                round
-                @click.stop="editMode = true"
-              >
-                <q-tooltip>{{ $t('app.edit') }}</q-tooltip>
-              </q-btn>
-              <q-btn
-                v-if="!(noRemovable || editMode)"
-                class="q-ml-md"
-                icon="delete"
-                color="accent"
-                size="0.75em"
-                flat
-                dense
-                round
-                @click.stop="confirmDelete()"
-              >
-                <q-tooltip>{{ $t('app.delete') }}</q-tooltip>
-              </q-btn>
-              <q-btn
-                v-if="editMode"
-                icon="clear"
-                color="red"
-                size="0.75em"
-                flat
-                dense
-                round
-                type="reset"
-              >
-                <q-tooltip>{{ $t('app.abort') }}</q-tooltip>
-              </q-btn>
-              <q-btn
-                v-if="editMode"
-                class="q-ml-md"
-                icon="done"
-                color="teal"
-                size="0.75em"
-                flat
-                dense
-                round
-                type="submit"
-              >
-                <q-tooltip>{{ $t('app.save') }}</q-tooltip>
-              </q-btn>
-            </div>
+              <q-tooltip>{{ $t('app.edit') }}</q-tooltip>
+            </q-btn>
+            <q-btn
+              v-if="!(noRemovable || editMode)"
+              class="q-ml-md"
+              icon="delete"
+              color="accent"
+              size="0.75em"
+              flat
+              dense
+              round
+              @click.stop="confirmDelete()"
+            >
+              <q-tooltip>{{ $t('app.delete') }}</q-tooltip>
+            </q-btn>
+            <q-btn
+              v-if="editMode"
+              icon="clear"
+              color="red"
+              size="0.75em"
+              flat
+              dense
+              round
+              type="reset"
+            >
+              <q-tooltip>{{ $t('app.abort') }}</q-tooltip>
+            </q-btn>
+            <q-btn
+              v-if="editMode"
+              class="q-ml-md"
+              icon="done"
+              color="teal"
+              size="0.75em"
+              flat
+              dense
+              round
+              type="submit"
+            >
+              <q-tooltip>{{ $t('app.save') }}</q-tooltip>
+            </q-btn>
           </div>
-        </can>
+        </div>
         <q-input
           v-model="code"
           class="col-7"

@@ -85,6 +85,7 @@
         </q-step>
 
         <q-step
+          class="q-mb-xs"
           :name="3"
           :title="$t('app.confirm')"
           :caption="$t('order.step3_desc')"
