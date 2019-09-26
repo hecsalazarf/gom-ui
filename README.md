@@ -4,6 +4,8 @@
 Gom (Graph Order Management) is a small, yet powerful solution, built on top of [Quasar Framework](https://quasar.dev), for managing orders . Our target business is direct selling. However, it might apply to other scenarios.
 
 ## Prerequisites
+[Gom API](https://github.com/hecsalazarf/gom-api) deployment
+
 Node.js >= 8.9.0
 
 npm >= 5.6.0
@@ -39,7 +41,7 @@ location / {
 ```
 
 ### Proxy
-Gom communicates with its backend through a proxy. All endpoints under the `/api/` route are proxied to the Gom API, including web socket connections.
+Gom communicates with its backend through a proxy. All endpoints under the `/api/` route are proxied to the [Gom API](https://github.com/hecsalazarf/gom-api), including web socket connections.
 
 On development environments, Quasar utilizes [http-proxy-middleware](https://github.com/chimurai/http-proxy-middleware) which is configurable in `quasar.conf.js`. 
 
