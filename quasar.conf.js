@@ -133,11 +133,13 @@ module.exports = function (ctx) {
     },
 
     devServer: {
-      https: {
+      https: ctx.dev ? {
+        // Cert files are for dev environments only, since they cause build
+        // errors as they are not part of the version-control repository.
         key: fs.readFileSync('./certs/localhost+10-key.pem'),
         cert: fs.readFileSync('./certs/localhost+10.pem'),
         ca: fs.readFileSync('./certs/rootCA.pem')
-      },
+      } : false,
       // port: 8080,
       open: false, // opens browser window automatically
       proxy: {
