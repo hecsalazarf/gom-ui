@@ -23,12 +23,12 @@ pipeline {
       // * SSH username-with-private-key (node1-ssh-private-key) credential to connect to the remote server
       // * SSH user-with-password (node1-ssh-password) credential for sudo operations
       environment {
-        REMOTE_HOST = 'hecsalazarf.sytes.net' // remote host
-        REMOTE_TEMP_DIR = '/home/hector/gom-ui/' // temporary directory on remote server to put files
-        REMOTE_WEB_DIR = '/var/www/gom-ui/' // web directory on remove server
-        SSH = credentials('node1-ssh-password') // password credential
-        SSH_OPTIONS = '-o StrictHostKeyChecking=no -p 6330' // ssh options
-        CRED_PRIVATE_KEY = 'node1-ssh-private-key' // private key credential
+        REMOTE_HOST = 'hecsalazarf.sytes.net' // Remote host
+        REMOTE_TEMP_DIR = '/home/hector/gom-ui/' // Temporary directory on remote server to put files
+        REMOTE_WEB_DIR = '/var/www/gom-ui/' // Web directory on remove server
+        SSH = credentials('node1-ssh-password') // Password credential
+        SSH_OPTIONS = '-o StrictHostKeyChecking=no -p 6330' // SSH options
+        CRED_PRIVATE_KEY = 'node1-ssh-private-key' // Private key credential
       }
       steps {
         sshagent (credentials: [env.CRED_PRIVATE_KEY]) {
