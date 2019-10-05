@@ -11,6 +11,7 @@
         <q-bar class="bg-white">
           <!-- Fix (#26) -->
           <h-filter-input
+            ref="listFilter"
             :disable="selectedOrders.length > 0"
             @filter="filter($event)"
           />
@@ -117,6 +118,7 @@ export default {
         updateQuery: this.updateQuery
       })
         .then(res => {
+          this.$refs.listFilter.reset()
           this.fetchMoreFlag = false
         })
         .catch(() => {

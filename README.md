@@ -4,6 +4,8 @@
 Gom (Graph Order Management) is a small, yet powerful solution, built on top of [Quasar Framework](https://quasar.dev), for managing orders . Our target business is direct selling. However, it might apply to other scenarios.
 
 ## Prerequisites
+[Gom API](https://github.com/hecsalazarf/gom-api) deployment
+
 Node.js >= 8.9.0
 
 npm >= 5.6.0
@@ -39,7 +41,7 @@ location / {
 ```
 
 ### Proxy
-Gom communicates with its backend through a proxy. All endpoints under the `/api/` route are proxied to the Gom API, including web socket connections.
+Gom communicates with its backend through a proxy. All endpoints under the `/api/` route are proxied to the [Gom API](https://github.com/hecsalazarf/gom-api), including web socket connections.
 
 On development environments, Quasar utilizes [http-proxy-middleware](https://github.com/chimurai/http-proxy-middleware) which is configurable in `quasar.conf.js`. 
 
@@ -94,6 +96,19 @@ Also observe that you can have Quasar [serve](https://quasar.dev/quasar-cli/cli-
 ```bash
 $ npm run serve:build
 ```
+
+### Configuration variables
+Configuration is done by adding variables to the `process.env` object. They are located in `env.js` and grouped in three categories: def (default), development and production. During the build process, we merge them depending on the target build.
+
+
+* CHROME_V: Minimum required version of Chrome.
+* SAFARI_V: Minimum required version of Safari.
+* FIREFOX_V: Minimum required version of Firefox.
+* CSRF_TOKEN_COOKIE: Cookie name for the CSRF token.
+* SESSION_TOKEN_COOKIE: Cookie name for the session token.
+* VAPID_PUBLIC_KEY: Public key to verify push notifications according to the VAPID specification.
+* WS_ENDPOINT: Web socket endpoint.
+
 
 ## Versioning
 

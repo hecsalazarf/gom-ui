@@ -33,10 +33,8 @@
             <q-item-section avatar>
               <q-toggle
                 v-model="statusFilters"
-                val="OPEN"
-                checked-icon="input"
-                color="cyan-5"
-                unchecked-icon="clear"
+                :val="status.OPEN"
+                :color="getStatusProps(status.OPEN).color"
               />
             </q-item-section>
           </q-item>
@@ -47,10 +45,8 @@
             <q-item-section avatar>
               <q-toggle
                 v-model="statusFilters"
-                val="IN_PROCESS"
-                checked-icon="input"
-                color="amber-5"
-                unchecked-icon="clear"
+                :val="status.IN_PROCESS"
+                :color="getStatusProps(status.IN_PROCESS).color"
               />
             </q-item-section>
           </q-item>
@@ -61,10 +57,8 @@
             <q-item-section avatar>
               <q-toggle
                 v-model="statusFilters"
-                val="WON"
-                checked-icon="check"
-                color="positive"
-                unchecked-icon="clear"
+                :val="status.WON"
+                :color="getStatusProps(status.WON).color"
               />
             </q-item-section>
           </q-item>
@@ -75,10 +69,8 @@
             <q-item-section avatar>
               <q-toggle
                 v-model="statusFilters"
-                val="CLOSED"
-                checked-icon="cancel_presentation"
-                color="negative"
-                unchecked-icon="clear"
+                :val="status.CLOSED"
+                :color="getStatusProps(status.CLOSED).color"
               />
             </q-item-section>
           </q-item>
@@ -89,8 +81,12 @@
 </template>
 
 <script>
+import { OrderStatus } from 'src/constants/order'
+import { OrderComponentMixin } from './common'
+
 export default {
   name: 'OrderFilterInput',
+  mixins: [ OrderComponentMixin ],
   props: {
     disable: {
       type: Boolean,
@@ -110,6 +106,9 @@ export default {
     },
     isDisabled () {
       return this.disable
+    },
+    status () {
+      return OrderStatus
     }
   },
   watch: {
@@ -146,6 +145,10 @@ export default {
       } else {
         this.filterBy.delete(key)
       }
+    },
+    reset () {
+      this.statusFilters = []
+      this.termFilter = ''
     }
   }
 }

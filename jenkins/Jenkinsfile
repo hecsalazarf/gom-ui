@@ -1,0 +1,45 @@
+pipeline {
+  // Defining agent none at the top-level of the Pipeline ensures that an
+  // Executor will not be assigned unnecessarily. Using agent none also forces
+  // each stage section to contain its own agent section.
+  agent {
+    docker {
+      image 'hecsalazarf/gomui-agent:0.1'
+    }
+  }
+  stages {
+    stage('Build') {
+      steps {
+        sh 'npm install'
+        echo 'Dependencies installed'
+        sh 'npm run build'
+        echo 'Build completed'
+      }
+    }
+
+    stage('Deploy') {
+      // IMPORTANT: Deployment requires the following Jenkins configurations:
+      // * SSH Agent Plugin (https://jenkins.io/doc/pipeline/steps/ssh-agent/)
+      // * SSH username-with-private-key (node1-ssh-private-key) credential to connect to the remote server
+      // * SSH user-with-password (node1-ssh-password) credential for sudo operations
+      when {
+        branch 'master'
+      }
+      
+      environment {
+        REMOTE_HOST = 'hecsalazarf.sytes.net' // Remote host
+        REMOTE_TEMP_DIR = '/home/hector/gom-ui/' // Temporary directory on remote server to put files
+        REMOTE_WEB_DIR = '/var/www/gom-ui/' // Web directory on remove server
+        SSH = credentials('node1-ssh-password') // Password credential
+        SSH_OPTIONS = '-o StrictHostKeyChecking=no -p 6330' // SSH options
+        CRED_PRIVATE_KEY = 'node1-ssh-private-key' // Private key credential
+      }
+      steps {
+        sshagent (credentials: [env.CRED_PRIVATE_KEY]) {
+          sh 'jenkins/deploy.sh'
+          echo 'Deploy completed'
+        }
+      }
+    }
+  }
+}
