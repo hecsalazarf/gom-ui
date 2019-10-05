@@ -12,5 +12,4 @@ echo '--> Sending assets'
 # Send files and delete extraneous files from dest dirs
 rsync --delete -avzhe "ssh ${SSH_OPTIONS}" dist/ $SSH_USR@$REMOTE_HOST:$REMOTE_TEMP_DIR
 echo "--> Copying assets to web server directory"
-ssh $SSH_OPTIONS -l $SSH_USR $REMOTE_HOST "echo $SSH_PSW | sudo -S rm -rf $REMOTE_WEB_DIR*"
-ssh $SSH_OPTIONS -l $SSH_USR $REMOTE_HOST "echo $SSH_PSW | sudo -S cp -r $REMOTE_TEMP_DIR. $REMOTE_WEB_DIR"
+ssh $SSH_OPTIONS -l $SSH_USR $REMOTE_HOST "echo $SSH_PSW | sudo -S rsync --delete -ah $REMOTE_TEMP_DIR $REMOTE_WEB_DIR"
