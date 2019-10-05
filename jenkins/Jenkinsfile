@@ -22,6 +22,10 @@ pipeline {
       // * SSH Agent Plugin (https://jenkins.io/doc/pipeline/steps/ssh-agent/)
       // * SSH username-with-private-key (node1-ssh-private-key) credential to connect to the remote server
       // * SSH user-with-password (node1-ssh-password) credential for sudo operations
+      when {
+        branch 'master'
+      }
+      
       environment {
         REMOTE_HOST = 'hecsalazarf.sytes.net' // Remote host
         REMOTE_TEMP_DIR = '/home/hector/gom-ui/' // Temporary directory on remote server to put files
