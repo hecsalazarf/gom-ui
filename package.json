@@ -7,10 +7,11 @@
   "author": "Héctor Salazar <hecsalazarf@outlook.com>",
   "private": true,
   "scripts": {
+    "dev": "npx quasar dev -m pwa",
     "lint": "eslint --ext .js,.vue src",
     "test": "echo \"No test specified\" && exit 0",
     "build": "npx rimraf dist && npx quasar build -m pwa",
-    "serve:build": "npx quasar serve --history --proxy proxy.conf.js --https --cert certs/localhost+10.pem --key certs/localhost+10-key.pem dist/pwa/"
+    "serve:build": "./node_modules/@quasar/cli/bin/quasar serve --history --proxy proxy.conf.js --https --cert certs/localhost+10.pem --key certs/localhost+10-key.pem dist/pwa/"
   },
   "dependencies": {
     "@casl/ability": "^3.2.0",
