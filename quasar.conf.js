@@ -12,7 +12,8 @@ module.exports = function (ctx) {
       'addressbar-color',
       'vue-apollo',
       'auth',
-      'defaults'
+      'defaults',
+      { server: false, path: 'updates' }
     ],
 
     css: [
