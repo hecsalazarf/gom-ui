@@ -16,9 +16,15 @@
           flat
           dense
           :label="$t('app.update')"
-          @click="$emit('ok', true)"
-        />
+          :loading="updating"
+          @click="update"
+        >
+          <template v-slot:loading>
+            <q-spinner-bars />
+          </template>
+        </q-btn>
         <q-btn
+          v-if="!updating"
           flat
           dense
           :label="$t('app.abort')"
@@ -36,11 +42,17 @@
 export default {
   name: 'HUpdateFound',
   data () {
-    return {}
+    return {
+      updating: false
+    }
   },
   methods: {
     show () {
       this.$refs.dialog.show()
+    },
+    update (event) {
+      this.updating = true
+      this.$emit('ok')
     }
   }
 }
