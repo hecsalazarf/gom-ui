@@ -28,8 +28,10 @@ register(process.env.SERVICE_WORKER_FILE, {
   },
 
   updated (registration) {
+    if (registration.waiting) {
+      window.dispatchEvent(new CustomEvent('gom-update', { detail: registration.waiting }))
+    }
     console.log('New content is available; please refresh.')
-    window.dispatchEvent(new CustomEvent('gomupdatefound', { detail: registration }))
   },
 
   offline () {
