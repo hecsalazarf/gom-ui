@@ -7,6 +7,7 @@ module.exports = function (ctx) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     boot: [
+      { server: false, path: 'ga' },
       'i18n',
       'axios',
       'addressbar-color',
