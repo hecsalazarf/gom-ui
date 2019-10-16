@@ -81,6 +81,7 @@
 <script>
 import CreateCustomer from 'src/graphql/mutations/CreateCustomer.gql'
 import UserCustomers from 'src/graphql/queries/UserCustomers.gql'
+import { Analytics } from 'src/constants/customer'
 
 export default {
   name: 'HNewCustomer',
@@ -232,6 +233,11 @@ export default {
         update: this.updateCache
       }).then(res => {
         this.$q.loading.hide()
+        // Seng GA event
+        this.$ga.event(Analytics.ACTION_CREATE, {
+          event_category: Analytics.CATEGORY,
+          event_label: this.$user.id
+        })
         this.$router.push({ name: 'customerDetails', params: { id: res.data.createBp.uid } })
       })
     }

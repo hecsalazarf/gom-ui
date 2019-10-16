@@ -158,11 +158,13 @@
 </template>
 
 <script>
-import CreateOrder from 'src/graphql/mutations/CreateOrder.gql'
-import UserOrders from 'src/graphql/queries/UserOrders.gql'
 import { throttle } from 'quasar'
 import { createNamespacedHelpers } from 'vuex'
 import { OrderMixin } from './common'
+import CreateOrder from 'src/graphql/mutations/CreateOrder.gql'
+import UserOrders from 'src/graphql/queries/UserOrders.gql'
+import { Analytics } from 'src/constants/order'
+
 const { mapActions } = createNamespacedHelpers('GomState')
 
 export default {
@@ -290,6 +292,11 @@ export default {
       }).then(res => {
         this.submitted = true
         this.$q.loading.hide()
+        // Seng GA event
+        this.$ga.event(Analytics.ACTION_CREATE, {
+          event_category: Analytics.CATEGORY,
+          event_label: this.$user.id
+        })
         this.$router.replace({ name: 'orderDetails', params: { id: res.data.createOrder.uid } })
       }).catch(error => error) // Error is handled globally, supress Uncaught (in promise)
     }, 3000),
