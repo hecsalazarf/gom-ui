@@ -33,10 +33,18 @@ class GAnalytics {
   }
 
   onPageView (to) {
-    this.gtag('config', this.trackingId, {
+    this.config({
       page_path: `/${to.name}`,
       send_page_view: true
     })
+  }
+
+  config (options) {
+    this.gtag('config', this.trackingId, options)
+  }
+
+  event (name, params) {
+    this.gtag('event', name, params)
   }
 }
 
