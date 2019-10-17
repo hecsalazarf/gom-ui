@@ -22,7 +22,11 @@ class GAnalytics {
   }
 
   async init () {
-    await this.loadScript()
+    try {
+      await this.loadScript()
+    } catch (error) {
+      console.warn('gtag.js cannot be loaded. Perhaps blocked by your Ad Blocker')
+    }
     this.scope.dataLayer = this.scope.dataLayer || []
     this.gtag('js', new Date())
     this.gtag('config', this.trackingId, { 'send_page_view': false })
