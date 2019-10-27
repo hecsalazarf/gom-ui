@@ -73,7 +73,7 @@ export default {
     delete_confirm: 'Quieres eliminar a {object}',
     go_back: 'Volver',
     see_more: 'Ver más',
-    filter_by_status: 'Filtrar por status',
+    filter_by_status: 'Filtrar por estado',
     no_results: 'Sin resultados',
     to: 'para',
     user_name: 'Usuario',
