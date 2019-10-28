@@ -10,6 +10,7 @@
       clearable
       clear-icon="clear"
       :disable="isDisabled"
+      :aria-label="$t('app.search')"
     />
     <q-btn
       :disable="isDisabled"
@@ -18,6 +19,7 @@
       :outline="activeFilters"
       icon="filter_list"
       color="primary"
+      :aria-label="$t('app.filter_by_status')"
     >
       <q-menu>
         <q-list dense>

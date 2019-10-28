@@ -74,6 +74,7 @@
           size="1.3em"
           dense
           flat
+          :aria-label="$t('customer.make_call')"
           :type="editMode || phone === '' ? '' : 'a'"
           :href="`tel:${phone}`"
           :disable="editMode || phone === ''"
@@ -86,6 +87,7 @@
           size="1.3em"
           dense
           flat
+          :aria-label="$t('customer.send_email')"
           :type="editMode || email === '' ? '' : 'a'"
           :href="`mailto:${email}`"
           :disable="editMode || email === ''"
@@ -101,6 +103,7 @@
           flat
           icon="edit"
           color="accent"
+          :aria-label="$t('app.edit')"
           @click="editMode = !editMode"
         >
           <q-tooltip>{{ $t('app.edit') }}</q-tooltip>

@@ -22,6 +22,7 @@ export default {
     step1_desc: 'Agrega los artículos a tu pedido',
     step2_desc: 'Agrega una descripción',
     step3_desc: 'Confirma y envía tu pedido',
+    submit: 'Enviar pedido',
     rules: {
       too_much: 'Ups, demasiado',
       minimum: 'Debe haber al menos {count}'
@@ -63,11 +64,13 @@ export default {
     delete: 'Eliminar',
     save: 'Guardar',
     abort: 'Cancelar',
+    search: 'Buscar',
     update: 'Actualizar',
     confirm: 'Confirmación',
     yes: 'Sí',
     no: 'No',
     update_found: 'Una versión más reciente de la aplicación está disponible.',
+    options_menu: 'Menú de opciones',
     sign_out: 'Cerrar sesión',
     continue_question: '¿Continuar?',
     delete_confirm: 'Quieres eliminar a {object}',
@@ -88,6 +91,8 @@ export default {
     to_be_confirmed: 'Por confirmar',
     minute: ' | {n} minuto | {n} minutos',
     for_better_ux: 'Para una mejor experiencia utiliza',
+    next_step: 'Paso siguiente',
+    prev_step: 'Paso anterior',
     rules: {
       required: 'Campo requerido',
       max_length: 'Máximo {count} caracteres',

@@ -114,6 +114,7 @@
               dense
               round
               flat
+              :aria-label="$t('app.prev_step')"
               @click="$refs.stepper.previous()"
             />
             <q-btn
@@ -124,6 +125,7 @@
               dense
               round
               flat
+              :aria-label="$t('app.next_step')"
               @click="nextStep()"
             />
             <q-btn
@@ -134,6 +136,7 @@
               dense
               round
               flat
+              :aria-label="$t('order.submit')"
               @click="submit()"
             />
           </q-stepper-navigation>

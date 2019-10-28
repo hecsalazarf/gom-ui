@@ -60,6 +60,7 @@
           flat
           round
           type="reset"
+          :aria-label="$t('app.abort')"
         >
           <q-tooltip>{{ $t('app.abort') }}</q-tooltip>
         </q-btn>
@@ -70,6 +71,7 @@
           flat
           round
           type="submit"
+          :aria-label="$t('app.save')"
         >
           <q-tooltip>{{ $t('app.save') }}</q-tooltip>
         </q-btn>

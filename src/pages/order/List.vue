@@ -58,6 +58,7 @@
         icon="add_shopping_cart"
         class="shadow-7"
         :to="{ name: 'newOrder' }"
+        :aria-label="$t('order.new')"
       />
     </q-page-sticky>
   </q-page>

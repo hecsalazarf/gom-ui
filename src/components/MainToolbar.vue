@@ -3,6 +3,7 @@
     <q-icon
       name="img:statics/icons/icon-192x192.png"
       size="2.6em"
+      :aria-label="$t('app.label')"
     />
     <q-toolbar-title class="text-blue-grey-9">
       {{ this.$t('app.label') }}
@@ -13,6 +14,7 @@
       dense
       icon="more_vert"
       color="primary"
+      :aria-label="$t('app.options_menu')"
     >
       <q-menu>
         <q-list>

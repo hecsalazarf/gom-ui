@@ -4,6 +4,7 @@
       class="q-mr-sm"
       icon="arrow_back_ios"
       color="primary"
+      :aria-label="$t('app.go_back')"
       flat
       dense
       @click="$router.replace({ name: 'customers' })"
@@ -20,6 +21,7 @@
       round
       color="primary"
       icon="more_vert"
+      :aria-label="$t('app.options_menu')"
     >
       <q-menu>
         <q-list>

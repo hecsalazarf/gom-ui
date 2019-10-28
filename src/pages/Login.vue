@@ -14,6 +14,7 @@
             <q-icon
               name="img:statics/icons/icon-192x192.png"
               size="9em"
+              :alt="$t('app.label')"
             />
           </div>
           <!-- <div class="col-1">
