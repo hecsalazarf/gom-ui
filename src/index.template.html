@@ -8,7 +8,7 @@
     <meta name="keywords" content="<%= htmlWebpackPlugin.options.keywords %>">
     <meta name="format-detection" content="telephone=no">
     <meta name="msapplication-tap-highlight" content="no">
-    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width<% if (htmlWebpackPlugin.options.ctx.mode.cordova) { %>, viewport-fit=cover<% } %>">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=2, minimum-scale=1, width=device-width<% if (htmlWebpackPlugin.options.ctx.mode.cordova || htmlWebpackPlugin.options.ctx.mode.capacitor) { %>, viewport-fit=cover<% } %>">
 
     <link rel="icon" type="image/png" href="statics/icons/icon-128x128.png">
     <link rel="icon" type="image/png" sizes="16x16" href="statics/icons/favicon-16x16.png">
@@ -17,6 +17,10 @@
     <link rel="icon" type="image/ico" href="statics/icons/favicon.ico">
   </head>
   <body>
+    <noscript>
+      <!-- No Javascript enabled fallback -->  
+      <embed type="text/html" src="statics/nojs.html" style="width: 100%; height: 99vh;"/>
+    </noscript>
     <!-- DO NOT touch the following DIV -->
     <div id="q-app"></div>
   </body>

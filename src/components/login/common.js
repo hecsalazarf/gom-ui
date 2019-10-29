@@ -13,9 +13,12 @@ export const LoginMixin = {
         }
         // log in givern user credentials
         await this.$axios.post('auth/login', credentials, { headers: { 'X-Csrf-Token': this.$q.cookies.get(process.env.CSRF_TOKEN_COOKIE) } })
-        this.$ability.update(this.$user.createAbility().rules) // update CASL ability
+        // update CASL ability
+        this.$ability.update(this.$user.createAbility().rules)
+        // set user ID with gtag.js
+        this.$ga.config({ user_id: this.$user.id })
+        this.$ga.event('login', { method: 'Auth0' })
         // request notification permission after 4 seconds of being logged id
-        // This is not the best UX
         setTimeout(() => requestNotificationPermission.call(this), 4000) // TODO implement a better approach
         this.loading = false
         this.$router.replace({ name: 'home' }) // once logged in, go to home

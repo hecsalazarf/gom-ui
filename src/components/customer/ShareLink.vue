@@ -36,6 +36,7 @@
             flat
             dense
             round
+            :aria-label="$t('customer.share_link_help')"
             @click="showHelp = !showHelp"
           />
           <q-btn
@@ -44,6 +45,7 @@
             dense
             flat
             color="accent"
+            :aria-label="$t('app.share')"
             @click="show()"
           >
             <q-tooltip>

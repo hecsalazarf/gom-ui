@@ -17,6 +17,8 @@ register(process.env.SERVICE_WORKER_FILE, {
 
   registered (registration) {
     console.log('Service worker has been registered.')
+    // Check for updates. Only on iOS
+    window.dispatchEvent(new CustomEvent('updateCheck', { detail: registration }))
   },
 
   cached (registration) {
@@ -28,6 +30,9 @@ register(process.env.SERVICE_WORKER_FILE, {
   },
 
   updated (registration) {
+    if (registration.waiting) {
+      window.dispatchEvent(new CustomEvent('updateFound', { detail: registration.waiting }))
+    }
     console.log('New content is available; please refresh.')
   },
 

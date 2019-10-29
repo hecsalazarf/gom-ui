@@ -7,6 +7,7 @@
       color="primary"
       flat
       dense
+      :aria-label="$t('app.go_back')"
       @click="$router.replace({ name: 'home' })"
     />
     <div

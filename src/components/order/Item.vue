@@ -46,6 +46,7 @@
               flat
               dense
               round
+              :aria-label="$t('app.edit')"
               @click.stop="editMode = true"
             >
               <q-tooltip>{{ $t('app.edit') }}</q-tooltip>
@@ -59,6 +60,7 @@
               flat
               dense
               round
+              :aria-label="$t('app.delete')"
               @click.stop="confirmDelete()"
             >
               <q-tooltip>{{ $t('app.delete') }}</q-tooltip>
@@ -72,6 +74,7 @@
               dense
               round
               type="reset"
+              :aria-label="$t('app.abort')"
             >
               <q-tooltip>{{ $t('app.abort') }}</q-tooltip>
             </q-btn>
@@ -85,6 +88,7 @@
               dense
               round
               type="submit"
+              :aria-label="$t('app.save')"
             >
               <q-tooltip>{{ $t('app.save') }}</q-tooltip>
             </q-btn>

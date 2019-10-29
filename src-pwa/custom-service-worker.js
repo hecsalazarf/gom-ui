@@ -9,9 +9,23 @@
       this.workbox = workbox
       this.cacheOptions = options
       this.workbox.core.setCacheNameDetails(this.cacheOptions)
-      this.workbox.core.skipWaiting() // instructs the latest service worker to activate as soon as it enters the waiting phase
-      this.workbox.core.clientsClaim() // instructs the latest service worker to take control of all clients as soon as it's activated
+      this.scope = scope
       this.workbox.precaching.precacheAndRoute(scope.__precacheManifest || [])
+      this.scope.addEventListener('message', event => this.onMessage(event))
+      this.scope.addEventListener('activate', event => this.onActivate(event))
+    }
+
+    onMessage (event) {
+      if (event.data && event.data.type === 'SKIP_WAITING') {
+        // instructs the latest service worker to activate as soon as it enters the waiting phase
+        this.scope.skipWaiting()
+        // event.ports[0].postMessage('Message back from SW')
+      }
+    }
+
+    onActivate (event) {
+      // instructs the latest service worker to take control of all clients as soon as it's activated
+      event.waitUntil(this.scope.clients.claim())
     }
   }
 

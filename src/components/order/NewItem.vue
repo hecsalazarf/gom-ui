@@ -102,8 +102,9 @@
           color="red"
           icon="clear"
           type="reset"
+          :aria-label="$t('app.abort')"
         >
-          <q-tooltip>Cancelar</q-tooltip>
+          <q-tooltip>{{ $t('app.abort') }}</q-tooltip>
         </q-btn>
         <q-btn
           flat
@@ -111,8 +112,9 @@
           color="teal"
           icon="done"
           type="submit"
+          :aria-label="$t('app.save')"
         >
-          <q-tooltip>Guardar</q-tooltip>
+          <q-tooltip>{{ $t('app.save') }}</q-tooltip>
         </q-btn>
       </q-card-actions>
     </q-form>

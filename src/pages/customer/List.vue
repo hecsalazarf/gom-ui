@@ -44,6 +44,7 @@
           color="accent"
           icon="person_add"
           class="shadow-7"
+          :aria-label="$t('customer.new')"
           @click="$refs.newCustomer.show()"
         />
       </q-page-sticky>
