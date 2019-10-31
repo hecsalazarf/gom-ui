@@ -11,7 +11,7 @@ export const LoginMixin = {
           // method will return a Forbidden error
           await this.$axios.get('auth/ping')
         }
-        // log in givern user credentials
+        // log in given user credentials
         await this.$axios.post('auth/login', credentials, { headers: { 'X-Csrf-Token': this.$q.cookies.get(process.env.CSRF_TOKEN_COOKIE) } })
         // update CASL ability
         this.$ability.update(this.$user.createAbility().rules)
@@ -37,7 +37,7 @@ export const LoginMixin = {
             message: `${this.$t('notifications.error.too_many_requests')} ${this.$tc('app.minute', retryAfter, { n: retryAfter })}`,
             icon: 'report_problem' })
         } else {
-          // any other erriror, display a generic error
+          // any other error, display a generic error
           this.$q.notify({ color: 'negative', message: this.$t('notifications.error.signin_failed'), icon: 'report_problem' })
           console.error(error)
         }
