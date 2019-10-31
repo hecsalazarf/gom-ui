@@ -1,9 +1,9 @@
 query OrderPag ($where: OrderWhereInput, $orderBy: OrderOrderByInput, $first: Int, $skip: Int) {
   # Since these queries are cached by both the initial
-    # query and their parameters, a problem arises when later
-    # retrieving or updating paginated queries in the cache.
-    # To solve this Apollo Client suggests @connection directive to specify
-    # a custom store key for results. See more https://www.apollographql.com/docs/react/advanced/caching/
+  # query and their parameters, a problem arises when later
+  # retrieving or updating paginated queries in the cache.
+  # To solve this Apollo Client suggests @connection directive to specify
+  # a custom store key for results. See more https://www.apollographql.com/docs/react/data/pagination/#the-connection-directive
   ordersConnection(where: $where, orderBy: $orderBy, first: $first, skip: $skip) @connection(key: "orders", filter: ["where"]) {
     pageInfo {
       hasNextPage
