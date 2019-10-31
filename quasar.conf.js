@@ -1,5 +1,6 @@
 // Configuration for your app
 const fs = require('fs')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const env = require('./env')
 
 module.exports = function (ctx) {
@@ -131,6 +132,26 @@ module.exports = function (ctx) {
           exclude: /node_modules/,
           loader: 'graphql-tag/loader'
         })
+      },
+      chainWebpack (chain) {
+        chain.plugin('html-webpack2')
+          .use(HtmlWebpackPlugin, [{
+            title: 'Gom nojs fallback',
+            filename: 'nojs.html',
+            template: 'src/nojs.template.html',
+            minify: {
+              collapseWhitespace: true,
+              removeComments: true,
+              removeRedundantAttributes: true,
+              removeScriptTypeAttributes: true,
+              removeStyleLinkTypeAttributes: true,
+              useShortDoctype: true
+            },
+            chunksSortMode: 'none',
+            inject: true,
+            cache: true
+          }])
+          .after('html-webpack')
       }
     },
 
