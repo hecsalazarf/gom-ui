@@ -57,7 +57,7 @@ export default {
 </script>
 
 <style scoped lang="stylus">
- /deep/ .q-slide-item__content
+ /deep/ .q-slide-item
     background: transparent //overrides default white color
 
   /deep/ .q-slide-item__right
