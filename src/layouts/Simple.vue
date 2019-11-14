@@ -10,6 +10,6 @@
 
 <script>
 export default {
-  // name: 'LayoutName',
+  name: 'SimpleLayout'
 }
 </script>

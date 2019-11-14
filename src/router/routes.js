@@ -6,10 +6,10 @@ const routes = [
     path: '/',
     name: 'home',
     redirect: { name: 'orders' },
-    component: () => import('layouts/Gom.vue'),
+    component: () => import('layouts/Home.vue'),
     children: [
       { path: 'orders',
-        component: () => import('layouts/Order.vue'),
+        component: () => import('layouts/TransitionPage.vue'),
         children: [
           {
             path: '',
@@ -34,7 +34,7 @@ const routes = [
         ]
       },
       { path: 'customers',
-        component: () => import('layouts/Customer.vue'),
+        component: () => import('layouts/TransitionPage.vue'),
         children: [
           {
             path: '',
