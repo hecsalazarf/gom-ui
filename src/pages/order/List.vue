@@ -20,7 +20,7 @@
           <h-list-item
             v-for="(order, index) in orders"
             ref="item"
-            :key="order.id"
+            :key="order.data.id"
             v-model="order.data"
             :separator="index < ordersMaxIndex"
           />
