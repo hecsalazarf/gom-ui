@@ -14,7 +14,7 @@
       </transition>
     </q-header>
     <q-footer
-      v-show="$route.name === 'orders' || $route.name === 'customers'"
+      v-show="isFooterShown"
       elevated
     >
       <!-- click.native scrolls to top -->
@@ -44,6 +44,13 @@
             class="customers-tab"
           />
         </can>
+        <q-route-tab
+          name="promos"
+          :to="{ name: 'promos' }"
+          :label="$tc('promos.label', 2)"
+          icon="fas fa-haykal"
+          class="promos-tab"
+        />
       </q-tabs>
     </q-footer>
     <q-page-container>
@@ -73,7 +80,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['activeToolbar'])
+    ...mapGetters(['activeToolbar']),
+    isFooterShown () {
+      return this.$options.tabs.includes(this.$route.name)
+    }
   },
   created () {
     this.changeActiveToolbar('h-main-toolbar')
@@ -82,7 +92,12 @@ export default {
     getScrollTarget,
     setScrollPosition,
     ...mapActions(['changeActiveToolbar'])
-  }
+  },
+  tabs: [
+    'orders',
+    'customers',
+    'promos'
+  ]
 }
 </script>
 
@@ -91,4 +106,6 @@ export default {
   color: $green-13
 /deep/ .customers-tab .q-tab__icon, /deep/ .customers-tab .q-tab__label
   color: $cyan-13
+/deep/ .promos-tab .q-tab__icon, /deep/ .promos-tab .q-tab__label
+  color: $pink-12
 </style>
