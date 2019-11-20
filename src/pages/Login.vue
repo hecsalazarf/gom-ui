@@ -68,7 +68,7 @@ export default {
       form: ''
     }
   },
-  created () {
+  mounted () {
     unsubscribeToPush.call(this) // unsubscribe if there is any subscription
     clearState.call(this) // clear store at log in (Fix #29)
     this.$q.cookies.remove(process.env.CSRF_TOKEN_COOKIE, { path: '/' }) // clear csrf token to login with a new one (#63)
@@ -81,14 +81,10 @@ export default {
         .then(shareID => {
           if (this.$route.query.ref) { // if there is a reference, special login as customer
             this.props = {
-              reference: this.$route.query.ref
+              reference: this.$route.query.ref,
+              save: shareID ? 'update' : 'add'
             }
             this.form = 'h-customer-login'
-            if (!shareID) {
-              return this.$idb.profile.add(this.$route.query.ref, Profile.SHARE_ID)
-            } else {
-              return this.$idb.profile.put(this.$route.query.ref, Profile.SHARE_ID)
-            }
           } else if (shareID) {
             this.props = {
               reference: shareID

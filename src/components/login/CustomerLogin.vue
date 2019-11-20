@@ -56,6 +56,7 @@
 import { throttle } from 'quasar'
 import { LoginMixin } from './common'
 import { Notifications } from 'src/helpers'
+import { Profile } from 'src/constants/app'
 const { notifyError } = Notifications
 
 export default {
@@ -66,6 +67,11 @@ export default {
       type: String,
       required: true,
       default: ''
+    },
+    save: {
+      type: String,
+      required: false,
+      default: 'none'
     }
   },
   data () {
@@ -76,7 +82,7 @@ export default {
       phoneLast: ''
     }
   },
-  created () {
+  mounted () {
     this.requestInfo()
   },
   methods: {
@@ -89,6 +95,7 @@ export default {
       }).then(res => {
         this.customerOf = res.data.customerOf
         this.phoneLast = res.data.phoneLast
+        this.saveReference()
       }).catch(error => {
         if (error.response && error.response.status === 400) {
           this.$q.notify({ // notify invalid reference
@@ -115,7 +122,15 @@ export default {
         username: this.reference,
         phone: this.digits.concat(this.phoneLast) // concat phone number
       })
-    }, 2000)
+    }, 2000),
+    saveReference () {
+      switch (this.save) {
+        case 'add':
+          return this.$idb.profile.add(this.reference, Profile.SHARE_ID)
+        case 'update':
+          return this.$idb.profile.put(this.reference, Profile.SHARE_ID)
+      }
+    }
   }
 }
 </script>
