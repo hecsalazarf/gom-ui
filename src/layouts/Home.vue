@@ -44,13 +44,13 @@
             class="customers-tab"
           />
         </can>
-        <q-route-tab
+        <!-- <q-route-tab
           name="promos"
           :to="{ name: 'promos' }"
           :label="$tc('promos.label', 2)"
           icon="fas fa-haykal"
           class="promos-tab"
-        />
+        /> -->
       </q-tabs>
     </q-footer>
     <q-page-container>

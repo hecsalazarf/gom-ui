@@ -15,7 +15,8 @@ module.exports = function (ctx) {
       'vue-apollo',
       'auth',
       'defaults',
-      { server: false, path: 'updates' }
+      { server: false, path: 'updates' },
+      { server: false, path: 'idb' }
     ],
 
     css: [

@@ -50,6 +50,7 @@
 
 <script>
 import { Session, Agent } from 'src/helpers'
+import { Profile } from 'src/constants/app'
 const { unsubscribeToPush, clearState } = Session
 const { isBrowserCompatible } = Agent
 
@@ -76,15 +77,29 @@ export default {
   methods: {
     isBrowserCompatible,
     renderComponent () {
-      if (this.$route.query.ref) { // if there is a reference, special login as customer
-        this.props = {
-          reference: this.$route.query.ref
-        }
-        this.form = 'h-customer-login'
-      } else {
-        this.props = {}
-        this.form = 'h-simple-login' // otherwise, just simple login
-      }
+      this.$idb.profile.get(Profile.SHARE_ID)
+        .then(shareID => {
+          if (this.$route.query.ref) { // if there is a reference, special login as customer
+            this.props = {
+              reference: this.$route.query.ref
+            }
+            this.form = 'h-customer-login'
+            if (!shareID) {
+              return this.$idb.profile.add(this.$route.query.ref, Profile.SHARE_ID)
+            } else {
+              return this.$idb.profile.put(this.$route.query.ref, Profile.SHARE_ID)
+            }
+          } else if (shareID) {
+            this.props = {
+              reference: shareID
+            }
+            this.form = 'h-customer-login'
+          } else {
+            this.props = {}
+            this.form = 'h-simple-login' // otherwise, just simple login
+          }
+        })
+        .catch(error => console.error(error))
     }
   }
 }
