@@ -49,6 +49,16 @@
         </q-btn>
       </div>
     </q-form>
+    <q-btn
+      flat
+      dense
+      no-caps
+      rounded
+      unelevated
+      @click="exit"
+    >
+      Soy vendedor
+    </q-btn>
   </div>
 </template>
 
@@ -106,8 +116,7 @@ export default {
         } else {
           notifyError.call(this) // any other error notify with generic error
         }
-        this.$emit('error') // emit error an render user-password login
-        console.log(error)
+        this.$emit('change', { component: 'h-simple-login' }) // emit change an render user-password login
       }).finally(() => this.$q.loading.hide())
     },
     setDigit (index, value) {
@@ -130,6 +139,12 @@ export default {
         case 'update':
           return this.$idb.profile.put(this.reference, Profile.SHARE_ID)
       }
+    },
+    exit (event) {
+      this.$idb.profile.delete(Profile.SHARE_ID)
+        .then(res => {
+          this.$emit('change', { component: 'h-simple-login' })
+        })
     }
   }
 }

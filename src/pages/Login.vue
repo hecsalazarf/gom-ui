@@ -23,13 +23,14 @@
           <div class="col-4 full-width">
             <transition
               mode="out-in"
-              enter-active-class="animated fadeIn"
+              enter-active-class="animated slideInUp"
+              leave-active-class="animated fadeOut"
             >
               <component
                 :is="form"
                 v-bind="props"
                 style="animation-duration: 500ms;"
-                @error="form = 'h-simple-login'"
+                @change="change"
               />
             </transition>
           </div>
@@ -59,6 +60,7 @@ export default {
   components: {
     'h-simple-login': () => import('components/login/SimpleLogin.vue'),
     'h-customer-login': () => import('components/login/CustomerLogin.vue'),
+    'h-shareid-input': () => import('components/login/ShareIdInput.vue'),
     'h-incompatible-browser': () => import('components/misc/IncompatibleBrowser.vue')
   },
   data () {
@@ -96,6 +98,10 @@ export default {
           }
         })
         .catch(error => console.error(error))
+    },
+    change (event) {
+      this.props = event.props
+      this.form = event.component
     }
   }
 }
