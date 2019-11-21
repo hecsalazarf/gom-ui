@@ -83,13 +83,13 @@ export default {
         .then(shareID => {
           if (this.$route.query.ref) { // if there is a reference, special login as customer
             this.props = {
-              reference: this.$route.query.ref,
-              save: shareID ? 'update' : 'add'
+              shareId: this.$route.query.ref,
+              saveMode: shareID ? 'update' : 'add'
             }
             this.form = 'h-customer-login'
           } else if (shareID) {
             this.props = {
-              reference: shareID
+              shareId: shareID
             }
             this.form = 'h-customer-login'
           } else {

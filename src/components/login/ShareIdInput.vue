@@ -13,7 +13,7 @@
       <q-input
         v-model="shareId"
         class="col"
-        input-class="text-h6 text-center h-phone-password"
+        input-class="text-h6 text-center h-shareid-input"
         color="primary"
         bg-color="white"
         maxlength="10"
@@ -51,9 +51,11 @@
 
 <script>
 import { throttle } from 'quasar'
+import { LoginMixin } from './common'
 
 export default {
   name: 'HSharedIdInput',
+  mixins: [LoginMixin],
   props: {
   },
   data () {
@@ -63,20 +65,23 @@ export default {
   },
   methods: {
     submit: throttle(function () {
-      this.$emit('change', {
-        component: 'h-customer-login',
-        props: {
-          reference: this.shareId,
-          save: 'add'
-        }
-      })
+      this.requestInfo()
+        .then(res => {
+          this.saveShareId('add')
+          this.$emit('change', {
+            component: 'h-customer-login',
+            props: {
+              value: res.data
+            }
+          })
+        })
     }, 2000)
   }
 }
 </script>
 
 <style lang="stylus" scoped>
-/deep/ .h-phone-password
+/deep/ .h-shareid-input
   letter-spacing: 0.6em
   text-indent: 0.6em // No additional space added to last letter by letter-spacing
 </style>

@@ -1,6 +1,7 @@
-import { Session } from 'src/helpers'
+import { Session, Notifications } from 'src/helpers'
+import { Profile } from 'src/constants/app'
 const { requestNotificationPermission } = Session
-
+const { notifyError } = Notifications
 export const LoginMixin = {
   methods: {
     async login (credentials) {
@@ -41,6 +42,35 @@ export const LoginMixin = {
           this.$q.notify({ color: 'negative', message: this.$t('notifications.error.signin_failed'), icon: 'report_problem' })
           console.error(error)
         }
+      }
+    },
+    requestInfo () {
+      this.$q.loading.show()
+      const promise = this.$axios.get('auth/bp', {
+        params: {
+          code: this.shareId
+        }
+      })
+      promise.catch(error => {
+        if (error.response && error.response.status === 400) {
+          this.$q.notify({ // notify invalid reference
+            color: 'negative',
+            message: this.$t('app.invalid_reference'),
+            icon: 'report_problem'
+          })
+        } else {
+          notifyError.call(this) // any other error notify with generic error
+        }
+        /// this.$emit('change', { component: 'h-simple-login' }) // emit change an render user-password login
+      }).finally(() => this.$q.loading.hide())
+      return promise
+    },
+    saveShareId (mode) {
+      switch (mode) {
+        case 'add':
+          return this.$idb.profile.add(this.shareId, Profile.SHARE_ID)
+        case 'update':
+          return this.$idb.profile.put(this.shareId, Profile.SHARE_ID)
       }
     }
   }

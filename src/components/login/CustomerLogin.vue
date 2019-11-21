@@ -65,23 +65,26 @@
 <script>
 import { throttle } from 'quasar'
 import { LoginMixin } from './common'
-import { Notifications } from 'src/helpers'
 import { Profile } from 'src/constants/app'
-const { notifyError } = Notifications
 
 export default {
   name: 'HCustomerLogin',
   mixins: [ LoginMixin ],
   props: {
-    reference: {
+    shareId: {
       type: String,
-      required: true,
+      required: false,
       default: ''
     },
-    save: {
+    saveMode: {
       type: String,
       required: false,
       default: 'none'
+    },
+    value: {
+      type: Object,
+      required: false,
+      default: () => {}
     }
   },
   data () {
@@ -93,32 +96,23 @@ export default {
     }
   },
   mounted () {
-    this.requestInfo()
-  },
-  methods: {
-    requestInfo () {
-      this.$q.loading.show()
-      this.$axios.get('auth/bp', {
-        params: {
-          code: this.reference
-        }
-      }).then(res => {
+    if (this.shareId === '') {
+      this.customerOf = this.value.customerOf
+      this.phoneLast = this.value.phoneLast
+    } else {
+      this.requestInfo().then(res => {
         this.customerOf = res.data.customerOf
         this.phoneLast = res.data.phoneLast
-        this.saveReference()
-      }).catch(error => {
-        if (error.response && error.response.status === 400) {
-          this.$q.notify({ // notify invalid reference
-            color: 'negative',
-            message: this.$t('app.invalid_reference'),
-            icon: 'report_problem'
-          })
-        } else {
-          notifyError.call(this) // any other error notify with generic error
+        this.saveShareId(this.saveMode)
+      }).catch(e => {
+        if (this.shareId !== '') {
+          // emit change an render user-password login)
+          this.$emit('change', { component: 'h-simple-login' })
         }
-        this.$emit('change', { component: 'h-simple-login' }) // emit change an render user-password login
-      }).finally(() => this.$q.loading.hide())
-    },
+      })
+    }
+  },
+  methods: {
     setDigit (index, value) {
       this.digits.splice(index, 1, value)
       if (index < 6 - 1) {
@@ -128,18 +122,10 @@ export default {
     submit: throttle(function () { // Throttle login #50
       this.login({
         grantType: 'phone',
-        username: this.reference,
+        username: this.shareId,
         phone: this.digits.concat(this.phoneLast) // concat phone number
       })
     }, 2000),
-    saveReference () {
-      switch (this.save) {
-        case 'add':
-          return this.$idb.profile.add(this.reference, Profile.SHARE_ID)
-        case 'update':
-          return this.$idb.profile.put(this.reference, Profile.SHARE_ID)
-      }
-    },
     exit (event) {
       this.$idb.profile.delete(Profile.SHARE_ID)
         .then(res => {
