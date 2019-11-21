@@ -50,7 +50,7 @@ export class IDBStoreOps {
     return new Promise((resolve, reject) => {
       const tx = this.db.transaction(this.store, 'readwrite')
       const request = tx.objectStore(this.store).delete(key)
-      request.onsuccess = ({ target }) => resolve(target.result)
+      request.onsuccess = ({ target }) => resolve(target)
       request.onerror = ({ target }) => reject(target.error)
     })
   }
