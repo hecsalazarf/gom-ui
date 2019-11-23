@@ -25,8 +25,8 @@
         @click.native="setScrollPosition(getScrollTarget($el), 0, 200)"
       >
         <q-route-tab
-          name="orders"
-          :to="{ name: 'orders' }"
+          :name="$options.routes.orders"
+          :to="{ name: $options.routes.orders }"
           :label="$tc('order.label', 2)"
           icon="shopping_cart"
           class="orders-tab"
@@ -37,8 +37,8 @@
           on="bps"
         >
           <q-route-tab
-            name="customers"
-            :to="{ name: 'customers' }"
+            :name="$options.routes.customers"
+            :to="{ name: $options.routes.customers }"
             :label="$tc('customer.label', 2)"
             icon="contacts"
             class="customers-tab"
@@ -61,8 +61,9 @@
 
 <script>
 import { scroll } from 'quasar'
-const { setScrollPosition, getScrollTarget } = scroll
 import { createNamespacedHelpers } from 'vuex'
+import { RouteNames } from 'src/constants/app'
+const { setScrollPosition, getScrollTarget } = scroll
 const { mapGetters, mapActions } = createNamespacedHelpers('GomState')
 
 export default {
@@ -76,7 +77,7 @@ export default {
   },
   data () {
     return {
-      tab: 'orders'
+      tab: RouteNames.ORDER_LIST
     }
   },
   computed: {
@@ -94,10 +95,14 @@ export default {
     ...mapActions(['changeActiveToolbar'])
   },
   tabs: [
-    'orders',
-    'customers',
+    RouteNames.ORDER_LIST,
+    RouteNames.CUSTOMER_LIST,
     'promos'
-  ]
+  ],
+  routes: {
+    orders: RouteNames.ORDER_LIST,
+    customers: RouteNames.CUSTOMER_LIST
+  }
 }
 </script>
 

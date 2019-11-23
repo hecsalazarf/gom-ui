@@ -7,7 +7,7 @@
       :aria-label="$t('app.go_back')"
       flat
       dense
-      @click="$router.replace({ name: 'customers' })"
+      @click="$router.replace({ name: $options.routes.customers })"
     />
     <div class="column items-start justify-center content-start ellipsis">
       <div class="col-5 text-subtitle1 text-weight-medium text-primary">
@@ -45,6 +45,7 @@
 <script>
 import CustomerDetails from 'src/graphql/queries/CustomerDetails.gql'
 import { createNamespacedHelpers } from 'vuex'
+import { RouteNames } from 'src/constants/app'
 const { mapGetters, mapActions } = createNamespacedHelpers('GomState')
 
 export default {
@@ -123,6 +124,9 @@ export default {
       })
     },
     ...mapActions(['emitEvent'])
+  },
+  routes: {
+    customers: RouteNames.CUSTOMER_LIST
   }
 }
 </script>

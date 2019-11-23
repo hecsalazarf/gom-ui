@@ -1,5 +1,5 @@
 import { Session, Notifications } from 'src/helpers'
-import { Profile } from 'src/constants/app'
+import { Profile, RouteNames } from 'src/constants/app'
 const { requestNotificationPermission } = Session
 const { notifyError } = Notifications
 export const LoginMixin = {
@@ -22,7 +22,7 @@ export const LoginMixin = {
         // request notification permission after 4 seconds of being logged id
         setTimeout(() => requestNotificationPermission.call(this), 4000) // TODO implement a better approach
         this.loading = false
-        this.$router.replace({ name: 'home' }) // once logged in, go to home
+        this.$router.replace({ name: RouteNames.HOME }) // once logged in, go to home
       } catch (error) {
         this.loading = false
         if (error.response && error.response.data.error === 'invalid_grant') {

@@ -81,9 +81,9 @@ export default {
     renderComponent () {
       this.$idb.profile.get(Profile.SHARE_ID)
         .then(shareID => {
-          if (this.$route.query.ref) { // if there is a reference, special login as customer
+          if (this.$route.query.shid) { // if there is a reference, special login as customer
             this.props = {
-              shareId: this.$route.query.ref,
+              shareId: this.$route.query.shid,
               saveMode: shareID ? 'update' : 'add'
             }
             this.form = 'h-customer-login'

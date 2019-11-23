@@ -39,6 +39,7 @@
 <script>
 import { createNamespacedHelpers } from 'vuex'
 import { ActionSubscribe } from 'components/actionSubscribe'
+import { RouteNames } from 'src/constants/app'
 import CustomerDetails from 'src/graphql/queries/CustomerDetails.gql'
 import UserCustomers from 'src/graphql/queries/UserCustomers.gql'
 import DeleteBp from 'src/graphql/mutations/DeleteBp.gql'
@@ -90,7 +91,7 @@ export default {
         update: this.updateCacheOnDelete
       })
         .then(res => {
-          this.$router.replace({ name: 'customers' })
+          this.$router.replace({ name: RouteNames.CUSTOMER_LIST })
         })
         .catch(err => {
           if (err.graphQLErrors && err.graphQLErrors.length > 0) {

@@ -1,4 +1,6 @@
 import { Notifications } from './notifications'
+import { RouteNames } from 'src/constants/app'
+
 const { notifyError } = Notifications
 
 /* IMPORTANT: Bind "this" to the Vue instance from the caller function */
@@ -28,7 +30,7 @@ async function logout () {
       unsubscribeToPush.call(this) // Unsubscribe from notifications
     ])
     await this.$axios.get('auth/logout') // Clear all cookies and finish session
-    this.$router.replace({ name: 'login' }) // Go to login page
+    this.$router.replace({ name: RouteNames.LOGIN_MAIN }) // Go to login page
   } catch (err) {
     notifyError.call(this)
   } finally {

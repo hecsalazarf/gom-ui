@@ -164,6 +164,7 @@
 import { throttle } from 'quasar'
 import { createNamespacedHelpers } from 'vuex'
 import { OrderMixin } from './common'
+import { RouteNames } from 'src/constants/app'
 import CreateOrder from 'src/graphql/mutations/CreateOrder.gql'
 import UserOrders from 'src/graphql/queries/UserOrders.gql'
 import { Analytics } from 'src/constants/order'
@@ -300,7 +301,7 @@ export default {
           event_category: Analytics.CATEGORY,
           event_label: this.$user.id
         })
-        this.$router.replace({ name: 'orderDetails', params: { id: res.data.createOrder.uid } })
+        this.$router.replace({ name: RouteNames.ORDER_DETAILS, params: { id: res.data.createOrder.uid } })
       }).catch(error => error) // Error is handled globally, supress Uncaught (in promise)
     }, 3000),
     addItem (item) {

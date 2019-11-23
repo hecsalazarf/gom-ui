@@ -60,7 +60,7 @@
 
 <script>
 import { openURL } from 'quasar'
-import { ROOT_LOGIN } from 'src/router/routes'
+import { RouteNames } from 'src/constants/app'
 
 export default {
   name: 'HShareLink',
@@ -151,7 +151,7 @@ export default {
         origin = undefined
       }
       /* Extract login path and reference query from router */
-      const { path, meta: { refQuery } } = this.$router.options.routes.find(el => el.meta ? el.meta.name === ROOT_LOGIN : false)
+      const { path, meta: { refQuery } } = this.$router.options.routes.find(el => el.meta ? el.meta.name === RouteNames.LOGIN_ROOT : false)
       if (!path || !refQuery || !origin) {
         /* if some of the variables is undefined, throw an error */
         console.error('Cannot generate shareable link')

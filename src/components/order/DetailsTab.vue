@@ -131,7 +131,7 @@
                 stack-label
               >
                 <template v-slot:default>
-                  <router-link :to="{ name: 'customerDetails', params: { id: typeof order.customer === 'undefined' ? '1' : order.customer.uid }}">
+                  <router-link :to="{ name: $options.routes.customerDetails, params: { id: typeof order.customer === 'undefined' ? '1' : order.customer.uid }}">
                     <div
                       class="self-center full-width all-pointer-events"
                     >
@@ -180,6 +180,7 @@
 
 <script>
 import { date } from 'quasar'
+import { RouteNames } from 'src/constants/app'
 import UpdateOrder from 'src/graphql/mutations/UpdateOrder.gql'
 import { createNamespacedHelpers } from 'vuex'
 const { mapActions } = createNamespacedHelpers('GomState')
@@ -310,6 +311,9 @@ export default {
     ...mapActions([
       'emitEvent'
     ])
+  },
+  routes: {
+    customerDetails: RouteNames.CUSTOMER_DETAILS
   }
 }
 </script>

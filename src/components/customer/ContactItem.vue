@@ -4,7 +4,7 @@
       <q-item
         v-ripple
         clickable
-        @click="$router.push({name: 'customerDetails', params: { id: value.id }})"
+        @click="$router.push({name: $options.routes.customerDetails, params: { id: value.id }})"
       >
         <q-item-section avatar>
           <q-avatar
@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import { RouteNames } from 'src/constants/app'
 export default {
   name: 'HContactItem',
   props: {
@@ -52,6 +53,9 @@ export default {
         return this.value.name1
       } else return `${this.value.name1} ${this.value.lastName1}`
     }
+  },
+  routes: {
+    customerDetails: RouteNames.CUSTOMER_DETAILS
   }
 }
 </script>

@@ -57,7 +57,7 @@
         color="accent"
         icon="add_shopping_cart"
         class="shadow-7"
-        :to="{ name: 'newOrder' }"
+        :to="{ name: $options.routes.newOrder }"
         :aria-label="$t('order.new')"
       />
     </q-page-sticky>
@@ -69,6 +69,7 @@ import UserOrders from 'src/graphql/queries/UserOrders.gql'
 import OrderListSub from 'src/graphql/subscriptions/OrderDetails.gql'
 import { createNamespacedHelpers } from 'vuex'
 import { OrderMixin } from './common'
+import { RouteNames } from 'src/constants/app'
 const { mapGetters, mapActions } = createNamespacedHelpers('GomState')
 
 export default {
@@ -254,6 +255,9 @@ export default {
         vm.$router.back() // no permission, go back
       }
     })
+  },
+  routes: {
+    newOrder: RouteNames.ORDER_NEW
   }
 }
 </script>
