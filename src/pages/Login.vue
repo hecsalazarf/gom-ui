@@ -46,6 +46,22 @@
         </div>
       </div>
     </div>
+    <q-page-sticky
+      position="bottom-right"
+      :offset="[0, 5]"
+    >
+      <q-btn
+        rounded
+        flat
+        no-caps
+        icon-right="exit_to_app"
+        @click="toggleForm"
+      >
+        <div class="text-body2">
+          {{ loginModeText }} &nbsp;
+        </div>
+      </q-btn>
+    </q-page-sticky>
   </q-page>
 </template>
 
@@ -68,6 +84,11 @@ export default {
       loading: false,
       props: {},
       form: ''
+    }
+  },
+  computed: {
+    loginModeText () {
+      return this.form === 'h-simple-login' ? this.$t('app.not_a_seller') : this.$t('app.not_a_customer')
     }
   },
   mounted () {
@@ -93,7 +114,6 @@ export default {
             }
             this.form = 'h-customer-login'
           } else {
-            this.props = {}
             this.form = 'h-simple-login' // otherwise, just simple login
           }
         })
@@ -102,6 +122,14 @@ export default {
     change (event) {
       this.props = event.props
       this.form = event.component
+    },
+    toggleForm () {
+      if (this.form === 'h-simple-login') {
+        this.form = 'h-shareid-input'
+      } else if (this.form === 'h-shareid-input' || this.form === 'h-customer-login') {
+        this.form = 'h-simple-login'
+        this.$idb.profile.delete(Profile.SHARE_ID).catch(error => console.error(error))
+      }
     }
   }
 }

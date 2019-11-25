@@ -67,16 +67,6 @@
         </template>
       </q-btn>
     </q-form>
-    <q-btn
-      flat
-      dense
-      no-caps
-      rounded
-      unelevated
-      @click="$emit('change', { component: 'h-shareid-input' })"
-    >
-      Soy cliente
-    </q-btn>
   </div>
 </template>
 

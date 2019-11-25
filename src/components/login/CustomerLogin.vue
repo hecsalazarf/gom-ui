@@ -49,23 +49,12 @@
         </q-btn>
       </div>
     </q-form>
-    <q-btn
-      flat
-      dense
-      no-caps
-      rounded
-      unelevated
-      @click="exit"
-    >
-      Soy vendedor
-    </q-btn>
   </div>
 </template>
 
 <script>
 import { throttle } from 'quasar'
 import { LoginMixin } from './common'
-import { Profile } from 'src/constants/app'
 
 export default {
   name: 'HCustomerLogin',
@@ -84,7 +73,7 @@ export default {
     value: {
       type: Object,
       required: false,
-      default: () => {}
+      default: () => ({})
     }
   },
   data () {
@@ -96,7 +85,7 @@ export default {
     }
   },
   mounted () {
-    if (this.shareId === '') {
+    if (Object.keys(this.value).length > 0) {
       this.customerOf = this.value.customerOf
       this.phoneLast = this.value.phoneLast
     } else {
@@ -106,7 +95,7 @@ export default {
         this.saveShareId(this.saveMode)
       }).catch(e => {
         if (this.shareId !== '') {
-          // emit change an render user-password login)
+          // emit change an render user-password login
           this.$emit('change', { component: 'h-simple-login' })
         }
       })
@@ -125,13 +114,7 @@ export default {
         username: this.shareId,
         phone: this.digits.concat(this.phoneLast) // concat phone number
       })
-    }, 2000),
-    exit (event) {
-      this.$idb.profile.delete(Profile.SHARE_ID)
-        .then(res => {
-          this.$emit('change', { component: 'h-simple-login' })
-        })
-    }
+    }, 2000)
   }
 }
 </script>

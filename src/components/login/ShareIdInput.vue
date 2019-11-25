@@ -1,10 +1,10 @@
 <template>
   <div class="column items-center q-gutter-y-md">
     <div class="text-h6 text-center">
-      {{ "Introduce tu ID único de cliente" }}
+      {{ $t('app.enter_shareid') }}
     </div>
     <div class="text-body2 text-center">
-      {{ "Si no cuentas con él, solícitalo a tu vendedor" }}
+      {{ $t('app.missing_shareid') }}
     </div>
     <q-form
       class="q-gutter-y-md q-gutter-x-xs full-width row justify-center items-center"
@@ -36,16 +36,6 @@
         />
       </div>
     </q-form>
-    <q-btn
-      flat
-      dense
-      no-caps
-      rounded
-      unelevated
-      @click="$emit('change', { component: 'h-simple-login' })"
-    >
-      Soy vendedor
-    </q-btn>
   </div>
 </template>
 
@@ -65,13 +55,18 @@ export default {
   },
   methods: {
     submit: throttle(function () {
+      let response
       this.requestInfo()
         .then(res => {
-          this.saveShareId('add')
+          response = res.data
+          return this.saveShareId('add')
+        })
+        .then(res => {
           this.$emit('change', {
             component: 'h-customer-login',
             props: {
-              value: res.data
+              value: response,
+              shareId: this.shareId
             }
           })
         })
