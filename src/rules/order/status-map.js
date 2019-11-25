@@ -16,7 +16,7 @@ const option1 = {
   event: {
     type: 'nextStatus',
     params: {
-      next: [ OrderStatus.WON, OrderStatus.CLOSED, OrderStatus.IN_PROCESS ]
+      next: [OrderStatus.WON, OrderStatus.CLOSED, OrderStatus.IN_PROCESS]
     }
   }
 }
@@ -26,13 +26,13 @@ const option2 = {
     all: [{
       fact: 'currentStatus',
       operator: 'in',
-      value: [ OrderStatus.CLOSED, OrderStatus.WON ]
+      value: [OrderStatus.CLOSED, OrderStatus.WON]
     }]
   },
   event: {
     type: 'nextStatus',
     params: {
-      next: [ ]
+      next: []
     }
   }
 }
@@ -42,13 +42,13 @@ const option3 = {
     all: [{
       fact: 'currentStatus',
       operator: 'in',
-      value: [ OrderStatus.IN_PROCESS ]
+      value: [OrderStatus.IN_PROCESS]
     }]
   },
   event: {
     type: 'nextStatus',
     params: {
-      next: [ OrderStatus.CLOSED, OrderStatus.WON ]
+      next: [OrderStatus.CLOSED, OrderStatus.WON]
     }
   }
 }

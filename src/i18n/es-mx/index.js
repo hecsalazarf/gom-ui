@@ -13,10 +13,10 @@ export default {
     status: {
       label: 'Estado',
       options: {
-        'OPEN': { label: 'Nuevo' },
-        'IN_PROCESS': { label: 'En proceso' },
-        'CLOSED': { label: 'Cancelado' },
-        'WON': { label: 'Entregado' }
+        OPEN: { label: 'Nuevo' },
+        IN_PROCESS: { label: 'En proceso' },
+        CLOSED: { label: 'Cancelado' },
+        WON: { label: 'Entregado' }
       }
     },
     step1_desc: 'Agrega los artículos a tu pedido',

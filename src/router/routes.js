@@ -7,7 +7,8 @@ const routes = [
     redirect: { name: RouteNames.ORDER_LIST },
     component: () => import('layouts/Home.vue'),
     children: [
-      { path: 'orders',
+      {
+        path: 'orders',
         component: () => import('layouts/TransitionPage.vue'),
         children: [
           {
@@ -32,7 +33,8 @@ const routes = [
           }
         ]
       },
-      { path: 'customers',
+      {
+        path: 'customers',
         component: () => import('layouts/TransitionPage.vue'),
         children: [
           {

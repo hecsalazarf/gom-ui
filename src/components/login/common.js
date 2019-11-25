@@ -36,7 +36,8 @@ export const LoginMixin = {
           this.$q.notify({
             color: 'negative',
             message: `${this.$t('notifications.error.too_many_requests')} ${this.$tc('app.minute', retryAfter, { n: retryAfter })}`,
-            icon: 'report_problem' })
+            icon: 'report_problem'
+          })
         } else {
           // any other error, display a generic error
           this.$q.notify({ color: 'negative', message: this.$t('notifications.error.signin_failed'), icon: 'report_problem' })

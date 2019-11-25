@@ -76,7 +76,7 @@ import { LoginMixin } from './common'
 
 export default {
   name: 'HSimpleLogin',
-  mixins: [ LoginMixin ],
+  mixins: [LoginMixin],
   data () {
     return {
       loading: false,

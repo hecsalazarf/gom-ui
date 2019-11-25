@@ -58,7 +58,7 @@ import { LoginMixin } from './common'
 
 export default {
   name: 'HCustomerLogin',
-  mixins: [ LoginMixin ],
+  mixins: [LoginMixin],
   props: {
     shareId: {
       type: String,

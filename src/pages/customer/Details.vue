@@ -52,7 +52,7 @@ export default {
     'h-customer-card': () => import('components/customer/Card.vue'),
     'h-share-link': () => import('components/customer/ShareLink.vue')
   },
-  mixins: [ ActionSubscribe ],
+  mixins: [ActionSubscribe],
   props: {
     id: {
       type: String,

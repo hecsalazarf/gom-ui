@@ -73,7 +73,7 @@ class ApolloClientProvider {
       // Absolute URL here
       uri: '/api/graphql',
       headers: {
-        'Accept': 'application/json'
+        Accept: 'application/json'
       },
       credentials: 'same-origin'
     })

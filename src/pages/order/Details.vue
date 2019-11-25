@@ -109,7 +109,7 @@ export default {
     'h-order-details-tab': () => import('components/order/DetailsTab.vue'),
     'h-new-item': () => import('components/order/NewItem.vue')
   },
-  mixins: [ OrderMixin ],
+  mixins: [OrderMixin],
   props: {
     id: {
       type: String,

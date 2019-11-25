@@ -78,7 +78,7 @@ export default {
     'h-list-item': () => import('components/order/ListItem.vue'),
     'h-filter-input': () => import('components/order/FilterInput.vue')
   },
-  mixins: [ OrderMixin ],
+  mixins: [OrderMixin],
   props: {
   },
   data () {
@@ -237,7 +237,7 @@ export default {
           document: OrderListSub,
           variables: {
             where: {
-              mutation_in: [ 'CREATED', 'UPDATED' ], // subscribe for new and updated orders (Fix #42)
+              mutation_in: ['CREATED', 'UPDATED'], // subscribe for new and updated orders (Fix #42)
               node: {
                 ...this.buildQueryVars()
               }

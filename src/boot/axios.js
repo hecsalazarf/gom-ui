@@ -6,7 +6,7 @@ class AxiosProvider {
     this.headers = {
       post: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        Accept: 'application/json'
       }
     }
   }

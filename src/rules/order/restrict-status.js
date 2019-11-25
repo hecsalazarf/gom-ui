@@ -7,7 +7,7 @@ export const RestrictStatus = {
         {
           fact: 'statusToRestrict',
           operator: 'in',
-          value: [ OrderStatus.WON, OrderStatus.IN_PROCESS ]
+          value: [OrderStatus.WON, OrderStatus.IN_PROCESS]
         },
         {
           fact: 'isCustomer',

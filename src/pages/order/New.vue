@@ -179,7 +179,7 @@ export default {
     'h-order-summary': () => import('components/order/SummaryCard.vue'),
     'h-new-item': () => import('components/order/NewItem.vue')
   },
-  mixins: [ OrderMixin ],
+  mixins: [OrderMixin],
   data () {
     return {
       step: 1,
@@ -268,7 +268,7 @@ export default {
       }
     },
     submit: throttle(function () {
-      let data = {
+      const data = {
         name: this.order.name,
         ...this.buildMutationVars(),
         items: {
