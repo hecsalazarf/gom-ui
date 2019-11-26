@@ -16,7 +16,7 @@
 <script>
 
 export default {
-  name: 'OrderLayout',
+  name: 'TransitionPageLayout',
   computed: {
     enterActiveClass () {
       // animate transition only on mobile devices
@@ -25,9 +25,6 @@ export default {
     leaveActiveClass () {
       // animate transition only on mobile devices
       return this.$q.platform.is.mobile ? 'animated slideOutUp' : ''
-    },
-    floatingButton () {
-      return this.$route.name === 'orders' ? 'add_shopping_cart' : 'edit'
     }
   }
 }

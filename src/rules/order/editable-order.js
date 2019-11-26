@@ -8,7 +8,7 @@ export const EditableOrder = {
           {
             fact: 'status',
             operator: 'in',
-            value: [ OrderStatus.CLOSED, OrderStatus.WON ]
+            value: [OrderStatus.CLOSED, OrderStatus.WON]
           }
         ]
       },
@@ -18,7 +18,7 @@ export const EditableOrder = {
           {
             fact: 'status',
             operator: 'in',
-            value: [ OrderStatus.IN_PROCESS ]
+            value: [OrderStatus.IN_PROCESS]
           },
           {
             fact: 'isCustomer',

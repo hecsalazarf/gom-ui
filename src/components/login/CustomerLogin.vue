@@ -55,17 +55,25 @@
 <script>
 import { throttle } from 'quasar'
 import { LoginMixin } from './common'
-import { Notifications } from 'src/helpers'
-const { notifyError } = Notifications
 
 export default {
   name: 'HCustomerLogin',
-  mixins: [ LoginMixin ],
+  mixins: [LoginMixin],
   props: {
-    reference: {
+    shareId: {
       type: String,
-      required: true,
+      required: false,
       default: ''
+    },
+    saveMode: {
+      type: String,
+      required: false,
+      default: 'none'
+    },
+    value: {
+      type: Object,
+      required: false,
+      default: () => ({})
     }
   },
   data () {
@@ -76,33 +84,24 @@ export default {
       phoneLast: ''
     }
   },
-  created () {
-    this.requestInfo()
-  },
-  methods: {
-    requestInfo () {
-      this.$q.loading.show()
-      this.$axios.get('auth/bp', {
-        params: {
-          code: this.reference
-        }
-      }).then(res => {
+  mounted () {
+    if (Object.keys(this.value).length > 0) {
+      this.customerOf = this.value.customerOf
+      this.phoneLast = this.value.phoneLast
+    } else {
+      this.requestInfo().then(res => {
         this.customerOf = res.data.customerOf
         this.phoneLast = res.data.phoneLast
-      }).catch(error => {
-        if (error.response && error.response.status === 400) {
-          this.$q.notify({ // notify invalid reference
-            color: 'negative',
-            message: this.$t('app.invalid_reference'),
-            icon: 'report_problem'
-          })
-        } else {
-          notifyError.call(this) // any other error notify with generic error
+        this.saveShareId(this.saveMode)
+      }).catch(e => {
+        if (this.shareId !== '') {
+          // emit change an render user-password login
+          this.$emit('change', { component: 'h-simple-login' })
         }
-        this.$emit('error') // emit error an render user-password login
-        console.log(error)
-      }).finally(() => this.$q.loading.hide())
-    },
+      })
+    }
+  },
+  methods: {
     setDigit (index, value) {
       this.digits.splice(index, 1, value)
       if (index < 6 - 1) {
@@ -112,7 +111,7 @@ export default {
     submit: throttle(function () { // Throttle login #50
       this.login({
         grantType: 'phone',
-        username: this.reference,
+        username: this.shareId,
         phone: this.digits.concat(this.phoneLast) // concat phone number
       })
     }, 2000)

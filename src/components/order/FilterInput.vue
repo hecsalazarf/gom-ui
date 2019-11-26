@@ -88,7 +88,7 @@ import { OrderComponentMixin } from './common'
 
 export default {
   name: 'OrderFilterInput',
-  mixins: [ OrderComponentMixin ],
+  mixins: [OrderComponentMixin],
   props: {
     disable: {
       type: Boolean,

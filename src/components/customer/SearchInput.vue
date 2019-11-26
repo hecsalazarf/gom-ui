@@ -88,7 +88,7 @@ export default {
         .then(({ data }) => {
           if (value === '') {
             done(() => {
-              let customers = data.bpsConnection.edges
+              const customers = data.bpsConnection.edges
               customers.sort((first, second) => {
                 if (first.node.name1 < second.node.name1) return -1
                 if (first.node.name1 > second.node.name1) return 1

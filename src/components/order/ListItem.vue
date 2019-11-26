@@ -56,6 +56,7 @@
 import { date } from 'quasar'
 import { createNamespacedHelpers } from 'vuex'
 import { OrderComponentMixin } from './common'
+import { RouteNames } from 'src/constants/app'
 
 const { mapActions, mapGetters } = createNamespacedHelpers('GomState')
 
@@ -122,7 +123,7 @@ export default {
         this.$refs.selectionEl.toggle()
       } else {
         this.$router.push({
-          name: 'orderDetails',
+          name: RouteNames.ORDER_DETAILS,
           params: { id: this.value.id }
         })
       }

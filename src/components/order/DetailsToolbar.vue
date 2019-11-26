@@ -8,7 +8,7 @@
       flat
       dense
       :aria-label="$t('app.go_back')"
-      @click="$router.replace({ name: 'home' })"
+      @click="$router.replace({ name: $options.routes.home })"
     />
     <div
       v-if="!activeOrder"
@@ -74,6 +74,7 @@
 <script>
 import OrderDetails from 'src/graphql/queries/OrderDetails.gql'
 import { OrderComponentMixin } from './common'
+import { RouteNames } from 'src/constants/app'
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapActions } = createNamespacedHelpers('GomState')
 
@@ -152,6 +153,9 @@ export default {
       }
     },
     ...mapActions(['emitEvent'])
+  },
+  routes: {
+    home: RouteNames.HOME
   }
 }
 </script>

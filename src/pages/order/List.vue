@@ -20,7 +20,7 @@
           <h-list-item
             v-for="(order, index) in orders"
             ref="item"
-            :key="order.id"
+            :key="order.data.id"
             v-model="order.data"
             :separator="index < ordersMaxIndex"
           />
@@ -57,7 +57,7 @@
         color="accent"
         icon="add_shopping_cart"
         class="shadow-7"
-        :to="{ name: 'newOrder' }"
+        :to="{ name: $options.routes.newOrder }"
         :aria-label="$t('order.new')"
       />
     </q-page-sticky>
@@ -69,6 +69,7 @@ import UserOrders from 'src/graphql/queries/UserOrders.gql'
 import OrderListSub from 'src/graphql/subscriptions/OrderDetails.gql'
 import { createNamespacedHelpers } from 'vuex'
 import { OrderMixin } from './common'
+import { RouteNames } from 'src/constants/app'
 const { mapGetters, mapActions } = createNamespacedHelpers('GomState')
 
 export default {
@@ -77,7 +78,7 @@ export default {
     'h-list-item': () => import('components/order/ListItem.vue'),
     'h-filter-input': () => import('components/order/FilterInput.vue')
   },
-  mixins: [ OrderMixin ],
+  mixins: [OrderMixin],
   props: {
   },
   data () {
@@ -236,7 +237,7 @@ export default {
           document: OrderListSub,
           variables: {
             where: {
-              mutation_in: [ 'CREATED', 'UPDATED' ], // subscribe for new and updated orders (Fix #42)
+              mutation_in: ['CREATED', 'UPDATED'], // subscribe for new and updated orders (Fix #42)
               node: {
                 ...this.buildQueryVars()
               }
@@ -254,6 +255,9 @@ export default {
         vm.$router.back() // no permission, go back
       }
     })
+  },
+  routes: {
+    newOrder: RouteNames.ORDER_NEW
   }
 }
 </script>

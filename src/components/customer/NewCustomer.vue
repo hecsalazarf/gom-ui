@@ -81,6 +81,7 @@
 </template>
 
 <script>
+import { RouteNames } from 'src/constants/app'
 import CreateCustomer from 'src/graphql/mutations/CreateCustomer.gql'
 import UserCustomers from 'src/graphql/queries/UserCustomers.gql'
 import { Analytics } from 'src/constants/customer'
@@ -240,7 +241,7 @@ export default {
           event_category: Analytics.CATEGORY,
           event_label: this.$user.id
         })
-        this.$router.push({ name: 'customerDetails', params: { id: res.data.createBp.uid } })
+        this.$router.push({ name: RouteNames.CUSTOMER_DETAILS, params: { id: res.data.createBp.uid } })
       })
     }
   }

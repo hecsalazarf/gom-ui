@@ -1,30 +1,30 @@
-
-export const ROOT_LOGIN = 'rootLogin'
+import { RouteNames } from 'src/constants/app'
 
 const routes = [
   {
     path: '/',
-    name: 'home',
-    redirect: { name: 'orders' },
-    component: () => import('layouts/Gom.vue'),
+    name: RouteNames.HOME,
+    redirect: { name: RouteNames.ORDER_LIST },
+    component: () => import('layouts/Home.vue'),
     children: [
-      { path: 'orders',
-        component: () => import('layouts/Order.vue'),
+      {
+        path: 'orders',
+        component: () => import('layouts/TransitionPage.vue'),
         children: [
           {
             path: '',
-            name: 'orders',
+            name: RouteNames.ORDER_LIST,
             component: () => import('pages/order/List.vue')
           },
           {
             path: 'id/:id',
-            name: 'orderDetails',
+            name: RouteNames.ORDER_DETAILS,
             component: () => import('pages/order/Details.vue'),
             props: true
           },
           {
             path: 'new',
-            name: 'newOrder',
+            name: RouteNames.ORDER_NEW,
             component: () => import('pages/order/New.vue')
           },
           {
@@ -33,17 +33,18 @@ const routes = [
           }
         ]
       },
-      { path: 'customers',
-        component: () => import('layouts/Customer.vue'),
+      {
+        path: 'customers',
+        component: () => import('layouts/TransitionPage.vue'),
         children: [
           {
             path: '',
-            name: 'customers',
+            name: RouteNames.CUSTOMER_LIST,
             component: () => import('pages/customer/List.vue')
           },
           {
             path: 'id/:id',
-            name: 'customerDetails',
+            name: RouteNames.CUSTOMER_DETAILS,
             component: () => import('pages/customer/Details.vue'),
             props: true
           },
@@ -58,14 +59,14 @@ const routes = [
   {
     path: '/login',
     meta: {
-      name: ROOT_LOGIN, // name is placed in meta to avoid warning "the default child route will not be rendered"
-      refQuery: 'ref'
+      name: RouteNames.LOGIN_ROOT, // name is placed in meta to avoid warning "the default child route will not be rendered"
+      refQuery: 'shid'
     },
     component: () => import('layouts/Simple.vue'),
     children: [
       {
         path: '',
-        name: 'login',
+        name: RouteNames.LOGIN_MAIN,
         component: () => import('pages/Login.vue')
       }
     ]

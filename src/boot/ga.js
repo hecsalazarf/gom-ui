@@ -29,7 +29,7 @@ class GAnalytics {
     }
     this.scope.dataLayer = this.scope.dataLayer || []
     this.gtag('js', new Date())
-    this.gtag('config', this.trackingId, { 'send_page_view': false })
+    this.gtag('config', this.trackingId, { send_page_view: false })
   }
 
   gtag () {

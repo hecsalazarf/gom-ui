@@ -23,13 +23,14 @@
           <div class="col-4 full-width">
             <transition
               mode="out-in"
-              enter-active-class="animated fadeIn"
+              enter-active-class="animated slideInUp"
+              leave-active-class="animated fadeOut"
             >
               <component
                 :is="form"
                 v-bind="props"
                 style="animation-duration: 500ms;"
-                @error="form = 'h-simple-login'"
+                @change="change"
               />
             </transition>
           </div>
@@ -45,11 +46,28 @@
         </div>
       </div>
     </div>
+    <q-page-sticky
+      position="bottom-right"
+      :offset="[0, 5]"
+    >
+      <q-btn
+        rounded
+        flat
+        no-caps
+        icon-right="exit_to_app"
+        @click="toggleForm"
+      >
+        <div class="text-body2">
+          {{ loginModeText }} &nbsp;
+        </div>
+      </q-btn>
+    </q-page-sticky>
   </q-page>
 </template>
 
 <script>
 import { Session, Agent } from 'src/helpers'
+import { Profile } from 'src/constants/app'
 const { unsubscribeToPush, clearState } = Session
 const { isBrowserCompatible } = Agent
 
@@ -58,6 +76,7 @@ export default {
   components: {
     'h-simple-login': () => import('components/login/SimpleLogin.vue'),
     'h-customer-login': () => import('components/login/CustomerLogin.vue'),
+    'h-shareid-input': () => import('components/login/ShareIdInput.vue'),
     'h-incompatible-browser': () => import('components/misc/IncompatibleBrowser.vue')
   },
   data () {
@@ -67,7 +86,12 @@ export default {
       form: ''
     }
   },
-  created () {
+  computed: {
+    loginModeText () {
+      return this.form === 'h-simple-login' ? this.$t('app.not_a_seller') : this.$t('app.not_a_customer')
+    }
+  },
+  mounted () {
     unsubscribeToPush.call(this) // unsubscribe if there is any subscription
     clearState.call(this) // clear store at log in (Fix #29)
     this.$q.cookies.remove(process.env.CSRF_TOKEN_COOKIE, { path: '/' }) // clear csrf token to login with a new one (#63)
@@ -76,14 +100,35 @@ export default {
   methods: {
     isBrowserCompatible,
     renderComponent () {
-      if (this.$route.query.ref) { // if there is a reference, special login as customer
-        this.props = {
-          reference: this.$route.query.ref
-        }
-        this.form = 'h-customer-login'
-      } else {
-        this.props = {}
-        this.form = 'h-simple-login' // otherwise, just simple login
+      this.$idb.profile.get(Profile.SHARE_ID)
+        .then(shareID => {
+          if (this.$route.query.shid) { // if there is a reference, special login as customer
+            this.props = {
+              shareId: this.$route.query.shid,
+              saveMode: shareID ? 'update' : 'add'
+            }
+            this.form = 'h-customer-login'
+          } else if (shareID) {
+            this.props = {
+              shareId: shareID
+            }
+            this.form = 'h-customer-login'
+          } else {
+            this.form = 'h-simple-login' // otherwise, just simple login
+          }
+        })
+        .catch(error => console.error(error))
+    },
+    change (event) {
+      this.props = event.props
+      this.form = event.component
+    },
+    toggleForm () {
+      if (this.form === 'h-simple-login') {
+        this.form = 'h-shareid-input'
+      } else if (this.form === 'h-shareid-input' || this.form === 'h-customer-login') {
+        this.form = 'h-simple-login'
+        this.$idb.profile.delete(Profile.SHARE_ID).catch(error => console.error(error))
       }
     }
   }

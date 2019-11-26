@@ -14,7 +14,7 @@
       </transition>
     </q-header>
     <q-footer
-      v-show="$route.name === 'orders' || $route.name === 'customers'"
+      v-show="isFooterShown"
       elevated
     >
       <!-- click.native scrolls to top -->
@@ -25,8 +25,8 @@
         @click.native="setScrollPosition(getScrollTarget($el), 0, 200)"
       >
         <q-route-tab
-          name="orders"
-          :to="{ name: 'orders' }"
+          :name="$options.routes.orders"
+          :to="{ name: $options.routes.orders }"
           :label="$tc('order.label', 2)"
           icon="shopping_cart"
           class="orders-tab"
@@ -37,13 +37,20 @@
           on="bps"
         >
           <q-route-tab
-            name="customers"
-            :to="{ name: 'customers' }"
+            :name="$options.routes.customers"
+            :to="{ name: $options.routes.customers }"
             :label="$tc('customer.label', 2)"
             icon="contacts"
             class="customers-tab"
           />
         </can>
+        <!-- <q-route-tab
+          name="promos"
+          :to="{ name: 'promos' }"
+          :label="$tc('promos.label', 2)"
+          icon="fas fa-haykal"
+          class="promos-tab"
+        /> -->
       </q-tabs>
     </q-footer>
     <q-page-container>
@@ -54,8 +61,9 @@
 
 <script>
 import { scroll } from 'quasar'
-const { setScrollPosition, getScrollTarget } = scroll
 import { createNamespacedHelpers } from 'vuex'
+import { RouteNames } from 'src/constants/app'
+const { setScrollPosition, getScrollTarget } = scroll
 const { mapGetters, mapActions } = createNamespacedHelpers('GomState')
 
 export default {
@@ -69,11 +77,14 @@ export default {
   },
   data () {
     return {
-      tab: 'orders'
+      tab: RouteNames.ORDER_LIST
     }
   },
   computed: {
-    ...mapGetters(['activeToolbar'])
+    ...mapGetters(['activeToolbar']),
+    isFooterShown () {
+      return this.$options.tabs.includes(this.$route.name)
+    }
   },
   created () {
     this.changeActiveToolbar('h-main-toolbar')
@@ -82,6 +93,15 @@ export default {
     getScrollTarget,
     setScrollPosition,
     ...mapActions(['changeActiveToolbar'])
+  },
+  tabs: [
+    RouteNames.ORDER_LIST,
+    RouteNames.CUSTOMER_LIST,
+    'promos'
+  ],
+  routes: {
+    orders: RouteNames.ORDER_LIST,
+    customers: RouteNames.CUSTOMER_LIST
   }
 }
 </script>
@@ -91,4 +111,6 @@ export default {
   color: $green-13
 /deep/ .customers-tab .q-tab__icon, /deep/ .customers-tab .q-tab__label
   color: $cyan-13
+/deep/ .promos-tab .q-tab__icon, /deep/ .promos-tab .q-tab__label
+  color: $pink-12
 </style>
