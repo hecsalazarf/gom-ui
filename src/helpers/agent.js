@@ -29,6 +29,24 @@ function isBrowserCompatible () {
   return false
 }
 
+/**
+ * Copy text to the clipboard.
+ * CLIENT-SIDE ONLY!
+ */
+export function copyToClipboard (element) {
+  if (window && window.getSelection) {
+    const range = document.createRange()
+    range.selectNode(document.getElementById(element))
+    window.getSelection().removeAllRanges() // clear current selection
+    window.getSelection().addRange(range) // to select text
+    document.execCommand('copy')
+    window.getSelection().removeAllRanges()// to deselect
+  } else {
+    throw new Error('Cannot copy code; browser does not support getSelection API')
+  }
+}
+
 export const Agent = {
-  isBrowserCompatible
+  isBrowserCompatible,
+  copyToClipboard
 }

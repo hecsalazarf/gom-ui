@@ -60,6 +60,7 @@
 
 <script>
 import { openURL } from 'quasar'
+import { copyToClipboard } from 'src/helpers/agent'
 import { RouteNames } from 'src/constants/app'
 
 export default {
@@ -76,6 +77,7 @@ export default {
     }
   },
   methods: {
+    copyToClipboard,
     show () {
       this.$q.bottomSheet({
         message: this.$t('app.share'),
@@ -124,22 +126,16 @@ export default {
           // This can happen if the user denies clipboard permissions:
           console.error(err)
         }) */
-      if (window && window.getSelection) {
-        const range = document.createRange()
-        range.selectNode(document.getElementById('customer-shareable-code'))
-        window.getSelection().removeAllRanges() // clear current selection
-        window.getSelection().addRange(range) // to select text
-        document.execCommand('copy')
-        window.getSelection().removeAllRanges()// to deselect
-
+      try {
+        this.copyToClipboard('customer-shareable-code')
         this.$q.notify({ // notify that link has been copied to clipboard
-          message: this.$t('app.copied_link'),
+          message: this.$t('app.copied_to_clipboard'),
           position: 'bottom',
           color: 'primary',
           classes: 'text-body2'
         })
-      } else {
-        console.error('Cannot copy code; browser does not support getSelection API')
+      } catch (e) {
+        console.error(e)
       }
     },
     generateUri () {
