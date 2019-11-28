@@ -89,7 +89,7 @@ export default {
     missing_shareid: 'Si no cuentas con él, solícitalo a tu vendedor',
     share: 'Compartir con',
     copy_link: 'Copiar enlace',
-    copied_link: 'Enlace copiado',
+    copied_to_clipboard: 'Copiado al portapapeles',
     not_a_customer: '¿No eres cliente?',
     not_a_seller: '¿No eres vendedor?',
     to_be_confirmed: 'Por confirmar',

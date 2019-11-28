@@ -55,6 +55,13 @@ class UserHelper {
     return this.token.sub
   }
 
+  get shareId () {
+    if (!this.token) {
+      return undefined
+    }
+    return this.token.eid
+  }
+
   get seller () {
     if (!this.token) {
       return undefined
