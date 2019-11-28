@@ -112,7 +112,7 @@ Configuration is done by adding variables to the `process.env` object. They are 
 
 ## Versioning
 
-0.5.0
+0.5.1
 
 ## Authors
 
