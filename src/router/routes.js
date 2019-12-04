@@ -53,6 +53,27 @@ const routes = [
             redirect: { name: 'customers' }
           }
         ]
+      },
+      {
+        path: 'promos',
+        component: () => import('layouts/TransitionPage.vue'),
+        children: [
+          {
+            path: '',
+            name: 'promos',
+            component: () => import('pages/promo/List.vue')
+          }
+          // {
+          //   path: 'id/:id',
+          //   name: 'customerDetails',
+          //   component: () => import('pages/customer/Details.vue'),
+          //   props: true
+          // },
+          // {
+          //   path: 'id/',
+          //   redirect: { name: 'customers' }
+          // }
+        ]
       }
     ]
   },

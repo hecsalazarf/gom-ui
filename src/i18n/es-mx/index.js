@@ -44,6 +44,9 @@ export default {
       with_active_orders: 'No puedes eliminar a un cliente con pedidos activos'
     }
   },
+  promos: {
+    label: 'Promoción | Promos'
+  },
   pricing: {
     label: 'Precio | Precios',
     total: 'Total',
