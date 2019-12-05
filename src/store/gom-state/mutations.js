@@ -32,6 +32,10 @@ export function setMoreOrders (state, moreOrders) {
   state.moreOrders = moreOrders
 }
 
+export function setActivePromo (state, promo) {
+  state.activePromo = promo
+}
+
 /**
  * Reset state to its initial values
  * @param {any} state State
