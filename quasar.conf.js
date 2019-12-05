@@ -82,7 +82,8 @@ module.exports = function (ctx) {
         'QField',
         'QBanner',
         'QChip',
-        'QVirtualScroll'
+        'QVirtualScroll',
+        'QColor'
       ],
 
       directives: [
