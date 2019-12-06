@@ -83,7 +83,10 @@ module.exports = function (ctx) {
         'QBanner',
         'QChip',
         'QVirtualScroll',
-        'QColor'
+        'QColor',
+        'QDate',
+        'QTime',
+        'QPopupProxy'
       ],
 
       directives: [
