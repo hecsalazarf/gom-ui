@@ -86,7 +86,8 @@ module.exports = function (ctx) {
         'QColor',
         'QDate',
         'QTime',
-        'QPopupProxy'
+        'QPopupProxy',
+        'QEditor'
       ],
 
       directives: [
