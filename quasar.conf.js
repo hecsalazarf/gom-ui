@@ -87,7 +87,9 @@ module.exports = function (ctx) {
         'QDate',
         'QTime',
         'QPopupProxy',
-        'QEditor'
+        'QEditor',
+        'QTimeline',
+        'QTimelineEntry'
       ],
 
       directives: [
