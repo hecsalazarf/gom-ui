@@ -1,10 +1,11 @@
 <template>
   <div>
     <q-item
+      v-ripple
       v-touch-hold.mouse="handleHold"
       clickable
       active-class="bg-teal-1 text-grey-8"
-      @click="handleClick($event)"
+      @click="handleClick"
     >
       <q-item-section>
         <q-item-label class="text-body1 text-weight-medium">
@@ -33,8 +34,11 @@
 </template>
 
 <script>
+import { debounce } from 'quasar'
+import { RouteNames } from 'src/constants/app'
+
 export default {
-  name: 'PromoListItem',
+  name: 'HIddlePromoItem',
   props: {
     value: {
       type: Object,
@@ -58,8 +62,12 @@ export default {
     handleHold ({ evt, ...info }) {
       // this.$refs.selectionEl.toggle() // SELECTION DISABLED (#28)
     },
-    handleClick (evt) {
-    }
+    handleClick: debounce(function (evt) {
+      this.$router.push({ name: this.$options.routes.promoDetails, params: { id: this.value.id } })
+    }, 200)
+  },
+  routes: {
+    promoDetails: RouteNames.PROMO_DETAILS
   }
 }
 </script>

@@ -29,7 +29,7 @@ const routes = [
           },
           {
             path: 'id',
-            redirect: { name: 'orders' }
+            redirect: { name: RouteNames.ORDER_LIST }
           }
         ]
       },
@@ -50,7 +50,7 @@ const routes = [
           },
           {
             path: 'id/',
-            redirect: { name: 'customers' }
+            redirect: { name: RouteNames.CUSTOMER_LIST }
           }
         ]
       },
@@ -60,15 +60,15 @@ const routes = [
         children: [
           {
             path: '',
-            name: 'promos',
+            name: RouteNames.PROMO_LIST,
             component: () => import('pages/promo/List.vue')
+          },
+          {
+            path: 'id/:id',
+            name: RouteNames.PROMO_DETAILS,
+            component: () => import('pages/promo/Details.vue'),
+            props: true
           }
-          // {
-          //   path: 'id/:id',
-          //   name: 'customerDetails',
-          //   component: () => import('pages/customer/Details.vue'),
-          //   props: true
-          // },
           // {
           //   path: 'id/',
           //   redirect: { name: 'customers' }

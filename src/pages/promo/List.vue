@@ -20,7 +20,7 @@
             virtual-scroll-horizontal
           >
             <template v-slot="{ item }">
-              <h-promohor-item v-model="item.data" />
+              <h-active-promo v-model="item.data" />
             </template>
           </q-virtual-scroll>
         </div>
@@ -36,7 +36,7 @@
         </q-item-section>
       </q-item>
       <q-list class="bg-secondary h-rounded-borders-20">
-        <h-promol-item
+        <h-iddle-promo
           v-for="(promo, index) in promos2"
           ref="item"
           :key="promo.data.id"
@@ -64,10 +64,10 @@
 
 <script>
 export default {
-  name: 'PromosListPage',
+  name: 'HPromoListPage',
   components: {
-    'h-promol-item': () => import('components/promo/ListItem.vue'),
-    'h-promohor-item': () => import('components/promo/HorListItem.vue')
+    'h-iddle-promo': () => import('components/promo/IddleItem.vue'),
+    'h-active-promo': () => import('components/promo/ActiveItem.vue')
   },
   data () {
     return {
@@ -122,6 +122,14 @@ export default {
         }
       ]
     }
+  },
+  beforeRouteEnter (to, from, next) {
+    next()
+    // next(vm => {
+    //   if (!vm.$can('read', 'bps')) { // check permission
+    //     vm.$router.back() // no permission, go back
+    //   }
+    // })
   }
 }
 </script>

@@ -1,5 +1,9 @@
 <template>
-  <q-card class="h-rounded-borders-20 q-ma-sm active-promo-card">
+  <q-card
+    v-ripple
+    class="h-rounded-borders-20 q-ma-sm active-promo-card cursor-pointer"
+    @click="handleClick"
+  >
     <q-card-section class="row q-pb-sm">
       <div class="col-10">
         <div class="column">
@@ -25,7 +29,7 @@
         />
       </div>
     </q-card-section>
-    <q-separator />
+    <q-separator inset />
     <q-card-section class="row q-gutter-y-sm q-pt-sm">
       <div class="col-2 text-caption">
         <q-icon
@@ -52,8 +56,11 @@
 </template>
 
 <script>
+import { debounce } from 'quasar'
+import { RouteNames } from 'src/constants/app'
+
 export default {
-  name: 'PromoHorListItem',
+  name: 'HActivePromoItem',
   props: {
     value: {
       type: Object,
@@ -74,6 +81,12 @@ export default {
   watch: {
   },
   methods: {
+    handleClick: debounce(function (evt) {
+      this.$router.push({ name: this.$options.routes.promoDetails, params: { id: this.value.id } })
+    }, 200)
+  },
+  routes: {
+    promoDetails: RouteNames.PROMO_DETAILS
   }
 }
 </script>
