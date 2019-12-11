@@ -18,7 +18,7 @@
       <q-icon
         name="event"
         class="cursor-pointer"
-        color="accent"
+        :color="iconColor"
       >
         <q-popup-proxy
           ref="popup"
@@ -117,6 +117,10 @@ export default {
     mask: {
       type: String,
       default: 'YYYY/MM/DD HH:mm'
+    },
+    iconColor: {
+      type: String,
+      default: 'primary'
     }
   },
   data () {
