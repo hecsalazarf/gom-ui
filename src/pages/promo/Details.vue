@@ -17,11 +17,11 @@
         >
           <q-tab
             name="details"
-            :label="$t('order.details')"
+            :label="$t('promo.details')"
           />
           <q-tab
             name="publishing"
-            :label="$t('order.publishing')"
+            :label="$t('promo.publishing')"
           />
         </q-tabs>
         <q-separator />

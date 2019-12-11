@@ -47,7 +47,7 @@
         <q-route-tab
           name="promos"
           :to="{ name: 'promos' }"
-          :label="$tc('promos.label', 2)"
+          :label="$tc('promo.label', 2)"
           icon="fas fa-haykal"
           class="promos-tab"
         />

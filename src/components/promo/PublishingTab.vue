@@ -6,13 +6,13 @@
       switch-toggle-side
       header-class="text-subtitle1 text-weight-medium text-primary"
       icon="notifications"
-      :label="$t('promo.notifications')"
+      :label="$tc('promo.notification', 2)"
     >
       <div class="row q-pa-md relative-position justify-between">
         <div class="col-xs-5 col-sm-5 col-md-4">
           <q-option-group
             v-model="delay"
-            :options="$options.delayOptions"
+            :options="delayOptions"
             color="primary"
             :disable="loading"
           />
@@ -27,7 +27,7 @@
             no-caps
             @click="simulateProgress(3)"
           >
-            {{ "Publicar" }}
+            {{ $t('promo.publish') }}
             <template v-slot:loading>
               <q-spinner-bars />
             </template>
@@ -45,7 +45,7 @@
               :items="notifications"
             >
               <template v-slot="{ item, index }">
-                <publish-timeline
+                <h-publish-timeline
                   :key="index"
                   v-model="item.data"
                 />
@@ -97,6 +97,20 @@ export default {
             delay: 432000000
           }
         }
+      ],
+      delayOptions: [
+        {
+          label: this.$t('time.now'),
+          value: 'now'
+        },
+        {
+          label: this.$t('time.one_hour_later'),
+          value: '1h_later'
+        },
+        {
+          label: this.$t('time.one_day_later'),
+          value: '1d_later'
+        }
       ]
     }
   },
@@ -105,21 +119,7 @@ export default {
       this.loading = true
       setTimeout(() => { this.loading = !this.loading }, 3000)
     }
-  },
-  delayOptions: [
-    {
-      label: 'Ahora',
-      value: 'now'
-    },
-    {
-      label: 'Una hora después',
-      value: '1h'
-    },
-    {
-      label: 'Mañana',
-      value: '1d'
-    }
-  ]
+  }
 }
 </script>
 

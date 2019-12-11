@@ -10,7 +10,7 @@
         <q-item dense>
           <q-item-section>
             <div class="text-subtitle1 text-weight-medium">
-              {{ "Vigentes" }}
+              {{ $tc('promo.active', 2) }}
             </div>
           </q-item-section>
         </q-item>
@@ -31,7 +31,7 @@
       >
         <q-item-section>
           <q-item-label class="text-subtitle1 text-weight-medium">
-            {{ "Anteriores" }}
+            {{ $tc('promo.iddle', 2) }}
           </q-item-label>
         </q-item-section>
       </q-item>

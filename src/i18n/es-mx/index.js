@@ -44,8 +44,29 @@ export default {
       with_active_orders: 'No puedes eliminar a un cliente con pedidos activos'
     }
   },
-  promos: {
-    label: 'Promoción | Promos'
+  promo: {
+    label: 'Promoción | Promos',
+    active: 'Activa | Activas',
+    iddle: 'Inactiva | Inactivas',
+    details: 'Detalles',
+    publishing: 'Publicaciones',
+    review: 'General',
+    content: 'Contenido',
+    log: 'Historial',
+    code: 'Código',
+    name: 'Nombre',
+    start: 'Inicio',
+    end: 'Fin',
+    category: 'Categoría',
+    createdAt: 'Creado el',
+    updatedAt: 'Actualizado el',
+    publish: 'Publicar',
+    notification: 'Notificación | Notificaciones'
+  },
+  time: {
+    now: 'Ahora',
+    one_day_later: 'Mañana',
+    one_hour_later: 'Una hora después'
   },
   pricing: {
     label: 'Precio | Precios',
