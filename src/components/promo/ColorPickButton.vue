@@ -1,38 +1,15 @@
 <template>
-  <q-btn
-    icon="bookmark"
-    flat
-    round
-    dense
-    :size="size"
-    :style="`color: ${color}`"
-  >
-    <q-menu
-      transition-show="scale"
-      transition-hide="scale"
-    >
-      <q-color
-        v-model="color"
-        v-close-popup
-        square
-        no-header
-        no-footer
-        default-view="palette"
-        :palette="[
-          '#f50000',
-          '#f57b00',
-          '#f5f500',
-          '#00d600',
-          '#006cd6',
-          '#6c00d6',
-          '#f500f5',
-          '#7f7f7f',
-          '#00d6d6',
-          '#000000'
-        ]"
-      />
-    </q-menu>
-  </q-btn>
+  <div class="row justify-start q-gutter-sm">
+    <q-checkbox
+      v-for="(color, index) in options"
+      :key="index"
+      v-model="model"
+      class="col-1"
+      :val="color.val"
+      :color="color.name"
+      keep-color
+    />
+  </div>
 </template>
 
 <script>
@@ -41,12 +18,12 @@ export default {
   props: {
     value: {
       type: String,
-      default: '',
-      required: true
+      required: true,
+      default: ''
     },
-    size: {
-      type: String,
-      default: '1em'
+    options: {
+      type: Array,
+      required: true
     }
   },
   data () {
@@ -54,24 +31,14 @@ export default {
     }
   },
   computed: {
-    color: {
+    model: {
       get () {
-        return this.value
+        return this.value === '' ? [] : [this.value]
       },
-      set (value) {
-        this.$emit('input', value)
+      set (val) {
+        this.$emit('input', val[val.length - 1])
       }
     }
   }
 }
 </script>
-
-<style lang="stylus" scoped>
-.q-color-picker /deep/ .q-tab-panels .q-panel
-  min-height: 100px
-
-/deep/ .q-color-picker__cube
-  margin: 10px
-  transform: scale(1.5);
-  border-radius: 1em
-</style>

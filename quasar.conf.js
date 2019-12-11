@@ -83,7 +83,6 @@ module.exports = function (ctx) {
         'QBanner',
         'QChip',
         'QVirtualScroll',
-        'QColor',
         'QDate',
         'QTime',
         'QPopupProxy',
