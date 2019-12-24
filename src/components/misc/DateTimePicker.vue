@@ -1,6 +1,6 @@
 <template>
   <q-field
-    v-model="date"
+    :value="dateTime | emptyDate"
     :dense="dense"
     :readonly="readonly"
     :hide-bottom-space="hideBottomSpace"
@@ -8,11 +8,11 @@
     :standout="standout"
     :label="label"
     :rules="rules"
-    :stack-label="_stackLabel"
+    :stack-label="stackLabel"
   >
     <template v-slot:control>
       <div :class="inputClass">
-        {{ value }}
+        {{ displayedDate }}
       </div>
     </template>
     <template v-slot:append>
@@ -31,6 +31,7 @@
             v-if="panel === 'date'"
             v-model="proxyDate"
             :mask="mask"
+            :options="dateOptions"
           >
             <div class="row justify-end q-gutter-x-md">
               <q-btn
@@ -57,6 +58,7 @@
             v-if="panel === 'time'"
             v-model="proxyDate"
             :mask="mask"
+            :options="timeOptions"
           >
             <div class="row justify-end q-gutter-x-md">
               <q-btn
@@ -90,14 +92,22 @@ import { date, debounce } from 'quasar'
 
 export default {
   name: 'DateTimePicker',
+  filters: {
+    emptyDate (value) {
+      // Quasar date utils transforms '' to a 31/12/1899 date. In order to avoid
+      // stacking the field label when the date is empty, we validate it
+      return date.isSameDate(value, new Date(1899, 11, 31)) ? '' : value
+    }
+  },
   props: {
     dense: Boolean,
     readonly: Boolean,
     hideBottomSpace: Boolean,
     borderless: Boolean,
     stackLabel: Boolean,
+    raw: Boolean,
     value: {
-      type: String,
+      type: [String, Date],
       default: ''
     },
     standout: {
@@ -123,35 +133,40 @@ export default {
     iconColor: {
       type: String,
       default: 'primary'
+    },
+    timeOptions: {
+      type: Function,
+      default: undefined
+    },
+    dateOptions: {
+      type: Function,
+      default: undefined
     }
   },
   data () {
     return {
-      proxyDate: this.value !== '' ? this.value : date.formatDate(Date.now(), this.mask),
-      date: '',
-      panel: 'date'
+      panel: 'date',
+      proxyDate: ''
     }
   },
   computed: {
-    _stackLabel () {
-      if (this.stackLabel || this.date !== '') {
-        return true
-      } else {
-        return false
-      }
+    displayedDate () {
+      return this.value === '' ? this.value : date.formatDate(this.dateTime, this.mask)
+    },
+    dateTime () {
+      return this.raw ? this.value : date.extractDate(this.value, this.mask)
     }
   },
   methods: {
     beforeHide () {
       this.panel = 'date'
-      this.proxyDate = this.value !== '' ? this.value : date.formatDate(Date.now(), this.mask)
+      this.proxyDate = this.displayedDate
     },
     pickTime: debounce(function () {
       this.panel = 'time'
     }, 200),
     save: debounce(function () {
-      this.date = this.proxyDate
-      this.$emit('input', this.proxyDate)
+      this.$emit('input', this.raw ? date.extractDate(this.proxyDate, this.mask) : this.proxyDate)
       this.$refs.popup.hide()
     }, 200)
   }
