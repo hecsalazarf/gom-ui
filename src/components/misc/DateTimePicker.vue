@@ -1,5 +1,6 @@
 <template>
   <q-field
+    v-model="date"
     :dense="dense"
     :readonly="readonly"
     :hide-bottom-space="hideBottomSpace"
@@ -7,7 +8,7 @@
     :standout="standout"
     :label="label"
     :rules="rules"
-    stack-label
+    :stack-label="_stackLabel"
   >
     <template v-slot:control>
       <div :class="inputClass">
@@ -94,13 +95,14 @@ export default {
     readonly: Boolean,
     hideBottomSpace: Boolean,
     borderless: Boolean,
+    stackLabel: Boolean,
     value: {
       type: String,
       default: ''
     },
     standout: {
       type: String,
-      default: ''
+      default: undefined
     },
     inputClass: {
       type: String,
@@ -126,7 +128,17 @@ export default {
   data () {
     return {
       proxyDate: this.value !== '' ? this.value : date.formatDate(Date.now(), this.mask),
+      date: '',
       panel: 'date'
+    }
+  },
+  computed: {
+    _stackLabel () {
+      if (this.stackLabel || this.date !== '') {
+        return true
+      } else {
+        return false
+      }
     }
   },
   methods: {
@@ -138,6 +150,7 @@ export default {
       this.panel = 'time'
     }, 200),
     save: debounce(function () {
+      this.date = this.proxyDate
       this.$emit('input', this.proxyDate)
       this.$refs.popup.hide()
     }, 200)
