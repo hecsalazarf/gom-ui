@@ -65,9 +65,13 @@ export default {
       promo: {}
     }
   },
-  created () {
+  beforeMount () {
     this.changeActivePromo(this.id)
     this.changeActiveToolbar('h-promo-toolbar')
+  },
+  beforeDestroy () {
+    this.changeActiveToolbar(null)
+    this.changeActivePromo(null)
   },
   methods: {
     refresh (done) {
@@ -85,10 +89,6 @@ export default {
     //     vm.$router.back() // no permission, go back
     //   }
     // })
-  },
-  beforeRouteLeave (to, from, next) {
-    this.changeActiveToolbar(null)
-    next()
   }
 }
 </script>

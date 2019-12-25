@@ -55,7 +55,7 @@
         color="accent"
         icon="note_add"
         class="shadow-7"
-        :to="{ name: 'newOrder' }"
+        :to="{ name: $options.routes.newPromo }"
         :aria-label="$t('order.new')"
       />
     </q-page-sticky>
@@ -63,6 +63,7 @@
 </template>
 
 <script>
+import { RouteNames } from 'src/constants/app'
 export default {
   name: 'HPromoListPage',
   components: {
@@ -130,6 +131,9 @@ export default {
     //     vm.$router.back() // no permission, go back
     //   }
     // })
+  },
+  routes: {
+    newPromo: RouteNames.PROMO_NEW
   }
 }
 </script>

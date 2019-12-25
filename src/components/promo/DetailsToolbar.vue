@@ -10,33 +10,23 @@
       :aria-label="$t('app.go_back')"
       @click="$router.replace({ name: $options.routes.promos })"
     />
-    <!-- <div
-      v-if="!activeOrder"
-      class="col-5 text-subtitle1 text-primary"
-    >
-      {{ $t('order.new') }}
-    </div> -->
-    <!-- <q-avatar
-      v-if="activeOrder"
-      rounded
-      size="2.5em"
-      :color="stage.color"
-      text-color="white"
-    >
-      <h-icon
-        size="h5"
-        :name="stage.icon"
-      />
-    </q-avatar> -->
     <div
       v-if="activePromo"
-      class="column self-stretch q-ml-md items-start justify-start content-start ellipsis"
+      class="column self-stretch items-start justify-start content-start ellipsis"
     >
       <div class="col-5 text-subtitle1 text-primary">
         {{ "Promo name" }}
       </div>
       <div class="col text-subtitle2 text-weight-regular text-primary">
         {{ "Promo code" }}
+      </div>
+    </div>
+    <div
+      v-else
+      class="column items-start justify-start content-start ellipsis"
+    >
+      <div class="text-subtitle1 text-primary">
+        {{ "Nueva promo" }}
       </div>
     </div>
     <q-space />

@@ -68,11 +68,16 @@ const routes = [
             name: RouteNames.PROMO_DETAILS,
             component: () => import('pages/promo/Details.vue'),
             props: true
+          },
+          {
+            path: 'id/',
+            redirect: { name: RouteNames.PROMO_LIST }
+          },
+          {
+            path: 'new',
+            name: RouteNames.PROMO_NEW,
+            component: () => import('pages/promo/New.vue')
           }
-          // {
-          //   path: 'id/',
-          //   redirect: { name: 'customers' }
-          // }
         ]
       }
     ]

@@ -16,5 +16,6 @@ export const RouteNames = Object.freeze({
   CUSTOMER_LIST: 'customers',
   CUSTOMER_DETAILS: 'customerDetails',
   PROMO_LIST: 'promos',
-  PROMO_DETAILS: 'promoDetails'
+  PROMO_DETAILS: 'promoDetails',
+  PROMO_NEW: 'newPromo'
 })
