@@ -15,10 +15,10 @@
       class="column self-stretch items-start justify-start content-start ellipsis"
     >
       <div class="col-5 text-subtitle1 text-primary">
-        {{ "Promo name" }}
+        {{ header.name }}
       </div>
       <div class="col text-subtitle2 text-weight-regular text-primary">
-        {{ "Promo code" }}
+        {{ header.code }}
       </div>
     </div>
     <div
@@ -36,6 +36,8 @@
 <script>
 import { RouteNames } from 'src/constants/app'
 import { createNamespacedHelpers } from 'vuex'
+import PromotionDetails from 'src/graphql/queries/PromotionDetails.gql'
+
 const { mapGetters, mapActions } = createNamespacedHelpers('GomState')
 
 export default {
@@ -52,35 +54,34 @@ export default {
     ...mapGetters(['activePromo'])
   },
   beforeMount () {
-    // if (this.activeOrder) {
-    //   this.subscription = this.$apollo
-    //     .watchQuery({
-    //       query: OrderDetails,
-    //       variables: {
-    //         where: {
-    //           uid: this.activeOrder
-    //         }
-    //       },
-    //       fetchPolicy: 'cache-only'
-    //     })
-    //     .subscribe(this.updateHeader)
-    // }
+    if (this.activePromo) {
+      this.subscription = this.$apollo
+        .watchQuery({
+          query: PromotionDetails,
+          variables: {
+            where: {
+              uid: this.activePromo
+            }
+          },
+          fetchPolicy: 'cache-only'
+        })
+        .subscribe(this.updateHeader)
+    }
   },
   beforeDestroy () {
-    // if (this.subscription) {
-    //   // Fix #61, ckeck subscription exists before unsubscribing
-    //   this.subscription.unsubscribe()
-    // }
+    if (this.subscription) {
+      // Fix #61, ckeck subscription exists before unsubscribing
+      this.subscription.unsubscribe()
+    }
   },
   methods: {
-    updateHeader ({ data: { order } }) {
-      // if (order) {
-      //   this.header = (({ name, stage, issuedTo }) => ({
-      //     name,
-      //     stage,
-      //     customer: issuedTo
-      //   }))(order)
-      // }
+    updateHeader ({ data: { promotion } }) {
+      if (promotion) {
+        this.header = (({ name, code }) => ({
+          name,
+          code
+        }))(promotion)
+      }
     },
     ...mapActions(['emitEvent'])
   },

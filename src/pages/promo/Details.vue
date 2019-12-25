@@ -31,7 +31,7 @@
           keep-alive
         >
           <q-tab-panel name="details">
-            <h-promo-details-tab v-model="promo" />
+            <h-promo-details-tab v-model="promotion" />
           </q-tab-panel>
           <q-tab-panel name="publishing">
             <h-promo-publishing-tab />
@@ -45,6 +45,8 @@
 
 <script>
 import { createNamespacedHelpers } from 'vuex'
+import PromotionDetails from 'src/graphql/queries/PromotionDetails.gql'
+
 const { mapActions } = createNamespacedHelpers('GomState')
 
 export default {
@@ -62,7 +64,7 @@ export default {
   data () {
     return {
       tab: 'details',
-      promo: {}
+      promotion: {}
     }
   },
   beforeMount () {
@@ -89,6 +91,22 @@ export default {
     //     vm.$router.back() // no permission, go back
     //   }
     // })
+  },
+  apollo: {
+    promotion () {
+      return {
+        query: PromotionDetails,
+        update: ({ promotion }) => promotion || {},
+        watchLoading (isLoading, countModifier) {
+          isLoading ? this.$q.loading.show() : this.$q.loading.hide()
+        },
+        variables: {
+          where: {
+            uid: this.id
+          }
+        }
+      }
+    }
   }
 }
 </script>

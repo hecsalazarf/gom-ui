@@ -61,7 +61,7 @@
             <q-card-section class="q-col-gutter-xs">
               <div class="row justify-between items-end">
                 <q-input
-                  v-model="codigo"
+                  v-model="code"
                   class="col-12"
                   dense
                   standout="bg-secondary"
@@ -77,7 +77,7 @@
                 />
               </div>
               <q-input
-                v-model="nombre"
+                v-model="name"
                 dense
                 standout="bg-secondary"
                 input-class="text-black"
@@ -91,7 +91,7 @@
               />
               <div class="row q-col-gutter-xs">
                 <h-datetime
-                  v-model="fechaInicio"
+                  v-model="start"
                   dense
                   class="col-xs-12"
                   standout="bg-secondary"
@@ -103,7 +103,7 @@
                   mask="DD-MMM-YYYY hh:mm A"
                 />
                 <h-datetime
-                  v-model="fechaFin"
+                  v-model="end"
                   dense
                   class="col-xs-12"
                   standout="bg-secondary"
@@ -128,7 +128,7 @@
               >
                 <template v-slot:control>
                   <h-color
-                    v-model="color"
+                    v-model="category"
                     :options="$options.colors"
                   />
                 </template>
@@ -148,7 +148,7 @@
       >
         <q-card class="bg-secondary">
           <q-card-section>
-            <h-text-editor v-model="editor" />
+            <h-text-editor v-model="content" />
           </q-card-section>
         </q-card>
       </q-expansion-item>
@@ -210,64 +210,110 @@ export default {
   data () {
     return {
       editMode: true,
-      promo: { ...this.value },
-      data: {}, // mutation variable
-      nombre: '',
-      color: '',
-      codigo: '',
-      fechaInicio: '',
-      fechaFin: '',
-      editor: ''
+      promotion: { ...this.value },
+      data: {} // mutation variable
     }
   },
   computed: {
     createdAt () {
-      if (typeof this.promo.createdAt === 'undefined') {
+      if (typeof this.promotion.createdAt === 'undefined') {
         return ''
       }
-      return date.formatDate(this.promo.createdAt, 'DD/MM/YYYY HH:mm:ss')
+      return date.formatDate(this.promotion.createdAt, 'DD/MM/YYYY HH:mm:ss')
     },
     updatedAt () {
-      if (typeof this.promo.updatedAt === 'undefined') {
+      if (typeof this.promotion.updatedAt === 'undefined') {
         return ''
       }
-      return date.formatDate(this.promo.updatedAt, 'DD/MM/YYYY HH:mm:ss')
-    },
-    status: {
-      get () {
-        if (typeof this.promo.stage === 'undefined') {
-          return ''
-        }
-        return this.promo.stage
-      },
-      set (status) {
-        if (status !== this.value.stage) this.data.stage = status.value // if it changed, save it
-        else delete this.data.stage // otherwise remove key from data object
-        this.promo.stage = status.value
-      }
+      return date.formatDate(this.promotion.updatedAt, 'DD/MM/YYYY HH:mm:ss')
     },
     name: {
       get () {
-        if (typeof this.promo.name === 'undefined') {
+        if (typeof this.promotion.name === 'undefined') {
           return ''
         }
-        return this.promo.name
+        return this.promotion.name
       },
       set (name) {
         if (name !== this.value.name) this.data.name = name
         else delete this.data.name
-        this.promo.name = name
+        this.promotion.name = name
+      }
+    },
+    code: {
+      get () {
+        if (typeof this.promotion.code === 'undefined') {
+          return ''
+        }
+        return this.promotion.code
+      },
+      set (code) {
+        if (code !== this.value.code) this.data.code = code
+        else delete this.data.code
+        this.promotion.code = code
+      }
+    },
+    start: {
+      get () {
+        if (typeof this.promotion.start === 'undefined') {
+          return ''
+        }
+        return date.formatDate(this.promotion.start, 'DD-MMM-YYYY hh:mm A')
+      },
+      set (start) {
+        if (start !== this.value.code) this.data.code = start
+        else delete this.data.start
+        this.promotion.start = start
+      }
+    },
+    end: {
+      get () {
+        if (typeof this.promotion.end === 'undefined') {
+          return ''
+        }
+        return date.formatDate(this.promotion.end, 'DD-MMM-YYYY hh:mm A')
+      },
+      set (end) {
+        if (end !== this.value.end) this.data.end = end
+        else delete this.data.end
+        this.promotion.end = end
+      }
+    },
+    content: {
+      get () {
+        if (typeof this.promotion.content === 'undefined') {
+          return ''
+        }
+        return this.promotion.content
+      },
+      set (content) {
+        if (content !== this.value.content) this.data.code = content
+        else delete this.data.content
+        this.promotion.content = content
+      }
+    },
+    category: {
+      get () {
+        if (typeof this.promotion.category === 'undefined') {
+          return ''
+        }
+        return this.promotion.category
+      },
+      set (category) {
+        if (category !== this.value.category) this.data.category = category
+        else delete this.data.content
+        this.promotion.content = category
       }
     }
   },
   watch: {
     value (newVal) {
-      this.promo = { ...this.value }
+      this.promotion = { ...this.value }
     }
   },
   methods: {
     clear () {
-      this.promo = { ...this.value } // revert changes
+      this.promotion = { ...this.value } // revert changes
       this.data = {} // reset temporary changes
       this.editMode = false // disable edit mode
     },
