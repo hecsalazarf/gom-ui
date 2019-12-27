@@ -22,7 +22,7 @@
       <q-item-section
         side
       >
-        <q-item-label>{{ "14/11/2019" }}</q-item-label>
+        <q-item-label>{{ end }}</q-item-label>
       </q-item-section>
     </q-item>
     <q-separator
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { debounce } from 'quasar'
+import { debounce, date } from 'quasar'
 import { RouteNames } from 'src/constants/app'
 
 export default {
@@ -55,6 +55,9 @@ export default {
     return {}
   },
   computed: {
+    end () {
+      return date.formatDate(this.value.end, 'DD/MM/YYYY')
+    }
   },
   watch: {
   },
@@ -63,7 +66,7 @@ export default {
       // this.$refs.selectionEl.toggle() // SELECTION DISABLED (#28)
     },
     handleClick: debounce(function (evt) {
-      this.$router.push({ name: this.$options.routes.promoDetails, params: { id: this.value.id } })
+      this.$router.push({ name: this.$options.routes.promoDetails, params: { id: this.value.uid } })
     }, 200)
   },
   routes: {

@@ -25,7 +25,7 @@
         <q-icon
           name="bookmark"
           size="2em"
-          :color="value.color"
+          :color="value.category"
         />
       </div>
     </q-card-section>
@@ -39,7 +39,7 @@
         />
       </div>
       <div class="col-10 text-caption">
-        {{ "14/11/2019" }}
+        {{ start }}
       </div>
       <div class="col-2 text-caption">
         <q-icon
@@ -49,14 +49,14 @@
         />
       </div>
       <div class="col-10 text-caption">
-        {{ "14/11/2019" }}
+        {{ end }}
       </div>
     </q-card-section>
   </q-card>
 </template>
 
 <script>
-import { debounce } from 'quasar'
+import { debounce, date } from 'quasar'
 import { RouteNames } from 'src/constants/app'
 
 export default {
@@ -77,12 +77,18 @@ export default {
     return {}
   },
   computed: {
+    start () {
+      return date.formatDate(this.value.start, 'DD/MM/YYYY HH:mm')
+    },
+    end () {
+      return date.formatDate(this.value.end, 'DD/MM/YYYY HH:mm')
+    }
   },
   watch: {
   },
   methods: {
     handleClick: debounce(function (evt) {
-      this.$router.push({ name: this.$options.routes.promoDetails, params: { id: this.value.id } })
+      this.$router.push({ name: this.$options.routes.promoDetails, params: { id: this.value.uid } })
     }, 200)
   },
   routes: {

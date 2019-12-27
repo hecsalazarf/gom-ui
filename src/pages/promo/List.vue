@@ -5,6 +5,7 @@
   >
     <div class="column full-width">
       <div
+        v-if="promotions.active.edges.length"
         class="bg-secondary q-pa-sm active-promos"
       >
         <q-item dense>
@@ -16,11 +17,11 @@
         </q-item>
         <div class="row justify-center active-promos__scroll">
           <q-virtual-scroll
-            :items="promos1"
+            :items="promotions.active.edges"
             virtual-scroll-horizontal
           >
             <template v-slot="{ item }">
-              <h-active-promo v-model="item.data" />
+              <h-active-promo v-model="item.node" />
             </template>
           </q-virtual-scroll>
         </div>
@@ -37,11 +38,11 @@
       </q-item>
       <q-list class="bg-secondary h-rounded-borders-20">
         <h-iddle-promo
-          v-for="(promo, index) in promos2"
+          v-for="(iddle, index) in promotions.iddle.edges"
           ref="item"
-          :key="promo.data.id"
-          v-model="promo.data"
-          :separator="index < promos2.length - 1"
+          :key="iddle.node.uid"
+          v-model="iddle.node"
+          :separator="index < promotions.iddle.edges.length - 1"
         />
       </q-list>
     </div>
@@ -64,6 +65,8 @@
 
 <script>
 import { RouteNames } from 'src/constants/app'
+import UserPromotions from 'src/graphql/queries/UserPromotions.gql'
+
 export default {
   name: 'HPromoListPage',
   components: {
@@ -72,56 +75,55 @@ export default {
   },
   data () {
     return {
-      promos1: [
-        {
-          data: {
-            id: '1',
-            name: 'Promo 1',
-            code: 'Código 1',
-            color: 'green'
-          }
+      promotionsPerBlock: 15,
+      promotions: {
+        active: {
+          edges: []
         },
-        {
-          data: {
-            id: '4',
-            name: 'Promo 4',
-            code: 'Código 4',
-            color: 'yellow'
-          }
-        },
-        {
-          data: {
-            id: '5',
-            name: 'Promo 5',
-            code: 'Código 5',
-            color: 'red'
-          }
-        },
-        {
-          data: {
-            id: '6',
-            name: 'Promo 6',
-            code: 'Código 6',
-            color: 'blue'
-          }
+        iddle: {
+          edges: []
         }
-      ],
-      promos2: [
-        {
-          data: {
-            id: '2',
-            name: 'Promo 2',
-            code: 'Código 2'
+      }
+    }
+  },
+  apollo: {
+    promotions () {
+      const now = new Date()
+      // In order to use the cache for consecutive call, we change the
+      // current date every hour. Every hour a new request will be made.
+      now.setHours(now.getHours(), 0, 0, 0)
+      return {
+        query: UserPromotions,
+        update (data) {
+          if (!data.active && !data.iddle) {
+            // If no orders, return empty object
+            return this.promotions
           }
+          return data
         },
-        {
-          data: {
-            id: '3',
-            name: 'Promo 3',
-            code: 'Código 3'
-          }
+        watchLoading (isLoading, countModifier) {
+          // Loading window is not shown when refetch is executed
+          if (isLoading && !this.refetchFlag && !this.fetchMoreFlag) this.$q.loading.show()
+          else this.$q.loading.hide()
+        },
+        variables: {
+          whereIddle: {
+            assignedTo: {
+              extUid: this.$user.id
+            },
+            end_lt: now
+          },
+          whereActive: {
+            assignedTo: {
+              extUid: this.$user.id
+            },
+            end_gte: now
+          },
+          first: this.promotionsPerBlock,
+          skip: 0,
+          orderBy: 'end_DESC'
         }
-      ]
+      }
     }
   },
   beforeRouteEnter (to, from, next) {
