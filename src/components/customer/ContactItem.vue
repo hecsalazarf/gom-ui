@@ -21,7 +21,10 @@
         </q-item-section>
       </q-item>
     </q-slide-item>
-    <q-separator v-if="separator" />
+    <q-separator
+      v-if="separator"
+      inset
+    />
   </div>
 </template>
 
