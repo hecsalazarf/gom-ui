@@ -7,7 +7,7 @@ export default {
     details: 'Detalles',
     createdAt: 'Pedido el',
     updatedAt: 'Actualizado el',
-    dates: 'Fechas',
+    log: 'Historial',
     confirm_exit_title: 'Tienes un pedido en proceso',
     confirm_exit_message: 'Al continuar perderás los cambios ¿Continuar?',
     status: {
