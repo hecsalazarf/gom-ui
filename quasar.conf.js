@@ -1,7 +1,7 @@
 // Configuration for your app
 const fs = require('fs')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const env = require('./env')
+const config = require('./config')
 
 module.exports = function (ctx) {
   return {
@@ -120,7 +120,7 @@ module.exports = function (ctx) {
       // analyze: true,
       // extractCSS: false,
       devtool: 'source-map',
-      env: env(ctx),
+      env: config(ctx),
       extendWebpack (cfg) {
         cfg.module.rules.push({
           enforce: 'pre',
