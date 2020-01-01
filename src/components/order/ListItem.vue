@@ -1,6 +1,7 @@
 <template>
   <div>
     <q-item
+      v-ripple
       v-touch-hold.mouse="handleHold"
       clickable
       :active="isActive"
@@ -53,7 +54,7 @@
 </template>
 
 <script>
-import { date } from 'quasar'
+import { date, debounce } from 'quasar'
 import { createNamespacedHelpers } from 'vuex'
 import { OrderComponentMixin } from './common'
 import { RouteNames } from 'src/constants/app'
@@ -118,7 +119,7 @@ export default {
     handleHold ({ evt, ...info }) {
       // this.$refs.selectionEl.toggle() // SELECTION DISABLED (#28)
     },
-    handleClick (evt) {
+    handleClick: debounce(function (evt) {
       if (this.selectedOrders.length > 0) {
         this.$refs.selectionEl.toggle()
       } else {
@@ -127,7 +128,7 @@ export default {
           params: { id: this.value.id }
         })
       }
-    },
+    }, 200),
     ...mapActions(['changeSelectedOrders', 'changeActiveToolbar'])
   }
 }
