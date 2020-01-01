@@ -145,10 +145,14 @@ export default {
       })
     }
   },
-  created () {
+  beforeMount () {
     this.changeActiveOrder(this.id)
     this.changeActiveToolbar('h-order-toolbar')
     this.changeActiveOrderTab(this.tab)
+  },
+  beforeDestroy () {
+    this.changeActiveToolbar(null)
+    this.changeActiveOrder(null)
   },
   methods: {
     refresh (done) {
@@ -233,11 +237,6 @@ export default {
         vm.$router.back() // no permission, go back
       }
     })
-  },
-  beforeRouteLeave (to, from, next) {
-    this.changeActiveToolbar(null)
-    this.changeActiveOrder(null)
-    next()
   }
 }
 </script>
