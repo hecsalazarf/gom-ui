@@ -89,20 +89,7 @@
             </q-card>
           </q-expansion-item>
 
-          <q-expansion-item
-            class="bg-secondary h-rounded-borders-20"
-            icon="receipt"
-            switch-toggle-side
-            :label="$t('promo.content')"
-            default-opened
-            header-class="text-subtitle1 text-weight-medium text-primary"
-          >
-            <q-card class="bg-secondary">
-              <q-card-section>
-                <h-text-editor v-model="promo.content" />
-              </q-card-section>
-            </q-card>
-          </q-expansion-item>
+          <h-promo-content-data v-model="promo" />
           <q-btn
             outline
             class="full-width"
@@ -129,7 +116,7 @@ export default {
   components: {
     'h-color': () => import('components/promo/ColorPickButton.vue'),
     'h-datetime': () => import('components/misc/DateTimePicker.vue'),
-    'h-text-editor': () => import('components/misc/TextEditor.vue')
+    'h-promo-content-data': () => import('components/promo/ContentData.vue')
   },
   data () {
     return {

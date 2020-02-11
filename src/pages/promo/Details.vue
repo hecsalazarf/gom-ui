@@ -31,7 +31,11 @@
           keep-alive
         >
           <q-tab-panel name="details">
-            <h-promo-details-tab v-model="promotion" />
+            <q-list class="q-gutter-y-sm">
+              <h-promo-general-data v-model="promotion" />
+              <h-promo-content-data v-model="promotion" />
+              <h-promo-log-data v-model="promotion" />
+            </q-list>
           </q-tab-panel>
           <q-tab-panel name="publishing">
             <h-promo-publishing-tab />
@@ -52,7 +56,9 @@ const { mapActions } = createNamespacedHelpers('GomState')
 export default {
   name: 'HPromoDetailsPage',
   components: {
-    'h-promo-details-tab': () => import('components/promo/DetailsTab.vue'),
+    'h-promo-general-data': () => import('components/promo/GeneralData.vue'),
+    'h-promo-content-data': () => import('components/promo/ContentData.vue'),
+    'h-promo-log-data': () => import('components/promo/LogData.vue'),
     'h-promo-publishing-tab': () => import('components/promo/PublishingTab.vue')
   },
   props: {
