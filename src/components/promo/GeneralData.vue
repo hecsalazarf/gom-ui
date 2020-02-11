@@ -125,10 +125,18 @@
             :borderless="!editMode"
           >
             <template v-slot:control>
-              <h-color
-                v-model="category"
-                :options="$options.colors"
-              />
+              <div class="row justify-start q-gutter-sm">
+                <q-checkbox
+                  v-for="(color, index) in $options.colors"
+                  :key="index"
+                  v-model="category"
+                  class="col-1"
+                  :val="color.val"
+                  :color="color.name"
+                  keep-color
+                  :disable="!editMode"
+                />
+              </div>
             </template>
           </q-field>
         </q-card-section>
@@ -144,7 +152,6 @@ import DataLayer from './dataLayer'
 export default {
   name: 'PromoGeneralData',
   components: {
-    'h-color': () => import('components/promo/ColorPickButton.vue'),
     'h-datetime': () => import('components/misc/DateTimePicker.vue')
   },
   mixins: [DataLayer],
@@ -219,14 +226,14 @@ export default {
     category: {
       get () {
         if (typeof this.model.category === 'undefined') {
-          return ''
+          return []
         }
-        return this.model.category
+        return [this.model.category]
       },
       set (category) {
-        if (category !== this.value.category) this.tempModel.category = category
-        else delete this.tempModel.content
-        this.model.content = category
+        if (category !== this.value.category) this.tempModel.category = category[category.length - 1]
+        else delete this.tempModel.category
+        this.model.category = category[category.length - 1]
       }
     }
   },

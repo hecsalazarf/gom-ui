@@ -57,7 +57,6 @@
     </template>
     <q-card class="bg-secondary">
       <q-card-section>
-        <!-- <h-text-editor v-model="content" /> -->
         <q-editor
           v-model="content"
           :dense="$q.screen.lt.sm"
@@ -65,6 +64,7 @@
           max-height="7rem"
           toolbar-text-color="primary"
           toolbar-toggle-color="accent"
+          :readonly="!editMode"
           :toolbar="[
             [
               {

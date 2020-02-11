@@ -2,7 +2,7 @@
 export default {
   data () {
     return {
-      editMode: true,
+      editMode: false,
       model: { ...this.value },
       tempModel: {} // mutation variable
     }

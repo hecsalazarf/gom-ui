@@ -16,10 +16,12 @@
       </div>
     </template>
     <template v-slot:append>
-      <q-icon
-        name="event"
-        class="cursor-pointer"
+      <q-btn
+        icon="event"
+        dense
+        flat
         :color="iconColor"
+        :disable="readonly"
       >
         <q-popup-proxy
           ref="popup"
@@ -30,6 +32,7 @@
           <q-date
             v-if="panel === 'date'"
             v-model="proxyDate"
+            today-btn
             :mask="mask"
             :options="dateOptions"
           >
@@ -82,7 +85,7 @@
             </div>
           </q-time>
         </q-popup-proxy>
-      </q-icon>
+      </q-btn>
     </template>
   </q-field>
 </template>
