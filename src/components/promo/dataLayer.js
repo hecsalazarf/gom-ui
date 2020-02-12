@@ -1,3 +1,5 @@
+import UpdatePromotion from 'src/graphql/mutations/UpdatePromotion.gql'
+
 // Use this object as a mixin
 export default {
   data () {
@@ -18,26 +20,26 @@ export default {
       this.tempModel = {} // reset temporary changes
       this.editMode = false // disable edit mode
     },
-    save () {
-      if (Object.keys(this.model).length === 0) {
+    updateModel () {
+      if (Object.keys(this.tempModel).length === 0) {
         this.editMode = false
         return // Do not save if no changes
       }
       this.$q.loading.show()
-      // this.$apollo.mutate({
-      //   mutation: UpdateOrder,
-      //   variables: {
-      //     where: {
-      //       uid: this.order.id
-      //     },
-      //     data: this.data
-      //   }
-      //   /* { id: this.order.id, data: this.data } */
-      // }).then(res => {
-      //   this.clear() // reset submitted data
-      //   this.$q.loading.hide()
-      //   this.$q.notify({ color: 'positive', message: this.$t('notifications.positive.changes_saved'), icon: 'check_circle' })
-      // })
+      this.$apollo.mutate({
+        mutation: UpdatePromotion,
+        variables: {
+          where: {
+            uid: this.model.uid
+          },
+          data: this.tempModel
+        }
+        /* { id: this.order.id, data: this.data } */
+      }).then(res => {
+        this.clear() // reset submitted data
+        this.$q.loading.hide()
+        this.$q.notify({ color: 'positive', message: this.$t('notifications.positive.changes_saved'), icon: 'check_circle' })
+      })
     }
   }
 }

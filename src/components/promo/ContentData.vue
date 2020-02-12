@@ -48,7 +48,7 @@
             dense
             round
             :aria-label="$t('app.save')"
-            @click.stop="$refs.form.validate(true).then(out => { if(out) save() })"
+            @click.stop="validate"
           >
             <q-tooltip>{{ $t('app.save') }}</q-tooltip>
           </q-btn>
@@ -58,6 +58,7 @@
     <q-card class="bg-secondary">
       <q-card-section>
         <q-editor
+          ref="editor"
           v-model="content"
           :dense="$q.screen.lt.sm"
           min-height="7rem"
@@ -144,6 +145,13 @@ export default {
         if (content !== this.model.content) this.tempModel.content = content
         else delete this.tempModel.content
         this.model.content = content
+      }
+    }
+  },
+  methods: {
+    validate () {
+      if (this.$refs.editor.getContentEl().textContent !== '') {
+        this.updateModel()
       }
     }
   }

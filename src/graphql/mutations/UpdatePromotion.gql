@@ -1,0 +1,12 @@
+mutation UpdatePromotion ($data: PromotionUpdateInput!, $where: PromotionWhereUniqueInput!) {
+  updatePromotion(data: $data, where: $where) {
+    uid
+    code
+    name
+    start
+    end
+    category
+    content
+    updatedAt
+  }
+}

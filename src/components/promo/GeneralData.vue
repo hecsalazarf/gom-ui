@@ -47,7 +47,7 @@
             dense
             round
             :aria-label="$t('app.save')"
-            @click.stop="$refs.form.validate(true).then(out => { if(out) save() })"
+            @click.stop="$refs.form.validate(true).then(out => { if(out) updateModel() })"
           >
             <q-tooltip>{{ $t('app.save') }}</q-tooltip>
           </q-btn>
@@ -91,6 +91,7 @@
             <h-datetime
               v-model="start"
               dense
+              raw
               class="col-xs-12"
               standout="bg-secondary"
               input-class="text-black"
@@ -103,6 +104,7 @@
             <h-datetime
               v-model="end"
               dense
+              raw
               class="col-xs-12"
               standout="bg-secondary"
               input-class="text-black"
@@ -205,7 +207,7 @@ export default {
         return date.formatDate(this.model.start, 'DD-MMM-YYYY hh:mm A')
       },
       set (start) {
-        if (start !== this.value.code) this.tempModel.code = start
+        if (!date.isSameDate(start, this.value.start)) this.tempModel.start = start
         else delete this.tempModel.start
         this.model.start = start
       }
@@ -218,7 +220,7 @@ export default {
         return date.formatDate(this.model.end, 'DD-MMM-YYYY hh:mm A')
       },
       set (end) {
-        if (end !== this.value.end) this.tempModel.end = end
+        if (!date.isSameDate(end, this.value.end)) this.tempModel.end = end
         else delete this.tempModel.end
         this.model.end = end
       }
