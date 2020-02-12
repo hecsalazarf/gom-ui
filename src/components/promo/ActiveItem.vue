@@ -6,19 +6,17 @@
   >
     <q-card-section class="row q-pb-sm">
       <div class="col-10">
-        <div class="column">
-          <div class="text-body1 text-weight-medium">
+        <div class="column block ellipsis">
+          <div class="text-body1 text-weight-medium ellipsis">
             {{ value.name }}
           </div>
-          <div>
-            <q-badge
-              outline
-              align="middle"
-              color="primary"
-            >
-              {{ value.code }}
-            </q-badge>
-          </div>
+          <q-badge
+            outline
+            align="middle"
+            color="primary"
+          >
+            {{ value.code }}
+          </q-badge>
         </div>
       </div>
       <div class="col-2">
