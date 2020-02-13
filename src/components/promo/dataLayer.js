@@ -9,6 +9,11 @@ export default {
       tempModel: {} // mutation variable
     }
   },
+  computed: {
+    editable () {
+      return this.editMode || this.forceEdit
+    }
+  },
   watch: {
     value (newVal) {
       this.model = { ...this.value }

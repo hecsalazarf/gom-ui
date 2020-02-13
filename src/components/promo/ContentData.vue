@@ -14,7 +14,7 @@
           class="row row q-gutter-x-md"
         >
           <q-btn
-            v-show="!editMode"
+            v-show="!editable"
             icon="edit"
             color="accent"
             size="0.75em"
@@ -27,7 +27,7 @@
             <q-tooltip>{{ $t('app.edit') }}</q-tooltip>
           </q-btn>
           <q-btn
-            v-if="editMode"
+            v-if="editable"
             icon="clear"
             color="red"
             size="0.75em"
@@ -40,7 +40,7 @@
             <q-tooltip>{{ $t('app.abort') }}</q-tooltip>
           </q-btn>
           <q-btn
-            v-if="editMode"
+            v-if="editable"
             icon="done"
             color="teal"
             size="0.75em"
@@ -48,7 +48,7 @@
             dense
             round
             :aria-label="$t('app.save')"
-            @click.stop="$refs.form.validate(true).then(out => !out || updateModel())"
+            @click.stop="update"
           >
             <q-tooltip>{{ $t('app.save') }}</q-tooltip>
           </q-btn>
@@ -78,8 +78,8 @@
               toolbar-text-color="primary"
               toolbar-toggle-color="accent"
               class="full-width"
-              :class="{ transparent: !editMode }"
-              :readonly="!editMode"
+              :class="{ transparent: !editable }"
+              :readonly="!editable"
               :toolbar="[
                 [
                   {
@@ -143,6 +143,10 @@ export default {
     readonly: {
       type: Boolean,
       default: false
+    },
+    forceEdit: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -170,6 +174,17 @@ export default {
         else delete this.tempModel.content
         this.model.content = content
       }
+    }
+  },
+  methods: {
+    update () {
+      this.validate().then(out => !out || this.updateModel())
+    },
+    validate () {
+      return this.$refs.form.validate(true)
+    },
+    getModel () {
+      return this.model
     }
   }
 }

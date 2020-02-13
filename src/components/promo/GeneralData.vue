@@ -13,7 +13,7 @@
           class="row row q-gutter-x-md"
         >
           <q-btn
-            v-show="!editMode"
+            v-show="!editable"
             icon="edit"
             color="accent"
             size="0.75em"
@@ -26,7 +26,7 @@
             <q-tooltip>{{ $t('app.edit') }}</q-tooltip>
           </q-btn>
           <q-btn
-            v-if="editMode"
+            v-if="editable"
             icon="clear"
             color="red"
             size="0.75em"
@@ -39,7 +39,7 @@
             <q-tooltip>{{ $t('app.abort') }}</q-tooltip>
           </q-btn>
           <q-btn
-            v-if="editMode"
+            v-if="editable"
             icon="done"
             color="teal"
             size="0.75em"
@@ -47,7 +47,7 @@
             dense
             round
             :aria-label="$t('app.save')"
-            @click.stop="$refs.form.validate(true).then(out => { if(out) updateModel() })"
+            @click.stop="update"
           >
             <q-tooltip>{{ $t('app.save') }}</q-tooltip>
           </q-btn>
@@ -65,8 +65,8 @@
               standout="bg-secondary"
               input-class="text-black"
               :label="$t('promo.code')"
-              :readonly="!editMode"
-              :borderless="!editMode"
+              :readonly="!editable"
+              :borderless="!editable"
               type="text"
               maxlength="10"
               :rules="[ val => !!val || $t('app.rules.required'), val => val.length <= 10 || $t('app.rules.max_length', { count: 10 }) ]"
@@ -80,8 +80,8 @@
             standout="bg-secondary"
             input-class="text-black"
             :label="$t('promo.name')"
-            :readonly="!editMode"
-            :borderless="!editMode"
+            :readonly="!editable"
+            :borderless="!editable"
             type="text"
             maxlength="40"
             :rules="[ val => !!val || $t('app.rules.required'), val => val.length <= 40 || $t('app.rules.max_length', { count: 40 }) ]"
@@ -96,8 +96,8 @@
               standout="bg-secondary"
               input-class="text-black"
               :label="$t('promo.start')"
-              :readonly="!editMode"
-              :borderless="!editMode"
+              :readonly="!editable"
+              :borderless="!editable"
               hide-bottom-space
               mask="DD-MMM-YYYY hh:mm A"
               :rules="[ val => !!val || $t('app.rules.required')]"
@@ -110,8 +110,8 @@
               standout="bg-secondary"
               input-class="text-black"
               :label="$t('promo.end')"
-              :readonly="!editMode"
-              :borderless="!editMode"
+              :readonly="!editable"
+              :borderless="!editable"
               hide-bottom-space
               mask="DD-MMM-YYYY hh:mm A"
               :rules="[
@@ -130,8 +130,8 @@
             :label="$t('promo.category')"
             stack-label
             hide-bottom-space
-            :readonly="!editMode"
-            :borderless="!editMode"
+            :readonly="!editable"
+            :borderless="!editable"
             :rules="[val => val.length === 1 || $t('app.rules.required')]"
           >
             <template v-slot:control>
@@ -144,7 +144,7 @@
                   :val="color.val"
                   :color="color.name"
                   keep-color
-                  :disable="!editMode"
+                  :disable="!editable"
                 />
               </div>
             </template>
@@ -172,6 +172,10 @@ export default {
       required: true
     },
     readonly: {
+      type: Boolean,
+      default: false
+    },
+    forceEdit: {
       type: Boolean,
       default: false
     }
@@ -250,6 +254,15 @@ export default {
   methods: {
     checkDateDiff (date1, date2) {
       return date.getDateDiff(date1, date2, 'minutes') > 0
+    },
+    update () {
+      this.validate().then(out => !out || this.updateModel())
+    },
+    validate () {
+      return this.$refs.form.validate(true)
+    },
+    getModel () {
+      return this.model
     }
   },
   colors: [
