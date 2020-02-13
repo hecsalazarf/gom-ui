@@ -48,7 +48,7 @@
             dense
             round
             :aria-label="$t('app.save')"
-            @click.stop="validate"
+            @click.stop="$refs.form.validate(true).then(out => !out || updateModel())"
           >
             <q-tooltip>{{ $t('app.save') }}</q-tooltip>
           </q-btn>
@@ -57,56 +57,72 @@
     </template>
     <q-card class="bg-secondary">
       <q-card-section>
-        <q-editor
-          ref="editor"
-          v-model="content"
-          :dense="$q.screen.lt.sm"
-          min-height="7rem"
-          max-height="7rem"
-          toolbar-text-color="primary"
-          toolbar-toggle-color="accent"
-          :readonly="!editMode"
-          :toolbar="[
-            [
-              {
-                icon: $q.iconSet.editor.formatting,
-                fixedLabel: true,
-                fixedIcon: true,
-                options: [
-                  'p',
-                  'code',
-                  'h6',
-                  'h5',
-                  'h4',
-                ]
-              },
-              {
-                icon: $q.iconSet.editor.fontSize,
-                fixedLabel: true,
-                list: 'no-icons',
-                options: [
-                  'size-1',
-                  'size-2',
-                  'size-3',
-                  'size-4',
-                  'size-5',
-                  'size-6',
-                ]
-              }
-            ],
-            [
-              {
-                icon: $q.iconSet.editor.align,
-                fixedLabel: true,
-                list: 'only-icons',
-                options: ['left', 'center', 'right', 'justify']
-              }
-            ],
-            ['bold','italic','underline','strike'],
-            ['undo','redo'],
-            ['quote', 'unordered', 'ordered']
-          ]"
-        />
+        <q-form ref="form">
+          <q-field
+            v-model="plainContent"
+            dense
+            borderless
+            hide-bottom-space
+            counter
+            :rules="[
+              val => !!val || $t('app.rules.required'),
+              val => val.length <= 140 || $t('app.rules.max_length', { count: 140 })
+            ]"
+          >
+            <q-editor
+              ref="editor"
+              v-model="content"
+              :dense="$q.screen.lt.sm"
+              min-height="9rem"
+              max-height="9rem"
+              toolbar-text-color="primary"
+              toolbar-toggle-color="accent"
+              class="full-width"
+              :class="{ transparent: !editMode }"
+              :readonly="!editMode"
+              :toolbar="[
+                [
+                  {
+                    icon: $q.iconSet.editor.formatting,
+                    fixedLabel: true,
+                    fixedIcon: true,
+                    options: [
+                      'p',
+                      'code',
+                      'h6',
+                      'h5',
+                      'h4',
+                    ]
+                  },
+                  {
+                    icon: $q.iconSet.editor.fontSize,
+                    fixedLabel: true,
+                    list: 'no-icons',
+                    options: [
+                      'size-1',
+                      'size-2',
+                      'size-3',
+                      'size-4',
+                      'size-5',
+                      'size-6',
+                    ]
+                  }
+                ],
+                [
+                  {
+                    icon: $q.iconSet.editor.align,
+                    fixedLabel: true,
+                    list: 'only-icons',
+                    options: ['left', 'center', 'right', 'justify']
+                  }
+                ],
+                ['bold','italic','underline','strike'],
+                ['undo','redo'],
+                ['quote', 'unordered', 'ordered']
+              ]"
+            />
+          </q-field>
+        </q-form>
       </q-card-section>
     </q-card>
   </q-expansion-item>
@@ -134,6 +150,14 @@ export default {
     }
   },
   computed: {
+    plainContent () {
+      if (typeof document !== 'undefined') {
+        const el = document.createElement('div')
+        el.innerHTML = this.content.replace(/<[^>]*>/g, '')
+        return el.textContent
+      }
+      return this.content.replace(/<[^>]*>/g, '')
+    },
     content: {
       get () {
         if (typeof this.model.content === 'undefined') {
@@ -142,16 +166,9 @@ export default {
         return this.model.content
       },
       set (content) {
-        if (content !== this.model.content) this.tempModel.content = content
+        if (content !== this.value.content) this.tempModel.content = content
         else delete this.tempModel.content
         this.model.content = content
-      }
-    }
-  },
-  methods: {
-    validate () {
-      if (this.$refs.editor.getContentEl().textContent !== '') {
-        this.updateModel()
       }
     }
   }
@@ -162,4 +179,7 @@ export default {
 .q-expansion-item__content > .q-card
   border-bottom-left-radius: 20px
   border-bottom-right-radius: 20px
+.editor--focus
+  border-color: $primary
+  background-color: $white
 </style>

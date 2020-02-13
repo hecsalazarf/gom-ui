@@ -68,8 +68,8 @@
               :readonly="!editMode"
               :borderless="!editMode"
               type="text"
-              maxlength="40"
-              :rules="[ val => !!val || $t('app.rules.required'), val => val.length <= 40 || $t('app.rules.max_length', { count: 40 }) ]"
+              maxlength="10"
+              :rules="[ val => !!val || $t('app.rules.required'), val => val.length <= 10 || $t('app.rules.max_length', { count: 10 }) ]"
               hide-bottom-space
               stack-label
             />
@@ -100,6 +100,7 @@
               :borderless="!editMode"
               hide-bottom-space
               mask="DD-MMM-YYYY hh:mm A"
+              :rules="[ val => !!val || $t('app.rules.required')]"
             />
             <h-datetime
               v-model="end"
@@ -113,9 +114,15 @@
               :borderless="!editMode"
               hide-bottom-space
               mask="DD-MMM-YYYY hh:mm A"
+              :rules="[
+                val => !!val || $t('app.rules.required'),
+                val => checkDateDiff(val, model.start) || 'Fecha de término debe ser mayor a fecha de inicio',
+                val => checkDateDiff(val, Date.now()) || 'Fecha de término debe ser mayor a la fecha actual',
+              ]"
             />
           </div>
           <q-field
+            v-model="category"
             dense
             class="col-xs-4 col-sm-3 col-md-2"
             standout="bg-secondary"
@@ -125,6 +132,7 @@
             hide-bottom-space
             :readonly="!editMode"
             :borderless="!editMode"
+            :rules="[val => val.length === 1 || $t('app.rules.required')]"
           >
             <template v-slot:control>
               <div class="row justify-start q-gutter-sm">
@@ -237,6 +245,11 @@ export default {
         else delete this.tempModel.category
         this.model.category = category[category.length - 1]
       }
+    }
+  },
+  methods: {
+    checkDateDiff (date1, date2) {
+      return date.getDateDiff(date1, date2, 'minutes') > 0
     }
   },
   colors: [
