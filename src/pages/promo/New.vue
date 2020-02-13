@@ -33,6 +33,7 @@
 import { createNamespacedHelpers } from 'vuex'
 import CreatePromotion from 'src/graphql/mutations/CreatePromotion.gql'
 import { RouteNames } from 'src/constants/app'
+import DataLayer from '../../components/promo/dataLayer'
 
 const { mapActions } = createNamespacedHelpers('GomState')
 const { PROMO_DETAILS } = RouteNames
@@ -42,6 +43,7 @@ export default {
     'h-promo-general-data': () => import('components/promo/GeneralData.vue'),
     'h-promo-content-data': () => import('components/promo/ContentData.vue')
   },
+  mixins: [DataLayer],
   data () {
     return {
       general: {
@@ -105,7 +107,8 @@ export default {
           }
           return this.$apollo.mutate({
             mutation: CreatePromotion,
-            variables: { data }
+            variables: { data },
+            update: this.updateCache
           })
         })
         .then(res => {
