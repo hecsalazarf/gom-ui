@@ -11,11 +11,10 @@ const handler = {
   set (target, prop, value) {
     if (Object.prototype.hasOwnProperty.call(target.schema, prop)) {
       target.resolve(prop, value)
-      return true
     } else {
       console.error(`Property ${prop} is not defined in schema ${target.constructor.name}`)
-      return true
     }
+    return true
   }
 }
 
@@ -63,7 +62,6 @@ export class BaseModel {
 }
 
 export function Model (ModelTemplate) {
-  ModelTemplate.prototype = Object.create(new BaseModel(), Object.getOwnPropertyDescriptors(ModelTemplate.prototype))
   Object.defineProperty(ModelTemplate.prototype, 'schema', {
     configurable: false,
     enumerable: true,
@@ -75,6 +73,7 @@ export function Model (ModelTemplate) {
   return new Proxy(ModelTemplate, {
     construct (Target, args) {
       const initialData = args[0] || {}
+      ModelTemplate.prototype = Object.create(new BaseModel(), Object.getOwnPropertyDescriptors(ModelTemplate.prototype))
       const proxy = new Proxy(new Target(), handler)
       Object.assign(proxy, initialData)
       return proxy
