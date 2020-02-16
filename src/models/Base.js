@@ -1,6 +1,6 @@
 const handler = {
   get (target, prop, receiver) {
-    if (prop in target.schema) {
+    if (Object.prototype.hasOwnProperty.call(target, prop)) {
       return target.resolve(prop)
     } else {
       const propValue = Reflect.get(...arguments)
@@ -8,7 +8,7 @@ const handler = {
     }
   },
   set (target, prop, value) {
-    prop in target.schema ? target.resolve(prop, value) : Reflect.set(...arguments)
+    Object.prototype.hasOwnProperty.call(target, prop) ? target.resolve(prop, value) : Reflect.set(...arguments)
     return true
   }
 }
@@ -50,37 +50,31 @@ export class BaseModel {
   resolve (prop, value) {
     let resolver
     if (typeof value === 'undefined') {
-      resolver = this.getResolverByType(this.schema[prop], 'get')
+      resolver = this.getResolverByType(this[prop], 'get')
     } else {
-      resolver = this.getResolverByType(this.schema[prop], 'set')
+      resolver = this.getResolverByType(this[prop], 'set')
     }
     return resolver(prop, value)
   }
 }
 
-export function Model (interactionLayer, schema) {
-  if (typeof interactionLayer.prototype.schema === 'undefined') {
-    // Target.prototype.schema = schema
-    Object.defineProperty(interactionLayer.prototype, 'schema', {
-      configurable: false,
-      enumerable: true,
-      writable: false,
-      value: schema
-    })
-  }
+export function Model (interactionLayer) {
   return new Proxy(interactionLayer, {
     construct (Target, args) {
       const initialData = args[0] || {}
+      Target.prototype = Object.create(new BaseModel(), Object.getOwnPropertyDescriptors(Target.prototype))
       const instance = new Target(...args)
 
-      for (const prop in schema) {
-        Object.defineProperty(instance.model, prop, {
-          // Vue requires these descriptors in order to be reactive
-          configurable: true,
-          enumerable: true,
-          writable: true,
-          value: initialData[prop] || ''
-        })
+      for (const prop in initialData) {
+        if (Object.prototype.hasOwnProperty.call(instance, prop)) {
+          Object.defineProperty(instance.model, prop, {
+            // Vue requires these descriptors in order to be reactive
+            configurable: true,
+            enumerable: true,
+            writable: true,
+            value: initialData[prop]
+          })
+        }
       }
       return new Proxy(instance, handler)
     }

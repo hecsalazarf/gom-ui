@@ -1,7 +1,15 @@
-import { BaseModel, Model } from './Base'
-import schema from './Promotion.schema'
+import { Model } from './Base'
 
-class Promotion extends BaseModel {
+class Promotion {
+  // uid = String
+  code = String
+  // name = String
+  // start = Date
+  // end = Date
+  // category = Array
+  // content = String
+
+  foo () {}
 }
 
-export default Model(Promotion, schema)
+export default Model(Promotion)
