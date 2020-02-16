@@ -8,8 +8,6 @@ class Promotion {
   // end = Date
   // category = Array
   // content = String
-
-  foo () {}
 }
 
 export default Model(Promotion)
