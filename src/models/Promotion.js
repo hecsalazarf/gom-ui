@@ -2,7 +2,9 @@ import { Model } from './Base'
 
 class Promotion {
   // uid = String
-  code = String
+  code = {
+    type: String
+  }
   // name = String
   // start = Date
   // end = Date

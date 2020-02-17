@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 const handler = {
   get (target, prop, receiver) {
     if (Object.prototype.hasOwnProperty.call(target.schema, prop)) {
@@ -27,8 +26,8 @@ export class BaseModel {
   resolveString (accessor) {
     const resolver = {
       get (prop) {
-        if (typeof this[prop] === 'undefined') {
-          // TODO
+        if (typeof this.initial[prop] === 'undefined') {
+          return ''
         }
         return this[prop]
       },
@@ -53,9 +52,9 @@ export class BaseModel {
   resolve (prop, value) {
     let resolver
     if (typeof value === 'undefined') {
-      resolver = this.getResolverByType(this.schema[prop], 'get')
+      resolver = this.getResolverByType(this.schema[prop].type, 'get')
     } else {
-      resolver = this.getResolverByType(this.schema[prop], 'set')
+      resolver = this.getResolverByType(this.schema[prop].type, 'set')
     }
     return resolver(prop, value)
   }
@@ -73,7 +72,7 @@ export function Model (ModelTemplate) {
   return new Proxy(ModelTemplate, {
     construct (Target, args) {
       const initialData = args[0] || {}
-      ModelTemplate.prototype = Object.create(new BaseModel(), Object.getOwnPropertyDescriptors(ModelTemplate.prototype))
+      Target.prototype = Object.create(new BaseModel(), Object.getOwnPropertyDescriptors(Target.prototype))
       const proxy = new Proxy(new Target(), handler)
       Object.assign(proxy.initial, initialData)
       Object.assign(proxy, initialData)
