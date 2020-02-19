@@ -59,7 +59,7 @@
         <q-card-section class="q-col-gutter-xs">
           <div class="row justify-between items-end">
             <q-input
-              v-model="code"
+              v-model="model.code"
               class="col-12"
               dense
               standout="bg-secondary"
@@ -71,11 +71,10 @@
               maxlength="10"
               :rules="[ val => !!val || $t('app.rules.required'), val => val.length <= 10 || $t('app.rules.max_length', { count: 10 }) ]"
               hide-bottom-space
-              stack-label
             />
           </div>
           <q-input
-            v-model="name"
+            v-model="model.name"
             dense
             standout="bg-secondary"
             input-class="text-black"
@@ -89,7 +88,7 @@
           />
           <div class="row q-col-gutter-xs">
             <h-datetime
-              v-model="start"
+              v-model="model.start"
               dense
               raw
               class="col-xs-12"
@@ -103,7 +102,7 @@
               :rules="[ val => !!val || $t('app.rules.required')]"
             />
             <h-datetime
-              v-model="end"
+              v-model="model.end"
               dense
               raw
               class="col-xs-12"
@@ -158,6 +157,7 @@
 <script>
 import { date } from 'quasar'
 import DataLayer from './dataLayer'
+import Promotion from 'src/models/Promotion'
 
 export default {
   name: 'PromoGeneralData',
@@ -168,8 +168,7 @@ export default {
   props: {
     value: {
       type: Object,
-      default: () => ({}),
-      required: true
+      default: () => ({})
     },
     readonly: {
       type: Boolean,
@@ -182,72 +181,16 @@ export default {
   },
   data () {
     return {
+      model: new Promotion(this.value)
     }
   },
   computed: {
-    name: {
-      get () {
-        if (typeof this.model.name === 'undefined') {
-          return ''
-        }
-        return this.model.name
-      },
-      set (name) {
-        if (name !== this.value.name) this.tempModel.name = name
-        else delete this.tempModel.name
-        this.model.name = name
-      }
-    },
-    code: {
-      get () {
-        if (typeof this.model.code === 'undefined') {
-          return ''
-        }
-        return this.model.code
-      },
-      set (code) {
-        if (code !== this.value.code) this.tempModel.code = code
-        else delete this.tempModel.code
-        this.model.code = code
-      }
-    },
-    start: {
-      get () {
-        if (typeof this.model.start === 'undefined') {
-          return ''
-        }
-        return date.formatDate(this.model.start, 'DD-MMM-YYYY hh:mm A')
-      },
-      set (start) {
-        if (!date.isSameDate(start, this.value.start)) this.tempModel.start = start
-        else delete this.tempModel.start
-        this.model.start = start
-      }
-    },
-    end: {
-      get () {
-        if (typeof this.model.end === 'undefined') {
-          return ''
-        }
-        return date.formatDate(this.model.end, 'DD-MMM-YYYY hh:mm A')
-      },
-      set (end) {
-        if (!date.isSameDate(end, this.value.end)) this.tempModel.end = end
-        else delete this.tempModel.end
-        this.model.end = end
-      }
-    },
     category: {
       get () {
-        if (typeof this.model.category === 'undefined') {
-          return []
-        }
         return [this.model.category]
       },
-      set (category) {
-        if (category !== this.value.category) this.tempModel.category = category[category.length - 1]
-        else delete this.tempModel.category
-        this.model.category = category[category.length - 1]
+      set (value) {
+        this.model.category = value[value.length - 1]
       }
     }
   },

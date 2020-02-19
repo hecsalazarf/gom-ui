@@ -71,7 +71,7 @@
           >
             <q-editor
               ref="editor"
-              v-model="content"
+              v-model="model.content"
               :dense="$q.screen.lt.sm"
               min-height="9rem"
               max-height="9rem"
@@ -130,6 +130,7 @@
 
 <script>
 import DataLayer from './dataLayer'
+import Promotion from 'src/models/Promotion'
 
 export default {
   name: 'PromoContentData',
@@ -137,8 +138,7 @@ export default {
   props: {
     value: {
       type: Object,
-      default: () => ({}),
-      required: true
+      default: () => ({})
     },
     readonly: {
       type: Boolean,
@@ -151,29 +151,17 @@ export default {
   },
   data () {
     return {
+      model: new Promotion(this.value)
     }
   },
   computed: {
     plainContent () {
       if (typeof document !== 'undefined') {
         const el = document.createElement('div')
-        el.innerHTML = this.content.replace(/<[^>]*>/g, '')
+        el.innerHTML = this.model.content.replace(/<[^>]*>/g, '')
         return el.textContent
       }
       return this.content.replace(/<[^>]*>/g, '')
-    },
-    content: {
-      get () {
-        if (typeof this.model.content === 'undefined') {
-          return ''
-        }
-        return this.model.content
-      },
-      set (content) {
-        if (content !== this.value.content) this.tempModel.content = content
-        else delete this.tempModel.content
-        this.model.content = content
-      }
     }
   },
   methods: {

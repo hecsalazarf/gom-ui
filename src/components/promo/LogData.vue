@@ -10,7 +10,7 @@
     <q-card class="bg-secondary">
       <q-card-section>
         <q-input
-          v-model="createdAt"
+          v-model="model.createdAt"
           dense
           :label="$t('promo.createdAt')"
           readonly
@@ -19,7 +19,7 @@
       </q-card-section>
       <q-card-section>
         <q-input
-          v-model="updatedAt"
+          v-model="model.updatedAt"
           dense
           :label="$t('promo.updatedAt')"
           readonly
@@ -31,8 +31,8 @@
 </template>
 
 <script>
-import { date } from 'quasar'
 import DataLayer from './dataLayer'
+import Promotion from 'src/models/Promotion'
 
 export default {
   name: 'PromoLogData',
@@ -40,8 +40,7 @@ export default {
   props: {
     value: {
       type: Object,
-      default: () => ({}),
-      required: true
+      default: () => ({})
     },
     readonly: {
       type: Boolean,
@@ -49,20 +48,8 @@ export default {
     }
   },
   data () {
-    return {}
-  },
-  computed: {
-    createdAt () {
-      if (typeof this.model.createdAt === 'undefined') {
-        return ''
-      }
-      return date.formatDate(this.model.createdAt, 'DD/MM/YYYY HH:mm:ss')
-    },
-    updatedAt () {
-      if (typeof this.model.updatedAt === 'undefined') {
-        return ''
-      }
-      return date.formatDate(this.model.updatedAt, 'DD/MM/YYYY HH:mm:ss')
+    return {
+      model: new Promotion(this.value)
     }
   }
 }

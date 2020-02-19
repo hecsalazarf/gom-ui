@@ -19,7 +19,7 @@ const handler = {
   }
 }
 
-export class BaseModel {
+class BaseModel {
   constructor () {
     this.initial = {}
     this.delta = {}
@@ -53,9 +53,10 @@ export class BaseModel {
         return date.formatDate(this[prop], this.schema[prop].options.format)
       },
       set (prop, value) {
-        if (!date.isSameDate(value, this.initial[prop])) this.delta[prop] = value
+        const extrDate = typeof value === 'string' ? new Date(value) : value
+        if (!date.isSameDate(extrDate, this.initial[prop])) this.delta[prop] = extrDate
         else delete this.delta[prop]
-        this[prop] = value
+        this[prop] = extrDate
       }
     }
     return resolver[accessor].bind(this)
@@ -102,6 +103,17 @@ export class BaseModel {
     }
     return resolver(prop, value)
   }
+
+  reset () {
+    const a = this
+    Object.assign(a, this.initial)
+    this.delta = {}
+  }
+
+  commit () {
+    Object.assign(this.initial, this.delta)
+    this.delta = {}
+  }
 }
 
 export function Model (ModelTemplate) {
@@ -110,7 +122,11 @@ export function Model (ModelTemplate) {
     enumerable: true,
     writable: false,
     value: {
-      ...new ModelTemplate()
+      ...new ModelTemplate(),
+      __typename: {
+        type: String,
+        default: ModelTemplate.prototype.constructor.name
+      }
     }
   })
   return new Proxy(ModelTemplate, {

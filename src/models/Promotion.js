@@ -33,16 +33,29 @@ class Promotion {
   }
 
   category = {
-    type: Array,
-    default: [],
-    options: {
-      multiValue: false
-    }
+    type: String,
+    default: ''
   }
 
   content = {
     type: String,
     default: ''
+  }
+
+  createdAt = {
+    type: Date,
+    default: '',
+    options: {
+      format: 'DD/MM/YYYY HH:mm:ss'
+    }
+  }
+
+  updatedAt = {
+    type: Date,
+    default: '',
+    options: {
+      format: 'DD/MM/YYYY HH:mm:ss'
+    }
   }
 }
 

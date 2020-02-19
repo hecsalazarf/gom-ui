@@ -5,13 +5,11 @@
         <q-list class="q-gutter-y-sm">
           <h-promo-general-data
             ref="generalData"
-            v-model="general"
             readonly
             force-edit
           />
           <h-promo-content-data
             ref="contentData"
-            v-model="content"
             readonly
             force-edit
           />
@@ -44,20 +42,6 @@ export default {
     'h-promo-content-data': () => import('components/promo/ContentData.vue')
   },
   mixins: [DataLayer],
-  data () {
-    return {
-      general: {
-        name: '',
-        category: '',
-        code: '',
-        start: '',
-        end: ''
-      },
-      content: {
-        content: ''
-      }
-    }
-  },
   created () {
     this.dataToSave = {}
   },
@@ -76,29 +60,21 @@ export default {
           validations.push(this.$refs[ref].validate())
         }
       }
-      return Promise.all(validations.map(p => p.catch(e => e)))
-    },
-    beforeSubmit () {
-      return this.validate()
-        .then(res => {
-          if (res.every(res => res)) {
-            for (const ref in this.$refs) {
-              if ('getModel' in this.$refs[ref]) {
-                this.dataToSave = {
-                  ...this.dataToSave,
-                  ...this.$refs[ref].getModel()
-                }
-              }
-            }
-          }
-        })
+      return Promise.all(validations.map(p => p.catch(e => e))).then(res => res.every(res => res))
     },
     submit () {
-      this.beforeSubmit()
-        .then(() => {
+      this.validate()
+        .then((success) => {
+          if (!success) {
+            return undefined
+          }
           this.$q.loading.show()
+          const dataToSave = {}
+          for (const ref in this.$refs) {
+            Object.assign(dataToSave, this.$refs[ref].model.delta)
+          }
           const data = {
-            ...this.dataToSave,
+            ...dataToSave,
             assignedTo: {
               connect: {
                 extUid: this.$user.id
@@ -112,45 +88,14 @@ export default {
           })
         })
         .then(res => {
-          this.$q.loading.hide()
-          this.$router.replace({ name: PROMO_DETAILS, params: { id: res.data.createPromotion.uid } })
-        }).catch(e => console.log(e))
+          if (typeof res !== 'undefined') {
+            this.$router.replace({ name: PROMO_DETAILS, params: { id: res.data.createPromotion.uid } })
+          }
+        })
+        .catch(e => console.log(e))
+        .finally(() => this.$q.loading.hide())
     }
-  },
-  colors: [
-    {
-      val: 'pink',
-      name: 'pink'
-    },
-    {
-      val: 'purple',
-      name: 'purple'
-    },
-    {
-      val: 'indigo',
-      name: 'indigo'
-    },
-    {
-      val: 'teal',
-      name: 'teal'
-    },
-    {
-      val: 'red',
-      name: 'red'
-    },
-    {
-      val: 'brown',
-      name: 'brown'
-    },
-    {
-      val: 'grey',
-      name: 'grey'
-    },
-    {
-      val: 'dark',
-      name: 'dark'
-    }
-  ]
+  }
 }
 </script>
 
