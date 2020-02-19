@@ -2,19 +2,23 @@ import { Model } from './Base'
 
 class Promotion {
   uid = {
-    type: String
+    type: String,
+    default: ''
   }
 
   code = {
-    type: String
+    type: String,
+    default: ''
   }
 
   name = {
-    type: String
+    type: String,
+    default: ''
   }
 
   start = {
     type: Date,
+    default: '',
     options: {
       format: 'DD-MMM-YYYY hh:mm A'
     }
@@ -22,6 +26,7 @@ class Promotion {
 
   end = {
     type: Date,
+    default: '',
     options: {
       format: 'DD-MMM-YYYY hh:mm A'
     }
@@ -29,13 +34,15 @@ class Promotion {
 
   category = {
     type: Array,
+    default: [],
     options: {
       multiValue: false
     }
   }
 
   content = {
-    type: String
+    type: String,
+    default: ''
   }
 }
 

@@ -29,7 +29,7 @@ export class BaseModel {
     const resolver = {
       get (prop) {
         if (typeof this[prop].type === 'function') {
-          return ''
+          return this.schema[prop].default
         }
         return this[prop]
       },
@@ -46,7 +46,7 @@ export class BaseModel {
     const resolver = {
       get (prop) {
         if (typeof this[prop].type === 'function') {
-          return ''
+          return this.schema[prop].default
         } else if (typeof this[prop] === 'string') {
           return this[prop]
         }
@@ -65,7 +65,7 @@ export class BaseModel {
     const resolver = {
       get (prop) {
         if (typeof this[prop].type === 'function') {
-          return []
+          return this.schema[prop].default
         } else if (typeof this[prop] === 'string') {
           return [this[prop]]
         }
