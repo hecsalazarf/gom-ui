@@ -1,3 +1,5 @@
+import { date } from 'quasar'
+
 const handler = {
   get (target, prop, receiver) {
     if (Object.prototype.hasOwnProperty.call(target.schema, prop)) {
@@ -26,7 +28,7 @@ export class BaseModel {
   resolveString (accessor) {
     const resolver = {
       get (prop) {
-        if (typeof this.initial[prop] === 'undefined') {
+        if (typeof this[prop].type === 'function') {
           return ''
         }
         return this[prop]
@@ -40,10 +42,52 @@ export class BaseModel {
     return resolver[accessor].bind(this)
   }
 
+  resolveDate (accessor) {
+    const resolver = {
+      get (prop) {
+        if (typeof this[prop].type === 'function') {
+          return ''
+        } else if (typeof this[prop] === 'string') {
+          return this[prop]
+        }
+        return date.formatDate(this[prop], this.schema[prop].options.format)
+      },
+      set (prop, value) {
+        if (!date.isSameDate(value, this.initial[prop])) this.delta[prop] = value
+        else delete this.delta[prop]
+        this[prop] = value
+      }
+    }
+    return resolver[accessor].bind(this)
+  }
+
+  resolveArray (accessor) {
+    const resolver = {
+      get (prop) {
+        if (typeof this[prop].type === 'function') {
+          return []
+        } else if (typeof this[prop] === 'string') {
+          return [this[prop]]
+        }
+        return this[prop]
+      },
+      set (prop, value) {
+        if (value !== this.initial[prop]) this.delta[prop] = value[value.length - 1]
+        else delete this.delta[prop]
+        this[prop] = value[value.length - 1]
+      }
+    }
+    return resolver[accessor].bind(this)
+  }
+
   getResolverByType (type, accessor) {
     switch (type.name) {
       case 'String':
         return this.resolveString(accessor)
+      case 'Date':
+        return this.resolveDate(accessor)
+      case 'Array':
+        return this.resolveArray(accessor)
       default:
         return this.resolveString(accessor)
     }
