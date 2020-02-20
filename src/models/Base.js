@@ -81,6 +81,25 @@ class BaseModel {
     return resolver[accessor].bind(this)
   }
 
+  resolveNumber (accessor) {
+    const resolver = {
+      get (prop) {
+        if (typeof this[prop].type === 'function') {
+          return this.schema[prop].default
+        } // else if (typeof this[prop] === 'string') {
+        //   return [this[prop]]
+        // }
+        return this[prop]
+      },
+      set (prop, value) {
+        if (value !== this.initial[prop]) this.delta[prop] = value
+        else delete this.delta[prop]
+        this[prop] = value
+      }
+    }
+    return resolver[accessor].bind(this)
+  }
+
   getResolverByType (type, accessor) {
     switch (type.name) {
       case 'String':
@@ -89,6 +108,8 @@ class BaseModel {
         return this.resolveDate(accessor)
       case 'Array':
         return this.resolveArray(accessor)
+      case 'Number':
+        return this.resolveNumber(accessor)
       default:
         return this.resolveString(accessor)
     }
