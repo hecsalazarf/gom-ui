@@ -42,9 +42,6 @@ export default {
     'h-promo-content-data': () => import('components/promo/ContentData.vue')
   },
   mixins: [DataLayer],
-  created () {
-    this.dataToSave = {}
-  },
   beforeMount () {
     this.changeActiveToolbar('h-promo-toolbar')
   },

@@ -130,7 +130,6 @@
 
 <script>
 import DataLayer from './dataLayer'
-import Promotion from 'src/models/Promotion'
 
 export default {
   name: 'PromoContentData',
@@ -147,11 +146,6 @@ export default {
     forceEdit: {
       type: Boolean,
       default: false
-    }
-  },
-  data () {
-    return {
-      model: new Promotion(this.value)
     }
   },
   computed: {

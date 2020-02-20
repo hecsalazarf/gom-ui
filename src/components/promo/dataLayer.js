@@ -1,14 +1,13 @@
 import UpdatePromotion from 'src/graphql/mutations/UpdatePromotion.gql'
 import UserPromotions from 'src/graphql/queries/UserPromotions.gql'
-import Promotion from 'src/models/Promotion'
+import { Promotion } from 'src/models'
 
 // Use this object as a mixin
 export default {
   data () {
     return {
       editMode: false,
-      model: { ...this.value },
-      tempModel: {} // mutation variable
+      model: new Promotion(this.value)
     }
   },
   computed: {

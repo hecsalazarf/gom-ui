@@ -1,4 +1,4 @@
-import { Model } from './Base'
+import { Model } from '../Base'
 
 class Promotion {
   uid = {
