@@ -11,7 +11,7 @@
       <div class="row q-pa-md relative-position justify-between">
         <div class="col-xs-5 col-sm-5 col-md-4">
           <q-option-group
-            v-model="delay"
+            v-model="model.delay"
             :options="delayOptions"
             color="primary"
             :disable="loading"
@@ -25,7 +25,7 @@
             outline
             rounded
             no-caps
-            @click="simulateProgress(3)"
+            @click="publish"
           >
             {{ $t('promo.publish') }}
             <template v-slot:loading>
@@ -42,12 +42,12 @@
           >
             <q-virtual-scroll
               class="q-pl-xs timeline-scroll"
-              :items="notifications"
+              :items="publications"
             >
               <template v-slot="{ item, index }">
                 <h-publish-timeline
                   :key="index"
-                  v-model="item.data"
+                  v-model="item.node"
                 />
               </template>
             </q-virtual-scroll>
@@ -59,6 +59,13 @@
 </template>
 
 <script>
+import { createNamespacedHelpers } from 'vuex'
+import { Publication } from 'src/models'
+import CreatePublication from 'src/graphql/mutations/CreatePublication.gql'
+import PromoPublications from 'src/graphql/queries/PromoPublications.gql'
+
+const { mapGetters } = createNamespacedHelpers('GomState')
+
 export default {
   name: 'HPromoPublishingTab',
   components: {
@@ -66,58 +73,109 @@ export default {
   },
   data () {
     return {
-      delay: '1h',
+      model: new Publication(),
       loading: false,
+      publications: [
+        'data: {}'
+      ],
       notifications: [
         {
           data: {
-            status: 'waiting',
+            status: 'WAITING',
             createdAt: '09/12/2019 19:39',
             delay: 120000
           }
         },
         {
           data: {
-            status: 'done',
+            status: 'DELIVERED',
             createdAt: '08/12/2019 12:17:18',
             finished: '08/12/2019 12:19:46'
           }
         },
         {
           data: {
-            status: 'error',
+            status: 'FAILED',
             createdAt: '08/12/2019 21:54',
             message: 'Error al enviar las notificaciones'
           }
         },
         {
           data: {
-            status: 'waiting',
+            status: 'WAITING',
             createdAt: '09/12/2019 19:39',
             delay: 432000000
           }
         }
-      ],
-      delayOptions: [
-        {
-          label: this.$t('time.now'),
-          value: 'now'
-        },
-        {
-          label: this.$t('time.one_hour_later'),
-          value: '1h_later'
-        },
-        {
-          label: this.$t('time.one_day_later'),
-          value: '1d_later'
-        }
       ]
     }
   },
+  computed: {
+    ...mapGetters(['activePromo'])
+  },
+  created () {
+    this.delayOptions = [
+      {
+        label: this.$t('time.now'),
+        value: 0
+      },
+      {
+        label: this.$t('time.one_hour_later'),
+        value: 3600000
+      },
+      {
+        label: this.$t('time.one_day_later'),
+        value: 86400000
+      }
+    ]
+  },
   methods: {
-    simulateProgress () {
+    publish () {
       this.loading = true
-      setTimeout(() => { this.loading = !this.loading }, 3000)
+      this.$apollo.mutate({
+        mutation: CreatePublication,
+        variables: {
+          data: {
+            ...this.model,
+            promotion: {
+              connect: {
+                uid: this.activePromo
+              }
+            }
+          }
+        }
+      })
+        .then(res => {
+          this.$q.notify({ color: 'positive', message: this.$t('notifications.positive.changes_saved'), icon: 'check_circle' })
+        })
+        .catch(e => console.log(e))
+        .finally(() => { this.loading = false })
+    }
+  },
+  apollo: {
+    publications () {
+      return {
+        query: PromoPublications,
+        update: ({ publicationsConnection }) => {
+          if (!publicationsConnection && publicationsConnection.edges.length > 0) {
+            // If no orders, return empty array
+            return []
+          }
+          return publicationsConnection.edges
+        },
+        watchLoading (isLoading, countModifier) {
+          isLoading ? this.$q.loading.show() : this.$q.loading.hide()
+        },
+        variables: {
+          where: {
+            promotion: {
+              uid: this.activePromo
+            }
+          },
+          orderBy: 'delay_ASC',
+          first: 10
+        }
+      }
     }
   }
 }

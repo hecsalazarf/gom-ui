@@ -4,16 +4,17 @@
   >
     <template v-slot:subtitle>
       <div class="text-capitalize opacity-seventy">
-        {{ value.createdAt }}
+        {{ createdAt }}
       </div>
     </template>
-    <div class=" text-caption">
+    <div class="text-caption">
       {{ meta.message }}
     </div>
   </q-timeline-entry>
 </template>
 
 <script>
+import { date } from 'quasar'
 export default {
   name: 'PromoPublishingTimeline',
   props: {
@@ -28,29 +29,33 @@ export default {
   },
   computed: {
     delay () {
-      if (this.value.delay < 3600000) {
-        return `${Math.round(this.value.delay / 60000)} minutos`
-      } else if (this.value.delay > 3600000 && this.value.delay < 86400000) {
-        return `${Math.round(this.value.delay / 60000 / 60)} horas`
-      } else if (this.value.delay > 86400000) {
-        return `${Math.round(this.value.delay / 60000 / 60 / 24)} días`
+      const remaining = (new Date(this.value.createdAt).valueOf() + this.value.delay) - Date.now()
+      if (remaining < 3600000) {
+        return `${Math.round(remaining / 60000)} minutos`
+      } else if (remaining > 3600000 && this.value.delay <= 86400000) {
+        return `${Math.round(remaining / 60000 / 60)} horas`
+      } else if (remaining > 86400000) {
+        return `${Math.round(remaining / 60000 / 60 / 24)} días`
       } else {
         return ''
       }
     },
+    createdAt () {
+      return date.formatDate(this.value.createdAt, 'DD/MM/YYYY HH:mm:ss')
+    },
     meta () {
       switch (this.value.status) {
-        case 'done':
+        case 'DELIVERED':
           return {
             icon: 'check_circle',
             message: 'Ejecutado el'
           }
-        case 'waiting':
+        case 'WAITING':
           return {
             icon: 'schedule',
             message: `Comienza en ${this.delay}`
           }
-        case 'error':
+        case 'FAILED':
           return {
             icon: 'error',
             message: 'Error en la ejecución'
