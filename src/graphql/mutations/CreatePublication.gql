@@ -4,5 +4,7 @@ mutation CreatePublication ($data: PublicationCreateInput!) {
     uid
     status
     delay
+    createdAt
+    updatedAt
   }
 }

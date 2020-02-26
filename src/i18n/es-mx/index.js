@@ -63,10 +63,19 @@ export default {
     publish: 'Publicar',
     notification: 'Notificación | Notificaciones'
   },
+  publication: {
+    publishedAt: 'Publicado el {date}',
+    errorAt: 'No publicado - {date}',
+    startIn: 'Comienza en {time}'
+  },
   time: {
     now: 'Ahora',
     one_day_later: 'Mañana',
-    one_hour_later: 'Una hora después'
+    one_hour_later: 'Una hora después',
+    second: 'segundo | 1 segundo | {n} segundos',
+    minute: 'minuto | 1 minuto | {n} minutos',
+    hour: 'hora | 1 hora | {n} horas'
+
   },
   pricing: {
     label: 'Precio | Precios',

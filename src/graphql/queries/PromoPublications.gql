@@ -10,6 +10,7 @@ query PromoPag ($where: PublicationWhereInput, $orderBy: PublicationOrderByInput
         status
         delay
         createdAt
+        updatedAt
       }
     }
   }

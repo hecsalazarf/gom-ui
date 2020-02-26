@@ -1,6 +1,7 @@
 <template>
   <q-timeline-entry
     :icon="meta.icon"
+    :color="meta.color"
   >
     <template v-slot:subtitle>
       <div class="text-capitalize opacity-seventy">
@@ -31,34 +32,40 @@ export default {
     delay () {
       const remaining = (new Date(this.value.createdAt).valueOf() + this.value.delay) - Date.now()
       if (remaining < 3600000) {
-        return `${Math.round(remaining / 60000)} minutos`
+        return this.$tc('time.minute', Math.round(remaining / 60000))
       } else if (remaining > 3600000 && this.value.delay <= 86400000) {
-        return `${Math.round(remaining / 60000 / 60)} horas`
+        return this.$tc('time.hour', Math.round(remaining / 60000 / 60))
       } else if (remaining > 86400000) {
-        return `${Math.round(remaining / 60000 / 60 / 24)} días`
+        return this.$tc('time.day', Math.round(remaining / 60000 / 60 / 24))
       } else {
         return ''
       }
     },
     createdAt () {
-      return date.formatDate(this.value.createdAt, 'DD/MM/YYYY HH:mm:ss')
+      return date.formatDate(this.value.createdAt, 'DD/MM/YYYY HH:mm')
+    },
+    updatedAt () {
+      return date.formatDate(this.value.updatedAt, 'DD/MM/YYYY HH:mm')
     },
     meta () {
       switch (this.value.status) {
         case 'DELIVERED':
           return {
             icon: 'check_circle',
-            message: 'Ejecutado el'
+            message: this.$t('publication.publishedAt', { date: this.updatedAt }),
+            color: 'positive'
           }
         case 'WAITING':
           return {
             icon: 'schedule',
-            message: `Comienza en ${this.delay}`
+            message: this.$t('publication.startIn', { time: this.delay }),
+            color: 'info'
           }
         case 'FAILED':
           return {
             icon: 'error',
-            message: 'Error en la ejecución'
+            message: this.$t('publication.errorAt', { date: this.updatedAt }),
+            color: 'negative'
           }
         default:
           return 'done'
@@ -94,4 +101,5 @@ export default {
   top: 32px
   left: 14px
   bottom: -6px
+  color: $primary
 </style>

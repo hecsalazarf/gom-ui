@@ -75,39 +75,7 @@ export default {
     return {
       model: new Publication(),
       loading: false,
-      publications: [
-        'data: {}'
-      ],
-      notifications: [
-        {
-          data: {
-            status: 'WAITING',
-            createdAt: '09/12/2019 19:39',
-            delay: 120000
-          }
-        },
-        {
-          data: {
-            status: 'DELIVERED',
-            createdAt: '08/12/2019 12:17:18',
-            finished: '08/12/2019 12:19:46'
-          }
-        },
-        {
-          data: {
-            status: 'FAILED',
-            createdAt: '08/12/2019 21:54',
-            message: 'Error al enviar las notificaciones'
-          }
-        },
-        {
-          data: {
-            status: 'WAITING',
-            createdAt: '09/12/2019 19:39',
-            delay: 432000000
-          }
-        }
-      ]
+      publications: []
     }
   },
   computed: {
@@ -134,6 +102,7 @@ export default {
       this.loading = true
       this.$apollo.mutate({
         mutation: CreatePublication,
+        update: this.updateCache.bind(this),
         variables: {
           data: {
             ...this.model,
@@ -150,6 +119,40 @@ export default {
         })
         .catch(e => console.log(e))
         .finally(() => { this.loading = false })
+    },
+    updateCache (cache, { data }) {
+      try {
+        const cached = cache.readQuery({
+          query: PromoPublications,
+          variables: {
+            where: {
+              promotion: {
+                uid: this.activePromo
+              }
+            }
+          }
+        })
+
+        cached.publicationsConnection.edges.unshift({
+          __typename: 'PublicationEdge',
+          node: data.createPublication
+        })
+
+        // Update cache
+        cache.writeQuery({
+          query: PromoPublications,
+          variables: {
+            where: {
+              promotion: {
+                uid: this.activePromo
+              }
+            }
+          },
+          data: cached
+        })
+      } catch (err) {
+        console.error(err)
+      }
     }
   },
   apollo: {
@@ -172,8 +175,8 @@ export default {
               uid: this.activePromo
             }
           },
-          orderBy: 'delay_ASC',
-          first: 10
+          orderBy: 'updatedAt_DESC',
+          first: 20
         }
       }
     }
