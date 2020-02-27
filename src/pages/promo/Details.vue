@@ -91,12 +91,11 @@ export default {
     ])
   },
   beforeRouteEnter (to, from, next) {
-    next()
-    // next(vm => {
-    //   if (!vm.$can('read', 'order')) { // check permission
-    //     vm.$router.back() // no permission, go back
-    //   }
-    // })
+    next(vm => {
+      if (!vm.$can('read', 'promotion')) { // check permission
+        vm.$router.back() // no permission, go back
+      }
+    })
   },
   apollo: {
     promotion () {

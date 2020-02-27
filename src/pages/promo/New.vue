@@ -92,6 +92,13 @@ export default {
         .catch(e => console.log(e))
         .finally(() => this.$q.loading.hide())
     }
+  },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (!vm.$can('create', 'promotion')) { // check permission
+        vm.$router.back() // no permission, go back
+      }
+    })
   }
 }
 </script>

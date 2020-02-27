@@ -117,7 +117,6 @@ export default {
         .then(res => {
           this.$q.notify({ color: 'positive', message: this.$t('notifications.positive.changes_saved'), icon: 'check_circle' })
         })
-        .catch(e => console.log(e))
         .finally(() => { this.loading = false })
     },
     updateCache (cache, { data }) {

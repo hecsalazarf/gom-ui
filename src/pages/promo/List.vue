@@ -127,12 +127,11 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    next()
-    // next(vm => {
-    //   if (!vm.$can('read', 'bps')) { // check permission
-    //     vm.$router.back() // no permission, go back
-    //   }
-    // })
+    next(vm => {
+      if (!vm.$can('read', 'promotions')) { // check permission
+        vm.$router.back() // no permission, go back
+      }
+    })
   },
   routes: {
     newPromo: RouteNames.PROMO_NEW
