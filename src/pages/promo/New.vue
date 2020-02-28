@@ -42,6 +42,11 @@ export default {
     'h-promo-content-data': () => import('components/promo/ContentData.vue')
   },
   mixins: [DataLayer],
+  data () {
+    return {
+      submitted: false
+    }
+  },
   beforeMount () {
     this.changeActiveToolbar('h-promo-toolbar')
   },
@@ -89,6 +94,7 @@ export default {
         })
         .then(res => {
           if (typeof res !== 'undefined') {
+            this.submitted = true
             this.$router.replace({ name: PROMO_DETAILS, params: { id: res.data.createPromotion.uid } })
           }
         })
@@ -104,7 +110,7 @@ export default {
     })
   },
   beforeRouteLeave (to, from, next) {
-    if (Object.keys(this.buildSubmitData()).length > 0) {
+    if (Object.keys(this.buildSubmitData()).length > 0 && !this.submitted) {
       this.$q.dialog({
         title: this.$t('promo.confirm_exit_title'),
         message: this.$t('app.confirm_lose_data'),
