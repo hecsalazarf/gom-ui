@@ -69,6 +69,7 @@ export default {
     publishedAt: 'Publicado el {date}',
     errorAt: 'No publicado - {date}',
     startIn: 'Comienza en {time}',
+    too_many: 'La promoción sólo puede publicarse una vez al día',
     confirm_new_title: 'Estás a punto de publicar {promo}'
   },
   time: {

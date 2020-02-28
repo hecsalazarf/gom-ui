@@ -177,6 +177,15 @@ export default {
         .then(res => {
           this.$q.notify({ color: 'positive', message: this.$t('notifications.positive.changes_saved'), icon: 'check_circle' })
         })
+        .catch(err => {
+          if (err.graphQLErrors && err.graphQLErrors.length > 0) {
+            if (err.graphQLErrors.find(e => e.extensions.code === 'TOO_MANY_PUBLICATIONS')) {
+              this.$q.notify({ color: 'warning', message: this.$t('publication.too_many'), icon: 'report_problem' })
+            }
+          } else {
+            this.$q.notify({ color: 'negative', message: this.$t('notifications.error.generic'), icon: 'report_problem' })
+          }
+        })
         .finally(() => { this.loading = false })
     }
   },
