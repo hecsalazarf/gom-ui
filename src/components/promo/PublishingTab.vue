@@ -71,6 +71,12 @@ export default {
   components: {
     'h-publish-timeline': () => import('components/promo/PublishTimeline')
   },
+  props: {
+    promoName: {
+      type: String,
+      default: ''
+    }
+  },
   data () {
     return {
       model: new Publication(),
@@ -99,25 +105,24 @@ export default {
   },
   methods: {
     publish () {
-      this.loading = true
-      this.$apollo.mutate({
-        mutation: CreatePublication,
-        update: this.updateCache.bind(this),
-        variables: {
-          data: {
-            ...this.model,
-            promotion: {
-              connect: {
-                uid: this.activePromo
-              }
-            }
-          }
-        }
-      })
-        .then(res => {
-          this.$q.notify({ color: 'positive', message: this.$t('notifications.positive.changes_saved'), icon: 'check_circle' })
-        })
-        .finally(() => { this.loading = false })
+      this.$q.dialog({
+        title: this.$t('publication.confirm_new_title', { promo: this.promoName }),
+        message: this.$t('app.continue_question'),
+        position: 'bottom',
+        persistent: true,
+        cancel: {
+          label: this.$t('app.no'),
+          color: 'primary',
+          flat: true
+        },
+        ok: {
+          label: this.$t('app.yes'),
+          color: 'primary',
+          flat: true
+        },
+        stackButtons: false,
+        color: 'primary'
+      }).onOk(this.submit.bind(this))
     },
     updateCache (cache, { data }) {
       try {
@@ -152,6 +157,27 @@ export default {
       } catch (err) {
         console.error(err)
       }
+    },
+    submit () {
+      this.loading = true
+      this.$apollo.mutate({
+        mutation: CreatePublication,
+        update: this.updateCache.bind(this),
+        variables: {
+          data: {
+            ...this.model,
+            promotion: {
+              connect: {
+                uid: this.activePromo
+              }
+            }
+          }
+        }
+      })
+        .then(res => {
+          this.$q.notify({ color: 'positive', message: this.$t('notifications.positive.changes_saved'), icon: 'check_circle' })
+        })
+        .finally(() => { this.loading = false })
     }
   },
   apollo: {

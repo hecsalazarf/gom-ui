@@ -61,12 +61,15 @@ export default {
     createdAt: 'Creado el',
     updatedAt: 'Actualizado el',
     publish: 'Publicar',
-    notification: 'Notificación | Notificaciones'
+    notification: 'Notificación | Notificaciones',
+    confirm_exit_title: 'Tienes una promoción en proceso'
   },
   publication: {
+    label: 'publicación | publicaciones',
     publishedAt: 'Publicado el {date}',
     errorAt: 'No publicado - {date}',
-    startIn: 'Comienza en {time}'
+    startIn: 'Comienza en {time}',
+    confirm_new_title: 'Estás a punto de publicar {promo}'
   },
   time: {
     now: 'Ahora',
@@ -107,6 +110,7 @@ export default {
     sign_out: 'Cerrar sesión',
     continue_question: '¿Continuar?',
     delete_confirm: 'Quieres eliminar a {object}',
+    confirm_lose_data: 'Al continuar perderás los cambios ¿Continuar?',
     go_back: 'Volver',
     see_more: 'Ver más',
     filter_by_status: 'Filtrar por estado',

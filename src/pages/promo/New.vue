@@ -50,6 +50,13 @@ export default {
   },
   methods: {
     ...mapActions(['changeActiveToolbar']),
+    buildSubmitData () {
+      const dataToSubmit = {}
+      for (const ref in this.$refs) {
+        Object.assign(dataToSubmit, this.$refs[ref].model.delta)
+      }
+      return dataToSubmit
+    },
     validate (evt) {
       const validations = []
       for (const ref in this.$refs) {
@@ -66,12 +73,8 @@ export default {
             return undefined
           }
           this.$q.loading.show()
-          const dataToSave = {}
-          for (const ref in this.$refs) {
-            Object.assign(dataToSave, this.$refs[ref].model.delta)
-          }
           const data = {
-            ...dataToSave,
+            ...this.buildSubmitData(),
             assignedTo: {
               connect: {
                 extUid: this.$user.id
@@ -99,6 +102,32 @@ export default {
         vm.$router.back() // no permission, go back
       }
     })
+  },
+  beforeRouteLeave (to, from, next) {
+    if (Object.keys(this.buildSubmitData()).length > 0) {
+      this.$q.dialog({
+        title: this.$t('promo.confirm_exit_title'),
+        message: this.$t('app.confirm_lose_data'),
+        position: 'bottom',
+        persistent: true,
+        cancel: {
+          label: this.$t('app.no'),
+          color: 'primary',
+          flat: true
+        },
+        ok: {
+          label: this.$t('app.yes'),
+          color: 'primary',
+          flat: true
+        },
+        stackButtons: false,
+        color: 'primary'
+      })
+        .onOk(next)
+        .onCancel(() => next(false))
+    } else {
+      next()
+    }
   }
 }
 </script>

@@ -38,7 +38,7 @@
             </q-list>
           </q-tab-panel>
           <q-tab-panel name="publishing">
-            <h-promo-publishing-tab />
+            <h-promo-publishing-tab :promo-name="promotion.name" />
           </q-tab-panel>
         </q-tab-panels>
       </div>
