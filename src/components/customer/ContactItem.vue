@@ -4,7 +4,7 @@
       <q-item
         v-ripple
         clickable
-        @click="$router.push({name: $options.routes.customerDetails, params: { id: value.id }})"
+        @click="handleClick"
       >
         <q-item-section avatar>
           <q-avatar
@@ -21,11 +21,15 @@
         </q-item-section>
       </q-item>
     </q-slide-item>
-    <q-separator v-if="separator" />
+    <q-separator
+      v-if="separator"
+      inset
+    />
   </div>
 </template>
 
 <script>
+import { debounce } from 'quasar'
 import { RouteNames } from 'src/constants/app'
 export default {
   name: 'HContactItem',
@@ -53,6 +57,11 @@ export default {
         return this.value.name1
       } else return `${this.value.name1} ${this.value.lastName1}`
     }
+  },
+  methods: {
+    handleClick: debounce(function (evt) {
+      this.$router.push({ name: this.$options.routes.customerDetails, params: { id: this.value.id } })
+    }, 200)
   },
   routes: {
     customerDetails: RouteNames.CUSTOMER_DETAILS

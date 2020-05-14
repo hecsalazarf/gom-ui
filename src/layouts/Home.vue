@@ -44,13 +44,18 @@
             class="customers-tab"
           />
         </can>
-        <!-- <q-route-tab
-          name="promos"
-          :to="{ name: 'promos' }"
-          :label="$tc('promos.label', 2)"
-          icon="fas fa-haykal"
-          class="promos-tab"
-        /> -->
+        <can
+          do="read"
+          on="promotions"
+        >
+          <q-route-tab
+            name="promos"
+            :to="{ name: 'promos' }"
+            :label="$tc('promo.label', 2)"
+            icon="fas fa-haykal"
+            class="promos-tab"
+          />
+        </can>
       </q-tabs>
     </q-footer>
     <q-page-container>
@@ -73,7 +78,8 @@ export default {
     // 'h-selection-toolbar': () =>
     //   import('components/order/SelectionToolbar.vue'), // selection DISABLED (#28)
     'h-order-toolbar': () => import('components/order/DetailsToolbar.vue'),
-    'h-customer-toolbar': () => import('components/customer/DetailsToolbar.vue')
+    'h-customer-toolbar': () => import('components/customer/DetailsToolbar.vue'),
+    'h-promo-toolbar': () => import('components/promo/DetailsToolbar.vue')
   },
   data () {
     return {

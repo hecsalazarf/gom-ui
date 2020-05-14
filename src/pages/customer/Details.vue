@@ -71,9 +71,13 @@ export default {
       }
     }
   },
-  created () {
+  beforeMount () {
     this.changeActiveCustomer(this.id) // change active customer
     this.changeActiveToolbar('h-customer-toolbar') // change toolbar
+  },
+  beforeDestroy () {
+    this.changeActiveToolbar(null)
+    this.changeActiveCustomer(null)
   },
   methods: {
     delete () {
@@ -178,10 +182,6 @@ export default {
         vm.$router.back() // no permission, go back
       }
     })
-  },
-  beforeRouteLeave (to, from, next) {
-    this.changeActiveToolbar(null)
-    next()
   }
 }
 </script>

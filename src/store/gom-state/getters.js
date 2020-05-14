@@ -25,3 +25,7 @@ export function activeCustomer (state) {
 export function moreOrders (state) {
   return state.moreOrders
 }
+
+export function activePromo (state) {
+  return state.activePromo
+}

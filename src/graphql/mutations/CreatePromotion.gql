@@ -1,0 +1,16 @@
+
+mutation CreatePromotion ($data: PromotionCreateInput!) {
+  createPromotion(data: $data) {
+    uid
+    code
+    name
+    start
+    end
+    category
+    content
+    createdAt
+    assignedTo {
+      extUid
+    }
+  }
+}

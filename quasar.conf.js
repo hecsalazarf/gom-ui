@@ -1,7 +1,7 @@
 // Configuration for your app
 const fs = require('fs')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const env = require('./env')
+const config = require('./config')
 
 module.exports = function (ctx) {
   return {
@@ -81,7 +81,14 @@ module.exports = function (ctx) {
         'QStepperNavigation',
         'QField',
         'QBanner',
-        'QChip'
+        'QVirtualScroll',
+        'QDate',
+        'QTime',
+        'QPopupProxy',
+        'QEditor',
+        'QTimeline',
+        'QTimelineEntry',
+        'QOptionGroup'
       ],
 
       directives: [
@@ -120,7 +127,7 @@ module.exports = function (ctx) {
       // analyze: true,
       // extractCSS: false,
       devtool: 'source-map',
-      env: env(ctx),
+      env: config(ctx),
       extendWebpack (cfg) {
         cfg.module.rules.push({
           enforce: 'pre',
@@ -212,29 +219,29 @@ module.exports = function (ctx) {
         start_url: '/',
         icons: [
           {
-            'src': 'statics/icons/icon-128x128.png',
-            'sizes': '128x128',
-            'type': 'image/png'
+            src: 'statics/icons/icon-128x128.png',
+            sizes: '128x128',
+            type: 'image/png'
           },
           {
-            'src': 'statics/icons/icon-192x192.png',
-            'sizes': '192x192',
-            'type': 'image/png'
+            src: 'statics/icons/icon-192x192.png',
+            sizes: '192x192',
+            type: 'image/png'
           },
           {
-            'src': 'statics/icons/icon-256x256.png',
-            'sizes': '256x256',
-            'type': 'image/png'
+            src: 'statics/icons/icon-256x256.png',
+            sizes: '256x256',
+            type: 'image/png'
           },
           {
-            'src': 'statics/icons/icon-384x384.png',
-            'sizes': '384x384',
-            'type': 'image/png'
+            src: 'statics/icons/icon-384x384.png',
+            sizes: '384x384',
+            type: 'image/png'
           },
           {
-            'src': 'statics/icons/icon-512x512.png',
-            'sizes': '512x512',
-            'type': 'image/png'
+            src: 'statics/icons/icon-512x512.png',
+            sizes: '512x512',
+            type: 'image/png'
           }
         ]
       }

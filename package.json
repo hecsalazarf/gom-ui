@@ -1,6 +1,6 @@
 {
   "name": "gom-ui",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "Gom UI prototype",
   "productName": "Gom App",
   "cordovaId": "org.cordova.quasar.app",
@@ -23,9 +23,9 @@
     "axios": "^0.19.0",
     "graphql": "^14.5.8",
     "json-rules-engine": "^4.1.0",
-    "quasar": "^1.4.5",
+    "quasar": "^1.5.3",
     "subscriptions-transport-ws": "^0.9.16",
-    "vue-apollo": "^3.0.1",
+    "vue-apollo": "^3.0.2",
     "vue-i18n": "^8.15.1"
   },
   "devDependencies": {
@@ -33,7 +33,7 @@
     "@quasar/cli": "^1.0.3",
     "@vue/eslint-config-standard": "^5.0.0",
     "babel-eslint": "^10.0.3",
-    "eslint": "^6.7.1",
+    "eslint": "^6.7.2",
     "eslint-loader": "^3.0.2",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-node": "^10.0.0",

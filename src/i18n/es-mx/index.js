@@ -7,7 +7,7 @@ export default {
     details: 'Detalles',
     createdAt: 'Pedido el',
     updatedAt: 'Actualizado el',
-    dates: 'Fechas',
+    log: 'Historial',
     confirm_exit_title: 'Tienes un pedido en proceso',
     confirm_exit_message: 'Al continuar perderás los cambios ¿Continuar?',
     status: {
@@ -44,6 +44,43 @@ export default {
       with_active_orders: 'No puedes eliminar a un cliente con pedidos activos'
     }
   },
+  promo: {
+    label: 'Promoción | Promos',
+    active: 'Activa | Activas',
+    iddle: 'Inactiva | Inactivas',
+    details: 'Detalles',
+    publishing: 'Publicaciones',
+    review: 'General',
+    content: 'Contenido',
+    log: 'Historial',
+    code: 'Código',
+    name: 'Nombre',
+    start: 'Inicio',
+    end: 'Fin',
+    category: 'Categoría',
+    createdAt: 'Creado el',
+    updatedAt: 'Actualizado el',
+    publish: 'Publicar',
+    notification: 'Notificación | Notificaciones',
+    confirm_exit_title: 'Tienes una promoción en proceso'
+  },
+  publication: {
+    label: 'publicación | publicaciones',
+    publishedAt: 'Publicado el {date}',
+    errorAt: 'No publicado - {date}',
+    startIn: 'Comienza en {time}',
+    too_many: 'La promoción sólo puede publicarse una vez al día',
+    confirm_new_title: 'Estás a punto de publicar {promo}'
+  },
+  time: {
+    now: 'Ahora',
+    one_day_later: 'Mañana',
+    one_hour_later: 'Una hora después',
+    second: 'segundo | 1 segundo | {n} segundos',
+    minute: 'minuto | 1 minuto | {n} minutos',
+    hour: 'hora | 1 hora | {n} horas'
+
+  },
   pricing: {
     label: 'Precio | Precios',
     total: 'Total',
@@ -74,6 +111,7 @@ export default {
     sign_out: 'Cerrar sesión',
     continue_question: '¿Continuar?',
     delete_confirm: 'Quieres eliminar a {object}',
+    confirm_lose_data: 'Al continuar perderás los cambios ¿Continuar?',
     go_back: 'Volver',
     see_more: 'Ver más',
     filter_by_status: 'Filtrar por estado',

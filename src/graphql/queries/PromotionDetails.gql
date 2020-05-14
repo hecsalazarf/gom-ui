@@ -1,0 +1,13 @@
+query ReadPromotion ($where: PromotionWhereUniqueInput!) {
+  promotion(where: $where) {
+    uid
+    code
+    name
+    start
+    end
+    category
+    content
+    createdAt
+    updatedAt
+  }
+}

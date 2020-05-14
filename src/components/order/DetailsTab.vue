@@ -147,9 +147,9 @@
 
       <q-expansion-item
         class="bg-secondary h-rounded-borders-20"
-        icon="date_range"
+        icon="history"
         switch-toggle-side
-        :label="$t('order.dates')"
+        :label="$t('order.log')"
         default-opened
         header-class="text-subtitle1 text-weight-medium text-primary"
       >
