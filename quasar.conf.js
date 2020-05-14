@@ -81,7 +81,14 @@ module.exports = function (ctx) {
         'QStepperNavigation',
         'QField',
         'QBanner',
-        'QChip'
+        'QVirtualScroll',
+        'QDate',
+        'QTime',
+        'QPopupProxy',
+        'QEditor',
+        'QTimeline',
+        'QTimelineEntry',
+        'QOptionGroup'
       ],
 
       directives: [

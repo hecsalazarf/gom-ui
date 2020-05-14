@@ -1,5 +1,6 @@
 const CustomHandlers = [
-  'BP_WITH_ACTIVE_ORDERS'
+  'BP_WITH_ACTIVE_ORDERS',
+  'TOO_MANY_PUBLICATIONS'
 ]
 
 export class GraphQlErrors {

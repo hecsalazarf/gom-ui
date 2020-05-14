@@ -1,0 +1,17 @@
+query PromoPag ($where: PublicationWhereInput, $orderBy: PublicationOrderByInput, $first: Int) {
+  # Since these queries are cached by both the initial
+  # query and their parameters, a problem arises when later
+  # retrieving or updating paginated queries in the cache.
+  # To solve this Apollo Client suggests @connection directive to specify
+  # a custom store key for results. See more https://www.apollographql.com/docs/react/data/pagination/#the-connection-directive
+  publicationsConnection(where: $where, orderBy: $orderBy, first: $first) @connection(key: "publication", filter: ["where"]) {
+    edges {
+      node {
+        status
+        delay
+        createdAt
+        updatedAt
+      }
+    }
+  }
+}

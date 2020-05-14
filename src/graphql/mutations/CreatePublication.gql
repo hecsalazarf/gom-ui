@@ -1,0 +1,10 @@
+
+mutation CreatePublication ($data: PublicationCreateInput!) {
+  createPublication(data: $data) {
+    uid
+    status
+    delay
+    createdAt
+    updatedAt
+  }
+}

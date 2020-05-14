@@ -26,6 +26,10 @@ export function changeMoreOrders (context, moreOrders) {
   context.commit('setMoreOrders', moreOrders)
 }
 
+export function changeActivePromo (context, promo) {
+  context.commit('setActivePromo', promo)
+}
+
 /**
  * Clear all store
  * @param {any} context Context

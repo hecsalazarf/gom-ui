@@ -9,6 +9,9 @@ export function getInitialState () {
     /* Customer */
     activeCustomer: null,
 
+    /* Promo */
+    activePromo: null,
+
     /* Toolbar */
     activeToolbar: null,
 

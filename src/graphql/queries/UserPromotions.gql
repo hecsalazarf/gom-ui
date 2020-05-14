@@ -1,0 +1,35 @@
+query PromotionPag($whereActive: PromotionWhereInput, $whereIddle: PromotionWhereInput, $orderBy: PromotionOrderByInput, $first: Int, $skip: Int) {
+  active: promotionsConnection(where: $whereActive, orderBy: $orderBy) @connection(key: "promotions", filter: ["where"]) {
+    pageInfo {
+      hasNextPage
+      startCursor
+      endCursor
+    }
+    edges {
+      node {
+        uid
+        code
+        name
+        start
+        end
+        category
+      }
+    }
+  }
+
+  iddle: promotionsConnection(where: $whereIddle, orderBy: $orderBy, first: $first, skip: $skip) @connection(key: "promotions", filter: ["where"]) {
+    pageInfo {
+      hasNextPage
+      startCursor
+      endCursor
+    }
+    edges {
+      node {
+        uid
+        code
+        name
+        end
+      }
+    }
+  }
+}
