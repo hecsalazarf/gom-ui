@@ -71,13 +71,16 @@ class UserHelper {
 
   createAbility () {
     if (!this.token) {
-      return undefined
+      // Create CASL instance without ability
+      return new Ability([])
     }
-    /* Create rules based on permissions retrieved from token */
+    // If token exists, user has already logged in and a CASL instance
+    // can be created with the corresponding ability based on permissions
+    // retrieved from token
     const rules = this.token.permissions.map(permission => {
       const defs = permission.split(':')
       return {
-        actions: defs[0],
+        action: defs[0],
         subject: defs[1]
       }
     })
