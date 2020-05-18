@@ -24,7 +24,7 @@ function handleGraphQlErrors (errors) {
  * Network error handler
  */
 function handleNetworkErrors (networkError) {
-  if (networkError.result && networkError.result.code && networkError.result.code === 'jwt_error') {
+  if (networkError.result && networkError.result.error && networkError.result.error === 'jwt_error') {
     logout.call(this)
   } else {
     this.$q.loading.hide() // hide any loading window
