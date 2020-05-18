@@ -49,10 +49,10 @@
           on="promotions"
         >
           <q-route-tab
-            name="promos"
-            :to="{ name: 'promos' }"
+            :name="$options.routes.promos"
+            :to="{ name: $options.routes.promos }"
             :label="$tc('promo.label', 2)"
-            icon="fas fa-haykal"
+            icon="stars"
             class="promos-tab"
           />
         </can>
@@ -103,11 +103,12 @@ export default {
   tabs: [
     RouteNames.ORDER_LIST,
     RouteNames.CUSTOMER_LIST,
-    'promos'
+    RouteNames.PROMO_LIST
   ],
   routes: {
     orders: RouteNames.ORDER_LIST,
-    customers: RouteNames.CUSTOMER_LIST
+    customers: RouteNames.CUSTOMER_LIST,
+    promos: RouteNames.PROMO_LIST
   }
 }
 </script>
