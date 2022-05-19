@@ -110,10 +110,6 @@ Configuration is done by adding variables to the `process.env` object. They are 
 * WS_ENDPOINT: Web socket endpoint.
 
 
-## Versioning
-
-0.6.0
-
 ## Authors
 
 * **Héctor Salazar** - *hecsalazarf*
