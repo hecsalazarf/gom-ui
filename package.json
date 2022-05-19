@@ -1,6 +1,6 @@
 {
   "name": "gom-ui",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Gom UI prototype",
   "productName": "Gom App",
   "cordovaId": "org.cordova.quasar.app",
